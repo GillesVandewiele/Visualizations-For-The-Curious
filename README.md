@@ -5,6 +5,7 @@
 ## Environment setup
 
 To run this scaffold you will need:
+
 1.  node.js with npm
     The easiest way to do this is using nvm (in case you want to update your node install in the future)
 
@@ -12,10 +13,10 @@ To run this scaffold you will need:
     or [here](https://github.com/creationix/nvm) (if you're using OSX or linux)
 
     Once you've installed nvm, start up your favorite shell and install node
-    > nvm install latest
+    `nvm install latest`
 
     Now make sure you have the latest npm
-    > npm install npm -g
+    `npm install npm -g`
 
 2.  Ruby
     
@@ -34,14 +35,14 @@ To run this scaffold you will need:
 
     Installation instructions can be found on [http://compass-style.org/install/](http://compass-style.org/install/)
 
-    > gem update --system
-    > gem install compass
+    `gem update --system`
+    `gem install compass`
 
     compass should be installed now.
 
     Now we add the middleware for the interaction between node and compass
 
-    > npm install node-compass
+    `npm install node-compass`
 
     ### Troubleshooting
 
@@ -62,11 +63,11 @@ To run this scaffold you will need:
     The scaffolding framework we've chosen is Yeoman
     More info can be found on [http://yeoman.io/](http://yeoman.io/)
 
-    > npm install -g yo
+    `npm install -g yo`
 
     Also install the angular-generator
 
-    > npm install -g generator-angular
+    `npm install -g generator-angular`
 
 
 # Extra information
