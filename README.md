@@ -24,6 +24,7 @@ To run this scaffold you will need:
 
     This is the whole reason for installing ruby.
     Compass is a css preprocessor and will be used for our SASS needs.
+    If you want to read up on the benefits of SASS, look at [this](http://www.webinsation.com/benefits-of-using-sass-over-traditional-css/) page.
 
     Installation instructions can be found on [http://compass-style.org/install/](http://compass-style.org/install/)
 
