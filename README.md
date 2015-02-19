@@ -6,7 +6,7 @@
 
 To run this scaffold you will need:
 
-1.  node.js with npm
+1.  **node.js** with npm
     The easiest way to do this is using nvm (in case you want to update your node install in the future)
 
     Download the setup file (nvm-setup.zip) [here](https://github.com/coreybutler/nvm-windows/releases) (if you're on windows)
@@ -18,7 +18,7 @@ To run this scaffold you will need:
     Now make sure you have the latest npm
     `npm install npm -g`
 
-2.  Ruby
+2.  **Ruby**
     
     If you're on linux or mac this is easy enough, just install rvm and use it to install ruby
     [https://rvm.io/](https://rvm.io/)
@@ -28,7 +28,7 @@ To run this scaffold you will need:
 
     I chose version [2.1.5 (x64)](http://dl.bintray.com/oneclick/rubyinstaller/rubyinstaller-2.1.5-x64.exe?direct)
 
-3.  Compass
+3.  **Compass**
 
     This is the whole reason for installing ruby.
     Compass is a css preprocessor and will be used for our SASS needs.
@@ -44,7 +44,7 @@ To run this scaffold you will need:
 
     `npm install node-compass`
 
-    ### Troubleshooting
+    ##### Troubleshooting ruby gem installation
 
     If you're on windows and this is giving you troubles with certificates (like it did on my pc), do the following:
     (taken from [here](http://stackoverflow.com/questions/5720484/how-to-solve-certificate-verify-failed-on-windows))
@@ -58,7 +58,7 @@ To run this scaffold you will need:
 
     Now close your shell and reopen it to load the new environment variable you just created and execute the gem commands stated previously.
 
-4.  Yeoman, Grunt, Bower
+4.  **Yeoman, Grunt, Bower**
     
     The scaffolding framework we've chosen is Yeoman
     More info can be found on [http://yeoman.io/](http://yeoman.io/)
