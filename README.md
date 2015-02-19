@@ -6,17 +6,9 @@
 
 To run this scaffold you will need:
 
-1.  **node.js** with npm
-    The easiest way to do this is using nvm (in case you want to update your node install in the future)
+1.  **node.js with npm**
 
-    Download the setup file (nvm-setup.zip) [here](https://github.com/coreybutler/nvm-windows/releases) (if you're on windows)
-    or [here](https://github.com/creationix/nvm) (if you're using OSX or linux)
-
-    Once you've installed nvm, start up your favorite shell and install node
-    `nvm install latest`
-
-    Now make sure you have the latest npm
-    `npm install npm -g`
+    You can go to [http://nodejs.org/](http://nodejs.org/) and find installation instructions there.
 
 2.  **Ruby**
     
@@ -65,9 +57,10 @@ To run this scaffold you will need:
 
     `npm install -g yo`
 
-    Also install the angular-generator
+    Also install the angular-generator and the karma generator
 
     `npm install -g generator-angular`
+    `npm install -g generator-karma`
 
 
 # Extra information
