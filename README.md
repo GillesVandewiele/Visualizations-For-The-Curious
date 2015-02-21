@@ -1,6 +1,4 @@
-# DataVisualizations
-
-[AMMA] Data visualizations
+# [AMMA] Data visualizations
 
 ## Environment setup
 
@@ -63,6 +61,9 @@ To run this scaffold you will need:
     `npm install -g generator-angular`
     `npm install -g generator-karma`
 
+5. **For Windows: Visual Studio**
+
+    For compiling a project, Grunt uses the build tools from MS Visual studio. You can download the free version [here](http://www.visualstudio.com/).
 
 # Extra information
 
@@ -71,7 +72,12 @@ version 0.11.1.
 
 ## Build & development
 
-Run `grunt` for building and `grunt serve` for preview.
+After cloning the git, bring the command line to the project directory. Now, resolve the project dependencies bij executing `npm install`.
+If you are using MS Visual Studio 2013, you should instead execute: `npm install --msvs_version=2013`.
+(If you encounter the ECONNRESET error, you resolve this by instructing npm to use http instead of https by executing:
+`npm config set registry http://registry.npmjs.org/` and retrying the install command from above.)
+Run `grunt` for building. If this results in the error: 'No Bower components found', execute:  `bower install` and retry the `grunt` command.
+When this succeeds, you can execute `grunt serve` for preview.
 
 ## Testing
 
