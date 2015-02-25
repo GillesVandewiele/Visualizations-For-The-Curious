@@ -118,41 +118,41 @@ def parse_traffic_delay_objects():
 def write_traffic_delays(trafficDelays, file):
 	#utf8 necessary for writing names of wallon cities
 	#as a result, all strings must be cast to unicode
-	json_data_clean = io.open(file, "w", encoding='utf8')
-	json_data_clean.write(unicode("{\n\t\"Traffic Delays\":  [\n"))
+	json_data_clean = io.open(file, "w")
+	json_data_clean.write("{\n\t\"Traffic Delays\":  [\n")
 	firstObject = True	
 
 	for trafficDelay in trafficDelays:
 		if firstObject:
-			json_data_clean.write(unicode("\n\t\t{\n"))
+			json_data_clean.write("\n\t\t{\n")
 			firstObject = False
 		else:
-			json_data_clean.write(unicode(",\n\t\t{\n"))
+			json_data_clean.write(",\n\t\t{\n")
 
-		json_data_clean.write(unicode("\t\t\t\"Time\": \""+trafficDelay.time+"\",\n"))
-		json_data_clean.write(unicode("\t\t\t\"Frequency\": \""+trafficDelay.frequency+"\",\n"))
-		json_data_clean.write(unicode("\t\t\t\"Delays\": [ \n"))
+		json_data_clean.write("\t\t\t\"Time\": \""+trafficDelay.time+"\",\n")
+		json_data_clean.write("\t\t\t\"Frequency\": \""+trafficDelay.frequency+"\",\n")
+		json_data_clean.write("\t\t\t\"Delays\": [ \n")
 		
 		#Write all delays
 		firstDelay = True
 		for delay in trafficDelay.delays:
 			if firstDelay:
-				json_data_clean.write(unicode("\t\t\t\t{\n"))
+				json_data_clean.write("\t\t\t\t{\n")
 				firstDelay = False
 			else:
-				json_data_clean.write(unicode(",\n\t\t\t\t{\n"))
+				json_data_clean.write(",\n\t\t\t\t{\n")
 			
-			json_data_clean.write(unicode("\t\t\t\t\t\"Route\": \""+delay.delayRoute+"\",\n"))
-			json_data_clean.write(unicode("\t\t\t\t\t\"From\": \""+delay.delayFrom+"\",\n"))
-			json_data_clean.write(unicode("\t\t\t\t\t\"To\": \""+delay.delayTo+"\",\n"))
-			json_data_clean.write(unicode("\t\t\t\t\t\"Est. delay\": \""+delay.delayTime+"\"\n"))
-			json_data_clean.write(unicode("\t\t\t\t}"))
+			json_data_clean.write("\t\t\t\t\t\"Route\": \""+delay.delayRoute+"\",\n")
+			json_data_clean.write("\t\t\t\t\t\"From\": \""+delay.delayFrom+"\",\n")
+			json_data_clean.write("\t\t\t\t\t\"To\": \""+delay.delayTo+"\",\n")
+			json_data_clean.write("\t\t\t\t\t\"Est. delay\": \""+delay.delayTime+"\"\n")
+			json_data_clean.write("\t\t\t\t}")
 
-		json_data_clean.write(unicode("\t\t\t] \n"))
+		json_data_clean.write("\t\t\t] \n")
 		
-		json_data_clean.write(unicode("\t\t}"))
+		json_data_clean.write("\t\t}")
 	
-	json_data_clean.write(unicode("\n\t]\n}\n"))
+	json_data_clean.write("\n\t]\n}\n")
 	
 
 def write_delays_per_day(trafficDelays_sorted, file_per_day):
