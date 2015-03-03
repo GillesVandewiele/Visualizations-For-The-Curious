@@ -6,7 +6,37 @@ To run this scaffold you will need:
 
 1.  **node.js with npm**
 
+    ##### Windows
+
     You can go to [http://nodejs.org/](http://nodejs.org/) and find installation instructions there.
+
+    ##### Linux
+
+    First install the prerequisites:
+    
+    `sudo apt-get update`
+    
+    `sudo apt-get install build-essential libssl-dev`
+    
+    Now follow the installation instructions for [nvm](https://github.com/creationix/nvm).
+    `curl https://raw.githubusercontent.com/creationix/nvm/v0.23.3/install.sh | bash`
+    
+    or if you want to use Wget:
+    
+    `wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.23.3/install.sh | bash`
+    
+    Install the latest version of node using nvm (in a new terminal to make sure it's sourced)
+    
+    `nvm install stable`
+    
+    `nvm alias default stable`
+    
+    `nvm use default`
+
+    Now install npm and you should be done with this part.
+
+    `sudo apt-get install npm`
+
 
 2.  **Ruby**
     
@@ -56,6 +86,13 @@ To run this scaffold you will need:
     More info can be found on [http://yeoman.io/](http://yeoman.io/)
 
     `npm install -g yo`
+    or
+    `sudo npm install -g yo`
+
+    On linux you have to install grunt and bower seperately:
+    `sudo npm install -g grunt-cli`
+
+    `sudo npm install -g bower`
 
     Also install the angular-generator and the karma generator
 
@@ -74,7 +111,11 @@ version 0.11.1.
 
 ## Build & development
 
-After cloning the git, bring the command line to the project directory. Now, resolve the project dependencies by executing `npm install`.
+After cloning the git, bring the command line to the project directory. 
+Now, resolve the project dependencies by executing `npm install`.
+
+On linux: Resolve the bower dependencies by executing `bower install`
+
 If you are using MS Visual Studio 2013, you should instead execute: `npm install --msvs_version=2013`.
 (If you encounter the ECONNRESET error, you resolve this by instructing npm to use http instead of https by executing:
 `npm config set registry http://registry.npmjs.org/` and retrying the install command from above.)
