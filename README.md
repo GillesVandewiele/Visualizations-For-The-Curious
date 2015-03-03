@@ -19,6 +19,7 @@ To run this scaffold you will need:
     `sudo apt-get install build-essential libssl-dev`
     
     Now follow the installation instructions for [nvm](https://github.com/creationix/nvm).
+    
     `curl https://raw.githubusercontent.com/creationix/nvm/v0.23.3/install.sh | bash`
     
     or if you want to use Wget:
@@ -90,6 +91,7 @@ To run this scaffold you will need:
     `sudo npm install -g yo`
 
     On linux you have to install grunt and bower seperately:
+    
     `sudo npm install -g grunt-cli`
 
     `sudo npm install -g bower`
@@ -114,12 +116,16 @@ version 0.11.1.
 After cloning the git, bring the command line to the project directory. 
 Now, resolve the project dependencies by executing `npm install`.
 
-On linux: Resolve the bower dependencies by executing `bower install`
+Resolve the bower dependencies by executing `bower install`
 
-If you are using MS Visual Studio 2013, you should instead execute: `npm install --msvs_version=2013`.
+If you are using MS Visual Studio 2013, you should instead execute: 
+
+`npm install --msvs_version=2013`
+
 (If you encounter the ECONNRESET error, you resolve this by instructing npm to use http instead of https by executing:
 `npm config set registry http://registry.npmjs.org/` and retrying the install command from above.)
-Run `grunt` for building. If this results in the error: 'No Bower components found', execute:  `bower install` and retry the `grunt` command.
+
+Run `grunt` for building.
 When this succeeds, you can execute `grunt serve` for preview.
 
 ## Testing
