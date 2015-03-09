@@ -5,3 +5,4 @@ dist
 bower_components
 *.md~
 /npm-debug.log
+*.sublime*
