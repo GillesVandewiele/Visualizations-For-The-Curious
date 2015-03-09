@@ -13,8 +13,9 @@
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
   </head>
-  <body ng-app="dataVisualizationsApp">
+  <body ng-app="dataVisualizationsApp" ng-init="charts=[[8, 3, 7],[2, 5, 9],[6, 2, 3],[2, 2, 5]]">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -52,7 +53,7 @@
 
     <div class="footer">
       <div class="container-fluid">
-        <p><span class="glyphicon glyphicon-copyright-mark"></span>Interactive Data Visualizations team</p>
+        <p><span class="glyphicon glyphicon-copyright-mark"></span> Interactive Data Visualizations team</p>
       </div>
     </div>
 
@@ -87,6 +88,7 @@
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/about.js"></script>
+        <script src="scripts/directives/donutchart.js"></script>
         <!-- endbuild -->
 </body>
 </html>
