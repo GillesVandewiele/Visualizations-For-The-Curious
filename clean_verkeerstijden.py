@@ -37,5 +37,5 @@ for f in allFiles:
 	else:
 		i = i + 1
 
-print("not cleanable :", str(i))
-print("cleaned :", str(j))
+print("not cleanable: ", str(i))
+print("cleaned: ", str(j))

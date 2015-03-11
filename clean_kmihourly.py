@@ -55,8 +55,7 @@ for f in allFiles:
 		fout.write(strData)
 		j = j + 1
 	else:
-		print(f)
 		i = i +1
 
-print("not cleanable :"  + str(i))
-print("cleaned :" + str(j))
+print("not cleanable: "  + str(i))
+print("cleaned: " + str(j))
