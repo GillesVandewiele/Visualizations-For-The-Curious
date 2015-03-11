@@ -13,8 +13,9 @@
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
   </head>
-  <body ng-app="dataVisualizationsApp">
+  <body ng-app="dataVisualizationsApp" ng-init="charts=[[8, 3, 7],[2, 5, 9],[6, 2, 3],[2, 2, 5]]">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -22,7 +23,7 @@
     <!-- Add your site or application content here -->
     <div class="header">
       <div class="navbar navbar-default" role="navigation">
-        <div class="container">
+        <div class="container-fluid">
           <div class="navbar-header">
 
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
@@ -32,7 +33,7 @@
               <span class="icon-bar"></span>
             </button>
 
-            <a class="navbar-brand" href="#/">dataVisualizations</a>
+            <a class="navbar-brand" href="#/">Interactive Data Visualizations</a>
           </div>
 
           <div class="collapse navbar-collapse" id="js-navbar-collapse">
@@ -40,20 +41,19 @@
             <ul class="nav navbar-nav">
               <li class="active"><a href="#/">Home</a></li>
               <li><a ng-href="#/about">About</a></li>
-              <li><a ng-href="#/">Contact</a></li>
             </ul>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="container">
+    <div class="container-fluid">
     <div ng-view=""></div>
     </div>
 
     <div class="footer">
-      <div class="container">
-        <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
+      <div class="container-fluid">
+        <p><span class="glyphicon glyphicon-copyright-mark"></span> Interactive Data Visualizations team</p>
       </div>
     </div>
 
@@ -88,6 +88,7 @@
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/about.js"></script>
+        <script src="scripts/directives/donutchart.js"></script>
         <!-- endbuild -->
 </body>
 </html>
