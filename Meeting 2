@@ -1,0 +1,9 @@
+Will there be a blocking filter? Taking a lot of computation time? Acceptance tests
+Use route mapping tool to automatically find routes in verkeerstijden dataset. Pieter
+Keep system scope larger than it needs to be for this application, or make it possible to easily extend it. 
+Enrich the dataset with a dataset that maps cities to geocoordinates? Google geolocation Pieter
+Cleansing and enriching! Pieter
+Know where all the limits are: limit because of implementation of limit because of the system design
+"Do not limit the genericity in your design" - eye on extending for the course next year
+Creeeren van nieuwe, gelijkaardige datasets (vertraging parijs) en 1 volledig verschillend (stacked bar, piechart nog makkelijk te implementeren?)
+
