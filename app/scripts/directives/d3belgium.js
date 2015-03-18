@@ -59,36 +59,53 @@ angular.module('dataVisualizationsApp.directives')
           states.selectAll('*').remove();
 
           // setup variables
-          var width, height, max;
-          //width = d3.select(iElement[0])[0][0].offsetWidth - 20;
-          width = 600;
-            // 20 is for margins and can be changed
-          height = 500;
+          var width, maxHeight;
+          width = d3.select(iElement[0])[0][0].offsetWidth - 20;
+          // 20 is for margins and can be changed
+          
+          //set the maxHeight
+          maxHeight = 500;
 
           // set the height based on the calculations above
-          svg.attr('height', height);
+          svg.attr('height', maxHeight);
 
           var subunits = topojson.feature(_belgium, _belgium.objects.subunits);
 
-          // var projection = d3.geo.mercator()
-          //     .scale(500)
-          //     .translate([width / 2, height / 2]);
+          var zoomfactor = 3;
 
+          // Create a unit projection.
           var projection = d3.geo.albers()
-            .center([4.8, 50.6])
-            .rotate([4.4, 0])
-            .parallels([7.1, 51.9])
-            .scale(13500)
-            .translate([-110,263]);
+              .scale(1)
+              .center([0,0])
+              .rotate([0,0])
+              .translate([0, 0]);
 
+          // Create a path generator.
           var path = d3.geo.path()
               .projection(projection);
 
+          // Compute the bounds of a feature of interest, then derive scale & translate.
+          var b = path.bounds(subunits);
+
+          b.s = b[0][1]; 
+          b.n = b[1][1]; 
+          b.w = b[0][0]; 
+          b.e = b[1][0]; 
+          b.height = Math.abs(b.n - b.s); 
+          b.width = Math.abs(b.e - b.w); 
+          var s = .9 / Math.max(b.width / width, (b.height / maxHeight));
+          var t = [(width - s * (b.e + b.w)) / 2, (maxHeight - s * (b.s + b.n)) / 2];
+
+          // Update the projection to use computed scale & translate.
+          projection
+              .scale(s)
+              .translate(t);
+
           states
-            .selectAll("path")
+            .selectAll('path')
               .data(subunits.features)
-            .enter().append("path")
-              .attr("d", path);
+            .enter().append('path')
+              .attr('d', path);
 
         }
         

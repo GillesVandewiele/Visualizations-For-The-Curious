@@ -16,7 +16,7 @@ body, .ui-widget {
 }
 
 svg {
-  width: 960px;
+  width: 1218px;
   height: 500px;
   border: solid 1px #ccc;
   background: #eee;
@@ -33,7 +33,7 @@ svg {
 }
 
 div {
-  width: 960px;
+  width: 1218px;
 }
 
     </style>
@@ -42,14 +42,17 @@ div {
     <h3>Albers Projection</h3>
     <script type="text/javascript">
 
+
+    var brussels = [50.85, 4.35];
+
 // Our projection.
 var xy = d3.geo.albers()
-      .center([4.8, 50.6])
-      .rotate([4.4, 0])
-      .parallels([7.1, 51.9])
-      .scale(13500)
-      .translate([-110,263]),
-    path = d3.geo.path().projection(xy);
+      .scale(13123)
+      .translate([-11810.201957755771, 10157.140572598788]);
+      //.rotate([brussels[1], 0])
+      //.center([0, brussels[0]])
+      //.parallels([7.1, 51.9])
+var path = d3.geo.path().projection(xy);
 
 d3.select("body")
   .append("svg")
@@ -186,8 +189,9 @@ $("#translate-x").slider({
 });
 
 $("#translate-y").slider({
-  min: -10000,
-  max: 10000,
+  min: -1000,
+  max: 1000,
+  step: 1e-1,
   value: xy.translate()[1],
   slide: function(event, ui) {
     var translate = xy.translate();
