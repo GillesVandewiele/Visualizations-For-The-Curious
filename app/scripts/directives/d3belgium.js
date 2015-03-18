@@ -69,10 +69,18 @@ angular.module('dataVisualizationsApp.directives')
           // set the height based on the calculations above
           svg.attr('height', maxHeight);
 
-          var subunits = topojson.feature(_belgium, _belgium.objects.subunits);
+          var belgianBorders = {
+            'lon':[2.2,6.9],
+            'lat':[49.2,51.8]
+          }
+          belgianBorders['center'] = [d3.mean(belgianBorders['lon']),d3.mean(belgianBorders['lat'])];
 
-          var zoomfactor = 3;
+          var theFeatures = topojson.feature(_belgium, _belgium.objects.subunits);
+          var innerBorders = topojson.mesh(_belgium, _belgium.objects.subunits, function(a, b) { return a !== b; });
+          var outerBorders = topojson.mesh(_belgium, _belgium.objects.subunits, function(a, b) { return a === b; });
+          var places = topojson.feature(_belgium, _belgium.objects.places);
 
+          //see http://stackoverflow.com/questions/14492284/center-a-map-in-d3-given-a-geojson-object
           // Create a unit projection.
           var projection = d3.geo.albers()
               .scale(1)
@@ -85,7 +93,7 @@ angular.module('dataVisualizationsApp.directives')
               .projection(projection);
 
           // Compute the bounds of a feature of interest, then derive scale & translate.
-          var b = path.bounds(subunits);
+          var b = path.bounds(theFeatures);
 
           b.s = b[0][1]; 
           b.n = b[1][1]; 
@@ -93,7 +101,7 @@ angular.module('dataVisualizationsApp.directives')
           b.e = b[1][0]; 
           b.height = Math.abs(b.n - b.s); 
           b.width = Math.abs(b.e - b.w); 
-          var s = .9 / Math.max(b.width / width, (b.height / maxHeight));
+          var s = 0.9 / Math.max(b.width / width, (b.height / maxHeight));
           var t = [(width - s * (b.e + b.w)) / 2, (maxHeight - s * (b.s + b.n)) / 2];
 
           // Update the projection to use computed scale & translate.
@@ -101,11 +109,65 @@ angular.module('dataVisualizationsApp.directives')
               .scale(s)
               .translate(t);
 
+
+          //see http://bost.ocks.org/mike/map/
+          //Displaying and styling the Polygons
           states
-            .selectAll('path')
-              .data(subunits.features)
+            .selectAll('.subunit')
+              .data(theFeatures.features)
             .enter().append('path')
-              .attr('d', path);
+            .attr('class', function(d) { return 'subunit ' + d.id; })
+            .attr('d', path);
+
+          //Displaying Boundaries
+          states
+            .append('path')
+            .datum(innerBorders)
+            .attr('class', 'subunit-boundary interior')
+            .attr('d', path);
+
+          states
+            .append('path')
+            .datum(outerBorders)
+            .attr('class', 'subunit-boundary exterior')
+            .attr('d', path);
+
+          //Add the place locations. This will draw a small circle for each city
+          //We can adjust the radius by setting path.pointRadius, and assign styles via CSS
+          states
+            .append('path')
+            .datum(places)
+            .attr('class', 'place')
+            .attr('d', path);
+
+          //adding the place names
+          states
+            .selectAll('.place-label')
+              .data(places.features)
+            .enter().append('text')
+              .attr('class', 'place-label')
+              .attr('transform', function(d) { return 'translate(' + projection(d.geometry.coordinates) + ')'; })
+              .attr('dy', '.35em')
+              .text(function(d) { return d.properties.name; });
+
+          //Aligning the place names
+          var placeNameMargin = 10;
+
+          states
+            .selectAll('.place-label')
+              .attr('x', function(d) { 
+                return d.geometry.coordinates[0] > belgianBorders['center'][0] ? placeNameMargin : -placeNameMargin; 
+              })
+              .style('text-anchor', function(d) { return d.geometry.coordinates[0] > belgianBorders['center'][0] ? 'start' : 'end'; });
+
+          states
+            .selectAll('.subunit-label')
+              .data(theFeatures.features)
+            .enter().append('text')
+              .attr('class', function(d) { return 'subunit-label ' + d.id; })
+              .attr('transform', function(d) { return 'translate(' + path.centroid(d) + ')'; })
+              .attr('dy', '.35em')
+              .text(function(d) { return d.properties.name; });
 
         }
         
