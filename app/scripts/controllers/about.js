@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name dataVisualizationsApp.controller:AboutCtrl
+ * @name dataVisualizationsApp.controllers.controller:AboutCtrl
  * @description
  * # AboutCtrl
  * Controller of the dataVisualizationsApp
  */
-angular.module('dataVisualizationsApp')
+angular.module('dataVisualizationsApp.controllers')
   .controller('AboutCtrl', function ($scope) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',

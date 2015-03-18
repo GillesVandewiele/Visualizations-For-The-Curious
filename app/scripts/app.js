@@ -15,7 +15,9 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ngTouch'
+    'ngTouch',
+    'dataVisualizationsApp.controllers',
+    'dataVisualizationsApp.directives'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -31,3 +33,7 @@ angular
         redirectTo: '/'
       });
   });
+
+angular.module('d3', []);  
+angular.module('dataVisualizationsApp.controllers', []);
+angular.module('dataVisualizationsApp.directives', ['d3']);

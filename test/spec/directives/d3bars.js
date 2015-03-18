@@ -1,9 +1,9 @@
 'use strict';
 
-describe('Directive: dvDataSelection', function () {
+describe('Directive: d3Bars', function () {
 
   // load the directive's module
-  beforeEach(module('dataVisualizationsApp'));
+  beforeEach(module('dataVisualizationsApp.directives'));
 
   var element,
     scope;
@@ -13,8 +13,8 @@ describe('Directive: dvDataSelection', function () {
   }));
 
   it('should make hidden element visible', inject(function ($compile) {
-    element = angular.element('<dv-data-selection></dv-data-selection>');
+    element = angular.element('<d3-bars></d3-bars>');
     element = $compile(element)(scope);
-    expect(element.text()).toBe('this is the dvDataSelection directive');
+    //expect(element.text()).toBe('this is the d3Bars directive');
   }));
 });

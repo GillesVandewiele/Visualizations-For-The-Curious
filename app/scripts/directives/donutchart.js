@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc directive
- * @name dataVisualizationsApp.directive:donutChart
+ * @name dataVisualizationsApp.directives.directive:donutChart
  * @description
  * # donutChart
  */
-angular.module('dataVisualizationsApp')
-  .directive('donutChart', function () {
+angular.module('dataVisualizationsApp.directives')
+  .directive('donutChart', ['d3', function(d3) {
     return {
       restrict: 'E',
       scope: { data: '=' },
@@ -33,7 +33,7 @@ angular.module('dataVisualizationsApp')
           .enter().append('path')
             .style('stroke', 'white')
             .attr('d', arc)
-            .attr('fill', function(d, i){ return color(i) });
+            .attr('fill', function(d, i){ return color(i); });
       }
     };
-  });
+  }]);
