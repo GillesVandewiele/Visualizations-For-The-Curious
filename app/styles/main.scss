@@ -4,6 +4,7 @@ $topPadding: 15px;
 $headerBgColor: #5f5f5f;
 $headerTextColor: #f5f5f5;
 $headerFontSize: 16px;
+$shadowAlpha: 0.6;
 
 // bower:scss
 @import "bootstrap-sass-official/assets/stylesheets/_bootstrap.scss";
@@ -11,6 +12,7 @@ $headerFontSize: 16px;
 
 @import "_layout.scss";
 @import "_map.scss";
+@import "compass/css3/box-shadow";
 
 /* Custom page header */
 .header {
@@ -19,6 +21,8 @@ $headerFontSize: 16px;
   background-color: $headerBgColor;
   color: $headerTextColor;
   font-size: $headerFontSize;
+
+  @include box-shadow(rgba(black,$shadowAlpha) 0 -5px 15px 0px inset);
 
   a {
     text-decoration: none;
@@ -34,6 +38,8 @@ $headerFontSize: 16px;
   color: $headerTextColor;
   border-top: 1px solid #000;
   background-color: $headerBgColor;
+
+  @include box-shadow(rgba(black,$shadowAlpha) 0 5px 15px 0px inset);
 }
 
 #ugentlogo{
