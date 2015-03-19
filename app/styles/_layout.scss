@@ -1,0 +1,79 @@
+$headerHeight: 50px;
+$footerHeight: 50px;
+$logoHeight: 100px;
+$logoPadding: 10px;
+$logoRowHeight: $logoHeight + 2 * $logoPadding;
+$titleRowHeight: 60px;
+$contentPadding: 15px;
+
+/* Generic pane rules */
+body { 
+	margin: 0;
+	padding: 0;
+}
+
+.layoutrow, .layoutcol { 
+	overflow: hidden; position: absolute; 
+}
+
+.layoutrow { 
+	left: 0; right: 0; 
+
+	&.content{
+		left: $contentPadding;
+		right: $contentPadding;
+		top: $headerHeight + $contentPadding;
+		bottom: $footerHeight + $contentPadding; 
+	}
+
+	&.header{
+		height: $headerHeight; top: 0; 
+	}
+
+	&.footer{ 
+		height: $footerHeight; bottom: 0; 
+	}
+
+	&.dvdataselection{
+		top:0;
+		bottom: $logoRowHeight;
+	}
+
+	&.logorow{
+		bottom: 0;
+		padding: $logoPadding;
+		height: $logoRowHeight;
+	}
+
+	&.titlerow{
+		height: $titleRowHeight;
+		top:0;
+	}
+
+	&.manualcontent{
+		top: $titleRowHeight;
+		bottom: 0;
+	}
+}
+
+.layoutcol { 
+	top: 0; bottom: 0; 
+
+	&.mainLeftCol{
+		left:0;
+		width:58%;
+	}
+
+	&.mainRightCol{
+		right:0;
+		width:38%;
+	}
+}
+
+.scroll-x { 
+	overflow-x: auto; 
+}
+.scroll-y { 
+	overflow-y: auto; 
+}
+
