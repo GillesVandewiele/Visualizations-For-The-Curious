@@ -4,6 +4,7 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/boots
 // endbower
 
 @import "_map.scss";
+@import "_manual.scss";
 
 .browsehappy {
   margin: 0.2em 0;
@@ -60,15 +61,6 @@ body {
   }
 }
 
-/* Supporting marketing content */
-.marketing {
-  margin: 40px 0;
-
-  p + h4 {
-    margin-top: 28px;
-  }
-}
-
 .row{
     margin-left: 0;
     margin-right: 0;
@@ -79,6 +71,25 @@ body {
         margin-left: -15px;
         margin-right: -15px;
     }
+}
+
+.borderless{
+  border: none;
+}
+
+.subtitle {
+  font-size: 150%;
+}
+
+.display-table{
+  display: table;
+  table-layout: fixed;
+}
+
+.display-cell{
+  display: table-cell;
+  vertical-align: middle;
+  float: none;
 }
 
 /* Responsive: Portrait tablets and up */
