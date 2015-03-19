@@ -47,9 +47,9 @@ angular.module('dataVisualizationsApp.directives')
           // 20 is for margins and can be changed
         height = scope.data.length * 35;
           // 35 = 30(bar height) + 5(margin between bars)
-        max = 98;
-          // this can also be found dynamically when the data is not static
-          // max = Math.max.apply(Math, _.map(data, ((val)-> val.count)))
+        //max = 98;
+        // this can also be found dynamically when the data is not static
+		max = d3.max(data, function(d) { return d.score; });
 
         // set the height based on the calculations above
         svg.attr('height', height);

@@ -1,0 +1,38 @@
+#belgiummap {
+  width: 100%;
+  border: solid 1px #ccc;
+  background: #eee;
+}
+
+.subunit {
+	stroke: #fff;
+
+	/*Brussels*/
+	&.BCR { fill: #ddc; }
+	/*Flanders*/
+	&.BFR { fill: #cdd; }
+	/*Walloon region*/
+	&.BWR { fill: #cdc; }
+}
+
+.subunit-boundary{
+	fill: none;
+
+	&.interior {
+	  stroke: #777;
+	  stroke-dasharray: 5,5;
+	  stroke-linejoin: round;
+	}
+
+	&.exterior {
+	  stroke: #000;
+	}
+}
+
+.subunit-label {
+  fill: #777;
+  fill-opacity: .5;
+  font-size: 20px;
+  font-weight: 300;
+  text-anchor: middle;
+}
