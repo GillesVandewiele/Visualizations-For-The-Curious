@@ -12,8 +12,8 @@
 					Dataset: 
 				</th>
 				<td> 
-					<select ng-model="selectedFile" ng-options="val for val in files">
-        				<option value="">Select</option>
+					<select class="form-control input-sm" ng-model="selectedFile" ng-options="val for val in files" required>
+        				<option value="">Add file..</option>
       				</select>
 					<!--<div ng-app="" ng-controller="FileLoader">
 						<select class="form-control input-sm" required>
@@ -30,7 +30,6 @@
 			<tr class="subtitle">
 				<td> 
 					Locations: <div class="iconcontainer"><span title="Give a location here" class="glyphicon glyphicon-question-sign"></span></div>
-					{{files}}
 				</td>
 				<td>
 				</td>
