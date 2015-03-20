@@ -5,24 +5,27 @@
 </div>
 <div class="row">
 	<div class="col-xs-8 col-md-8">
-		<table class="table table-responsive borderless">
-			<tr>
+		<table class="table-striped borderless">
+			<tr></tr>
+			<tr class="lastrow">
 				<th> 
 					Dataset: 
 				</th>
 				<td> 
-				 <select class="form-control input-sm">
-							<option value="one">One</option>
-							<option value="two">Two</option>
-							<option value="three">Three</option>
-							<option value="four">Four</option>
-							<option value="five">Five</option>
-					</select>
+					<!--<div ng-app="" ng-controller="FileLoader">-->
+						<select class="form-control input-sm" required>
+								<option value="one">One</option>
+								<option value="two">Two</option>
+								<option value="three">Three</option>
+								<option value="four">Four</option>
+								<option value="five">Five</option>
+						</select>
+					<!--</div>-->
 				</td>
 			</tr>
 
-			<tr>
-				<td class="subtitle"> 
+			<tr class="subtitle">
+				<td> 
 					Locations: 
 					<button type="button" class="btn btn-xs btn-info" title="Give a location here">
 						<span class="glyphicon glyphicon-question-sign"></span>
@@ -32,7 +35,9 @@
 				</td>
 			</tr>
 
-			<tr>
+			<tr></tr>
+
+			<tr class="lastrow">
 				<th>
 					Column:
 				</th>
@@ -48,21 +53,23 @@
 				</td>
 			</tr>
 
-			<tr>
-				<td class="subtitle"> 
+			<tr class="subtitle">
+				<td> 
 					Values: <button type="button" class="btn btn-xs btn-info" title="Give a value here"><span class="glyphicon glyphicon-question-sign" ></span></button>
 				</td>
 				<td> 
 				</td>
 			</tr>
 
+			<tr></tr>
+
 			<tr>
 				<th>
 					Column:
 				</th>
 
 				<td>
-				 <select class="form-control input-sm">
+				 <select class="form-control input-sm" required>
 							<option value="one">One</option>
 							<option value="two">Two</option>
 							<option value="three">Three</option>
@@ -72,7 +79,9 @@
 				</td>
 			</tr>
 
-			<tr>
+			<tr></tr>
+
+			<tr class="lastrow">
 				<th>
 					Aggregate by:
 				</th>
@@ -86,15 +95,17 @@
 							<option value="five">Five</option>
 					</select>
 				</td>
-			</tr>			
+			</tr>		
 
-			<tr>
-				<td class="subtitle"> 
-					Dates: <button type="button" class="btn btn-xs btn-info" title="Give the dates here"><span class="glyphicon glyphicon-question-sign" ></span></button>
+			<tr class="subtitle">
+				<td> 
+					Dates:<button type="button" class="btn btn-xs btn-info" title="Give the dates here"><span class="glyphicon glyphicon-question-sign" ></span></button>
 				</td>
 				<td> 
 				</td>
 			</tr>
+
+			<tr></tr>
 
 			<tr>
 				<th>
@@ -102,7 +113,7 @@
 				</th>
 
 				<td>
-				 <select class="form-control input-sm">
+				 <select class="form-control input-sm" required>
 							<option value="one">One</option>
 							<option value="two">Two</option>
 							<option value="three">Three</option>
@@ -112,7 +123,9 @@
 				</td>
 			</tr>
 
-			<tr>
+			<tr></tr>
+
+			<tr class="lastrow">
 				<th>
 					Group by:
 				</th>
@@ -137,7 +150,10 @@
 			<a href="#" class="list-group-item">Second item</a>
 			<a href="#" class="list-group-item">Third item</a>
 		</div>
-		<a href="#" class="btn btn-success"><span class="glyphicon glyphicon-ok-circle"></span> Finish</a>
+		<div class="btn-group">
+			<a href="#" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Add</a>
+			<a href="#" class="btn btn-success"><span class="glyphicon glyphicon-ok-circle"></span> Finish</a>
+		</div>
 	</div>
 
 </div>
