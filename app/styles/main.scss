@@ -48,10 +48,19 @@ $shadowAlpha: 0.6;
 
 .borderless{
   border: none;
+  padding: 20px;
+  margin: 25px 25px 25px 25px;
 }
 
 .subtitle {
   font-size: 150%;
+}
+
+.subtitle:after
+{
+    content:' ';
+    display:block;
+    border:2px solid black;
 }
 
 .display-table{
