@@ -2,17 +2,16 @@
 
 /**
  * @ngdoc function
- * @name dataVisualizationsApp.controllers.controller:MainCtrl
+ * @name dataVisualizationsApp.controller:DataselectionCtrl
  * @description
- * # MainCtrl
+ * # DataselectionCtrl
  * Controller of the dataVisualizationsApp
  */
-angular.module('dataVisualizationsApp.controllers')
-  .controller('MainCtrl', function ($scope) {
+angular.module('dataVisualizationsApp')
+  .controller('DataselectionCtrl', function ($scope) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
       'Karma'
     ];
   });
-

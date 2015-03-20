@@ -72,7 +72,7 @@ angular.module('dataVisualizationsApp.directives')
           var belgianBorders = {
             'lon':[2.2,6.9],
             'lat':[49.2,51.8]
-          }
+          };
           belgianBorders['center'] = [d3.mean(belgianBorders['lon']),d3.mean(belgianBorders['lat'])];
 
           var theFeatures = topojson.feature(_belgium, _belgium.objects.subunits);
