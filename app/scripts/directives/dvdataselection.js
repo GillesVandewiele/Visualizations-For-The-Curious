@@ -10,6 +10,7 @@ angular.module('dataVisualizationsApp.directives')
   .directive('dvDataSelection', function () {
     return {
       templateUrl: '/views/dvdataselection.html',
-      restrict: 'E'
+      restrict: 'E',
+      controller: 'DataselectionCtrl'
     };
   });
