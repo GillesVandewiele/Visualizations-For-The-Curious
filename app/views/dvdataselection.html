@@ -12,7 +12,10 @@
 					Dataset: 
 				</th>
 				<td> 
-					<!--<div ng-app="" ng-controller="FileLoader">-->
+					<select ng-model="selectedFile" ng-options="val for val in files">
+        				<option value="">Select</option>
+      				</select>
+					<!--<div ng-app="" ng-controller="FileLoader">
 						<select class="form-control input-sm" required>
 								<option value="one">One</option>
 								<option value="two">Two</option>
@@ -20,14 +23,14 @@
 								<option value="four">Four</option>
 								<option value="five">Five</option>
 						</select>
-					<!--</div>-->
+					-->
 				</td>
 			</tr>
 
 			<tr class="subtitle">
 				<td> 
 					Locations: <div class="iconcontainer"><span title="Give a location here" class="glyphicon glyphicon-question-sign"></span></div>
-					{{gerard}}
+					{{files}}
 				</td>
 				<td>
 				</td>

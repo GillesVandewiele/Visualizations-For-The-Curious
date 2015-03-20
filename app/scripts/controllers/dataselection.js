@@ -8,17 +8,21 @@
  * Controller of the dataVisualizationsApp
  */
 angular.module('dataVisualizationsApp.controllers')
-  .controller('DataselectionCtrl', function ($scope) {
-    $scope.gerard = 'zalig';
-    
-    $scope.url = "/data/files.json";
-    $scope.newFile = "";
-    $scope.files = []; 
-    console.log('received: ', $http.get($scope.url));
-    $scope.add = function(){
-    	$http.get($scope.url).then(function(response){
-    		$scope.newFile = response.data;//.queries.request.totalResults;
-            $scope.files.push($scope.newFile);
-    	});
-    };
-  });
+  .controller('DataselectionCtrl', ['$scope', '$http', function ($scope, $http) {
+
+    $http.get('data/files.json').
+	  success(function(data, status, headers, config) {
+	    // this callback will be called asynchronously
+	    // when the response is available
+    	$scope.files = []; 
+	    for(var file in data.Files) {
+	    	$scope.files.push(data.Files[file].Name)
+	    }
+	    $scope.selectedFile = $scope.files[0];
+	  }).
+	  error(function(data, status, headers, config) {
+	    // called asynchronously if an error occurs
+	    // or server returns response with an error status.
+	  });
+
+  }]);
