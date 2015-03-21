@@ -2,12 +2,12 @@
 	"Files":  [
 		{
 			"Name": "verkeerstijden",
-			"Path": "/data/Weginfo_daily.json",
+			"Path": "data/Weginfo_daily.json",
 			"Columns": ["Locatie","Vertraging","Tijdstip"]
 		},
 		{
 			"Name": "weerdata",
-			"Path": "/data/KMI_daily.json",
+			"Path": "data/KMI_daily.json",
 			"Columns": ["Locatie","Temperatuur","Luchtvochtigheid","Tijdstip"]
 		}
 	]
