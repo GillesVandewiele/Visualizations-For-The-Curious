@@ -2,41 +2,13 @@
 	"Files":  [
 		{
 			"Name": "verkeerstijden",
-			"Columns":  [
-				{
-					"Colname": "Locatie",
-					"Type": "Location"
-				},
-				{
-					"Colname": "Vertraging",
-					"Type": "Value"
-				},
-				{
-					"Colname": "Tijdstip",
-					"Type": "Date"
-				}
-			] 
+			"Path": "/data/Weginfo_daily.json",
+			"Columns": ["Locatie","Vertraging","Tijdstip"]
 		},
 		{
 			"Name": "weerdata",
-			"Columns":  [
-				{
-					"Colname": "Locatie",
-					"Type": "Location"
-				},
-				{
-					"Colname": "Temperatuur",
-					"Type": "Value"
-				},
-				{
-					"Colname": "Luchtvochtigheid",
-					"Type": "Value"
-				},
-				{
-					"Colname": "Tijdstip",
-					"Type": "Date"
-				}
-			] 
+			"Path": "/data/KMI_daily.json",
+			"Columns": ["Locatie","Temperatuur","Luchtvochtigheid","Tijdstip"]
 		}
 	]
 }
