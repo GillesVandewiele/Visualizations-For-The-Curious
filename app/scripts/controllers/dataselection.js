@@ -1,5 +1,16 @@
 'use strict';
 
+/*
+	TODO:
+		- ERROR HANDLING (HTTP ERRORS + USER INPUT ERRORS)
+		- VALIDATE COLUMNS
+		- PASS THROUGH REQUIRED INFORMATION IN ORDER TO VISUALIZE EVERYTHING
+		- LET USER ADD HIS OWN FILES
+
+		- CLEAN UP CODE
+		- WRITE TEST?
+*/
+
 /**
  * @ngdoc function
  * @name dataVisualizationsApp.controller:DataselectionCtrl
@@ -92,7 +103,7 @@ angular.module('dataVisualizationsApp.controllers')
 	    // TODO: show an error message on the homepage
 	  });
 
-	// This function is called when the user presses the 'Add' button and adds a dataset to a list to be downloaded later on.
+	// This function is called when the user presses the '+' button and adds a dataset to a list to be downloaded later on.
 	$scope.addDataset = function(){
 		if($scope.userDatasets.length < MAX_DATASETS){
 			if(containsDataset($scope.currentDataset, $scope.userDatasets) == -1){
@@ -106,24 +117,18 @@ angular.module('dataVisualizationsApp.controllers')
 		}
 	};
 
+	// This function is called when the user presses the '-' button and removes the selected dataset.
 	$scope.removeDataset = function(){
 		$scope.userDatasets.splice(containsDataset($scope.currentDataset, $scope.userDatasets), 1);
 	}
 
+	// Function is called when the user clicks an element in the list of datasets
 	$scope.changeDataset = function(obj){
 		$scope.currentDataset = obj;
 		$scope.selectedFile = obj.name;
 	}
 
-	/*var Lst;
-
-	function changeClass(obj){
-		if (Lst) Lst.className='list-group-item';
-		obj.className+=' active';
-		Lst=obj;
-	}*/
-
-  	// This function is called when the user presses the 'Finish' button and downloads all datasets from the list.
+  	// This function is called when the user presses the 'V' button and downloads all datasets from the list.
 	$scope.downloadData = function(){
 		if($scope.fileData != null){
 			for(var i = 0; i < $scope.userDatasets.length; i++){
@@ -140,7 +145,3 @@ angular.module('dataVisualizationsApp.controllers')
 	};
 
   }]);
-
-	
-
-
