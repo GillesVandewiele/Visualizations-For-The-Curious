@@ -8,6 +8,12 @@
 angular.module('dataVisualizationsApp.controllers')
   .controller('DataselectionCtrl', ['$scope', '$http', function ($scope, $http) {
 
+  	/****************** CONSTANTS ********************/
+
+  		var MAX_DATASETS = 3;
+
+  	/*************************************************/
+
   	/****** VARIABLES USED IN START SCREEN VIEW ******/
 
   		$scope.fileData = null; // The data stored in files.json on the server
@@ -24,6 +30,8 @@ angular.module('dataVisualizationsApp.controllers')
 
   	/*************************************************/
 
+  	/************* PRIVATE FUNCTIONS *****************/
+
   	// Private function to create a dataset (which has a lot of properties)
   	var updateDataset = function(data, index){
   		return {name:data[index].Name, columns:data[index].Columns, location:data[index].Columns[0],
@@ -31,9 +39,22 @@ angular.module('dataVisualizationsApp.controllers')
 			path: data[index].Path, aggregation:$scope.aggregations[0], grouping:$scope.grouping[0]};
   	};
 
+  	// Private function to check if two specified datasets are not unique
   	var datasetTracker = function(dataset){
   		return dataset.name + dataset.location + dataset.value + dataset.date + dataset.aggregation + dataset.grouping;
-  	}
+  	};
+
+  	// Check if dataset is in userDatasets using datasetTracker
+	var containsDataset = function(dataset, userDatasets){
+		for(var i = 0; i < userDatasets.length; i++){
+			if(datasetTracker(userDatasets[i]) == datasetTracker(dataset)){
+				return i;
+			}
+		}
+		return -1;
+	}
+
+  	/************************************************/
 
     $http.get('data/files.json').
 	  success(function(data, status, headers, config) {  
@@ -73,21 +94,34 @@ angular.module('dataVisualizationsApp.controllers')
 
 	// This function is called when the user presses the 'Add' button and adds a dataset to a list to be downloaded later on.
 	$scope.addDataset = function(){
-		var contains = false;
-		for(var i = 0; i < $scope.userDatasets.length; i++){
-			if(datasetTracker($scope.userDatasets[i]) == datasetTracker($scope.currentDataset)){
-				contains = true;
+		if($scope.userDatasets.length < MAX_DATASETS){
+			if(containsDataset($scope.currentDataset, $scope.userDatasets) == -1){
+				var copy = jQuery.extend(true, {}, $scope.currentDataset);
+				$scope.userDatasets.push(copy);
+			} else {
+				// TODO: write error message that it is already in the list
 			}
-		}
-		if(!contains){
-			var copy = jQuery.extend(true, {}, $scope.currentDataset);
-			$scope.userDatasets.push(copy);
+		} else {
+			// TODO: write error message that maximum 3 different datasets are allowed
 		}
 	};
 
 	$scope.removeDataset = function(){
-
+		$scope.userDatasets.splice(containsDataset($scope.currentDataset, $scope.userDatasets), 1);
 	}
+
+	$scope.changeDataset = function(obj){
+		$scope.currentDataset = obj;
+		$scope.selectedFile = obj.name;
+	}
+
+	/*var Lst;
+
+	function changeClass(obj){
+		if (Lst) Lst.className='list-group-item';
+		obj.className+=' active';
+		Lst=obj;
+	}*/
 
   	// This function is called when the user presses the 'Finish' button and downloads all datasets from the list.
 	$scope.downloadData = function(){
@@ -102,9 +136,11 @@ angular.module('dataVisualizationsApp.controllers')
 				    	// TODO: show an error message on the homepage
 					});
 			}
-		} else {
-			// TODO: show an error message on the homepage
 		}
 	};
 
   }]);
+
+	
+
+
