@@ -12,18 +12,11 @@
 					Dataset: 
 				</th>
 				<td> 
-					<select class="form-control input-sm" ng-model="selectedFile" ng-options="val for val in files" required>
+					<select class="form-control input-sm" ng-model="selectedFile" data-ng-change="populateDropdowns()" required>
+						<!-- ng-repeat is used instead of ng-options because I wanted Add file.. to be in the back for consistent indexing -->
+						<option ng-repeat="file in files">{{file}}</option>
         				<option value="">Add file..</option>
       				</select>
-					<!--<div ng-app="" ng-controller="FileLoader">
-						<select class="form-control input-sm" required>
-								<option value="one">One</option>
-								<option value="two">Two</option>
-								<option value="three">Three</option>
-								<option value="four">Four</option>
-								<option value="five">Five</option>
-						</select>
-					-->
 				</td>
 			</tr>
 
@@ -43,13 +36,7 @@
 				</th>
 
 				<td>
-				 <select class="form-control input-sm">
-							<option value="one">One</option>
-							<option value="two">Two</option>
-							<option value="three">Three</option>
-							<option value="four">Four</option>
-							<option value="five">Five</option>
-					</select>
+				 	<select class="form-control input-sm" ng-model="selectedLocationColumn" ng-options="column for column in columns"></select>
 				</td>
 			</tr>
 
@@ -69,13 +56,7 @@
 				</th>
 
 				<td>
-				 <select class="form-control input-sm" required>
-							<option value="one">One</option>
-							<option value="two">Two</option>
-							<option value="three">Three</option>
-							<option value="four">Four</option>
-							<option value="five">Five</option>
-					</select>
+					<select class="form-control input-sm" ng-model="selectedValueColumn" ng-options="column for column in columns"></select>
 				</td>
 			</tr>
 
@@ -87,13 +68,7 @@
 				</th>
 
 				<td>
-				 <select class="form-control input-sm">
-							<option value="one">One</option>
-							<option value="two">Two</option>
-							<option value="three">Three</option>
-							<option value="four">Four</option>
-							<option value="five">Five</option>
-					</select>
+					<select class="form-control input-sm" ng-model="selectedAggregation" ng-options="aggregation for aggregation in aggregations"></select>
 				</td>
 			</tr>		
 
@@ -113,13 +88,7 @@
 				</th>
 
 				<td>
-				 <select class="form-control input-sm" required>
-							<option value="one">One</option>
-							<option value="two">Two</option>
-							<option value="three">Three</option>
-							<option value="four">Four</option>
-							<option value="five">Five</option>
-					</select>				
+					<select class="form-control input-sm" ng-model="selectedDateColumn" ng-options="column for column in columns"></select>				
 				</td>
 			</tr>
 
@@ -131,13 +100,7 @@
 				</th>
 
 				<td>
-				 <select class="form-control input-sm">
-							<option value="one">One</option>
-							<option value="two">Two</option>
-							<option value="three">Three</option>
-							<option value="four">Four</option>
-							<option value="five">Five</option>
-					</select>
+					<select class="form-control input-sm" ng-model="selectedGrouping" ng-options="group for group in grouping"></select>
 				</td>
 			</tr>
 
@@ -145,14 +108,21 @@
 	</div>
 
 	<div class="col-xs-4 col-md-4">
-		<div class="list-group">
-			<a href="#" class="list-group-item active">First item</a>
-			<a href="#" class="list-group-item">Second item</a>
-			<a href="#" class="list-group-item">Third item</a>
+		<div class="row">
+			<div class="list-group">
+				<a href="#" class="list-group-item active">First item</a>
+				<a href="#" class="list-group-item">Second item</a>
+				<a href="#" class="list-group-item">Third item</a>
+			</div>
+			<div class="btn-group" style="width: 100%;">
+				<a href="#" class="btn btn-default" style="width: 50%;"><span class="glyphicon glyphicon-plus"></span> Add</a>
+				<a href="#" class="btn btn-default" style="width: 50%;"><span class="glyphicon glyphicon-minus"></span> Remove</a>
+			</div>
 		</div>
-		<div class="btn-group">
-			<a href="#" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Add</a>
-			<a href="#" class="btn btn-success"><span class="glyphicon glyphicon-ok-circle"></span> Finish</a>
+		<div class="row" style="padding-top:150px;">
+			<div class="btn-group" style="width: 100%;">		
+				<a href="#" class="btn btn-success" style="float:right; width: 50%;"><span class="glyphicon glyphicon-ok-circle"></span> Finish</a>
+			</div>
 		</div>
 	</div>
 
