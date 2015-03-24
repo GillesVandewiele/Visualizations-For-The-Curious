@@ -18,11 +18,18 @@
 				<td> 
 
 					<div class="dropdown">
-					  	<input type="button" value="Select a dataset" class="btn btn-default dropdown-toggle" type="button" id="datasetMenu" data-toggle="dropdown" aria-expanded="true">
+				  		<input type="button" value="Select a dataset" class="form-control input-sm" type="button" id="datasetMenu" data-toggle="dropdown" aria-expanded="true">
 					  <ul class="dropdown-menu" role="menu" aria-labelledby="datasetMenu">
 					  	<!-- ng-repeat is used instead of ng-options because I wanted Add file.. to be in the back for consistent indexing -->
 						<li role="presentation" ng-repeat="dataset in datasets"><a role="menuitem" ng-click="updateDataset(dataset.name)">{{dataset.name}}</a></li>
-						<li role="presentation"><input type="file" accept=".json"></li>
+						<li role="presentation"> 
+							<div class="inputWrapper">
+								<label for="userFile" class="customFileUpload">
+								    Add file..
+								</label>
+								<input class="uploadFile" id="userFile" type="file" accept=".json">
+							</div> 
+						</li>
 					  </ul>
 					</div>
 					<!--<select class="form-control input-sm" ng-model="selectedFile" data-ng-change="populateDropdowns()" required>-->

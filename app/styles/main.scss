@@ -101,3 +101,24 @@ tr.lastrow > td
 .close{
   float:right;
 }
+
+#datasetMenu{
+  text-align: left;
+}
+
+input[type=file]{ 
+  display:none;
+}
+
+.customFileUpload{
+  padding: 3px 20px;
+  margin-bottom: 0;
+  color: #333;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+}
