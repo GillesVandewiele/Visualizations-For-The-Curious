@@ -13,14 +13,23 @@
 			<tr></tr>
 			<tr class="lastrow">
 				<th> 
-					Dataset: 
+					Dataset:
 				</th>
 				<td> 
-					<select class="form-control input-sm" ng-model="selectedFile" data-ng-change="populateDropdowns()" required>
+
+					<div class="dropdown">
+					  	<input type="button" value="Select a dataset" class="btn btn-default dropdown-toggle" type="button" id="datasetMenu" data-toggle="dropdown" aria-expanded="true">
+					  <ul class="dropdown-menu" role="menu" aria-labelledby="datasetMenu">
+					  	<!-- ng-repeat is used instead of ng-options because I wanted Add file.. to be in the back for consistent indexing -->
+						<li role="presentation" ng-repeat="dataset in datasets"><a role="menuitem" ng-click="updateDataset(dataset.name)">{{dataset.name}}</a></li>
+						<li role="presentation"><input type="file" accept=".json"></li>
+					  </ul>
+					</div>
+					<!--<select class="form-control input-sm" ng-model="selectedFile" data-ng-change="populateDropdowns()" required>-->
 						<!-- ng-repeat is used instead of ng-options because I wanted Add file.. to be in the back for consistent indexing -->
-						<option ng-repeat="dataset in datasets">{{dataset.name}}</option>
-        				<option value="">Add file..</option>
-      				</select>
+						<!--<option ng-repeat="dataset in datasets">{{dataset.name}}</option>
+        				<option value="" id="fileExplorer">Add file..</option>  
+      				</select>--> 
 				</td>
 			</tr>
 

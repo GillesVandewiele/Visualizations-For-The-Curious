@@ -93,21 +93,26 @@ angular.module('dataVisualizationsApp.controllers')
 	    $scope.currentDataset = updateDataset(data.Files, 0);
 	    $scope.selectedFile = $scope.files[0];
 
-	    // Based on the selection of dataset, we populate the other dropdowns
-	    $scope.populateDropdowns = function(){
-			var indexSelectedDataset = $scope.files.indexOf($scope.selectedFile);
-			// If the index is equal to -1, 'Add file..' was selected
-			if(indexSelectedDataset != -1){
-				$scope.currentDataset = updateDataset(data.Files, indexSelectedDataset);
-			} else {
-				// TODO: Open a file browser so that the user can select a file to load
-				$scope.currentDataset.columns=[];
-			}
-		};
 	  }).
 	  error(function(data, status, headers, config) {
 	  	showErrorMessage("We were unable to retrieve files.json from the server.");
 	  });
+
+	// Based on the selection of dataset, we populate the other dropdowns
+	$scope.$watch('selectedFile', function(){
+    	if($scope.fileData != null){
+			var indexSelectedDataset = $scope.files.indexOf($scope.selectedFile);
+			console.log("Selected file = ", $scope.selectedFile);
+			// If the index is equal to -1, 'Add file..' was selected
+			if(indexSelectedDataset != -1){
+				$scope.currentDataset = updateDataset($scope.fileData.Files, indexSelectedDataset);
+			} else {
+				console.log("Add file selected");
+				showFileExplorer();
+				$scope.currentDataset.columns=[];
+			}
+		}
+	});
 
 	// This function is called when the user presses the '+' button and adds a dataset to a list to be downloaded later on.
 	$scope.addDataset = function(){
@@ -122,6 +127,11 @@ angular.module('dataVisualizationsApp.controllers')
 			showErrorMessage("We support only up to three datasets!");
 		}
 	};
+
+	$scope.updateDataset=function(value){
+		$scope.selectedFile = value
+    	document.getElementById("datasetMenu").value = value;
+	}
 
 	// This function is called when the user presses the '-' button and removes the selected dataset.
 	$scope.removeDataset = function(){
@@ -160,4 +170,10 @@ var show = function(target) {
 
 var hide = function(target) {
     document.getElementById(target).style.display = 'none';
+}
+
+var showFileExplorer = function(target){
+	$('#fileExplorer').fileTree({ root: '/' }, function(file) {
+        alert(file);
+    });
 }
