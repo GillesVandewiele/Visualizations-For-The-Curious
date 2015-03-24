@@ -39,6 +39,8 @@ angular.module('dataVisualizationsApp.controllers')
 	  	$scope.userDatasets = []; // The defined datasets by the user
 	  	$scope.currentDataset;
 
+	  	$scope.errorMessage = ""; // Used to show all errors
+
   	/*************************************************/
 
   	/************* PRIVATE FUNCTIONS *****************/
@@ -65,6 +67,12 @@ angular.module('dataVisualizationsApp.controllers')
 		return -1;
 	}
 
+	// Private function to show an error message on top of the page
+	var showErrorMessage = function(message){
+		show('alert');
+		$scope.errorMessage = message;
+	}
+
   	/************************************************/
 
     $http.get('data/files.json').
@@ -84,7 +92,6 @@ angular.module('dataVisualizationsApp.controllers')
 	    }
 	    $scope.currentDataset = updateDataset(data.Files, 0);
 	    $scope.selectedFile = $scope.files[0];
-	   	console.log("Current Dataset = ", $scope.currentDataset);
 
 	    // Based on the selection of dataset, we populate the other dropdowns
 	    $scope.populateDropdowns = function(){
@@ -92,7 +99,6 @@ angular.module('dataVisualizationsApp.controllers')
 			// If the index is equal to -1, 'Add file..' was selected
 			if(indexSelectedDataset != -1){
 				$scope.currentDataset = updateDataset(data.Files, indexSelectedDataset);
-				console.log("Current Dataset = ", $scope.currentDataset);
 			} else {
 				// TODO: Open a file browser so that the user can select a file to load
 				$scope.currentDataset.columns=[];
@@ -100,7 +106,7 @@ angular.module('dataVisualizationsApp.controllers')
 		};
 	  }).
 	  error(function(data, status, headers, config) {
-	    // TODO: show an error message on the homepage
+	  	showErrorMessage("We were unable to retrieve files.json from the server.");
 	  });
 
 	// This function is called when the user presses the '+' button and adds a dataset to a list to be downloaded later on.
@@ -110,10 +116,10 @@ angular.module('dataVisualizationsApp.controllers')
 				var copy = jQuery.extend(true, {}, $scope.currentDataset);
 				$scope.userDatasets.push(copy);
 			} else {
-				// TODO: write error message that it is already in the list
+				showErrorMessage("The list already contains this dataset with these columns!");
 			}
 		} else {
-			// TODO: write error message that maximum 3 different datasets are allowed
+			showErrorMessage("We support only up to three datasets!");
 		}
 	};
 
@@ -138,10 +144,20 @@ angular.module('dataVisualizationsApp.controllers')
 			  			// TODO: validate all columns
 			  		}).
 			  		error(function(data, status, headers, config) {
-				    	// TODO: show an error message on the homepage
+				    	showErrorMessage("We were unable to download the requested data.");
 					});
 			}
 		}
 	};
 
   }]);
+
+
+// The two functions below are to show and hide the error message box.
+var show = function(target) {
+    document.getElementById(target).style.display = 'block';
+}
+
+var hide = function(target) {
+    document.getElementById(target).style.display = 'none';
+}

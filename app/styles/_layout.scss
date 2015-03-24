@@ -13,7 +13,8 @@ body {
 }
 
 .layoutrow, .layoutcol { 
-	overflow: hidden; position: absolute; 
+	position: absolute; 
+	overflow-y: auto;
 }
 
 .layoutrow { 
