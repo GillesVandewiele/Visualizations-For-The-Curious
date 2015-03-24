@@ -1,5 +1,16 @@
 'use strict';
 
+/*
+	TODO:
+		- ERROR HANDLING (HTTP ERRORS + USER INPUT ERRORS)
+		- VALIDATE COLUMNS
+		- PASS THROUGH REQUIRED INFORMATION IN ORDER TO VISUALIZE EVERYTHING
+		- LET USER ADD HIS OWN FILES
+
+		- CLEAN UP CODE
+		- WRITE TEST?
+*/
+
 /**
  * @ngdoc function
  * @name dataVisualizationsApp.controller:DataselectionCtrl
@@ -28,6 +39,8 @@ angular.module('dataVisualizationsApp.controllers')
 	  	$scope.userDatasets = []; // The defined datasets by the user
 	  	$scope.currentDataset;
 
+	  	$scope.errorMessage = ""; // Used to show all errors
+
   	/*************************************************/
 
   	/************* PRIVATE FUNCTIONS *****************/
@@ -54,6 +67,12 @@ angular.module('dataVisualizationsApp.controllers')
 		return -1;
 	}
 
+	// Private function to show an error message on top of the page
+	var showErrorMessage = function(message){
+		show('alert');
+		$scope.errorMessage = message;
+	}
+
   	/************************************************/
 
     $http.get('data/files.json').
@@ -73,57 +92,59 @@ angular.module('dataVisualizationsApp.controllers')
 	    }
 	    $scope.currentDataset = updateDataset(data.Files, 0);
 	    $scope.selectedFile = $scope.files[0];
-	   	console.log("Current Dataset = ", $scope.currentDataset);
 
-	    // Based on the selection of dataset, we populate the other dropdowns
-	    $scope.populateDropdowns = function(){
-			var indexSelectedDataset = $scope.files.indexOf($scope.selectedFile);
-			// If the index is equal to -1, 'Add file..' was selected
-			if(indexSelectedDataset != -1){
-				$scope.currentDataset = updateDataset(data.Files, indexSelectedDataset);
-				console.log("Current Dataset = ", $scope.currentDataset);
-			} else {
-				// TODO: Open a file browser so that the user can select a file to load
-				$scope.currentDataset.columns=[];
-			}
-		};
 	  }).
 	  error(function(data, status, headers, config) {
-	    // TODO: show an error message on the homepage
+	  	showErrorMessage("We were unable to retrieve files.json from the server.");
 	  });
 
-	// This function is called when the user presses the 'Add' button and adds a dataset to a list to be downloaded later on.
+	// Based on the selection of dataset, we populate the other dropdowns
+	$scope.$watch('selectedFile', function(){
+    	if($scope.fileData != null){
+			var indexSelectedDataset = $scope.files.indexOf($scope.selectedFile);
+			console.log("Selected file = ", $scope.selectedFile);
+			// If the index is equal to -1, 'Add file..' was selected
+			if(indexSelectedDataset != -1){
+				$scope.currentDataset = updateDataset($scope.fileData.Files, indexSelectedDataset);
+			} else {
+				console.log("Add file selected");
+				showFileExplorer();
+				$scope.currentDataset.columns=[];
+			}
+		}
+	});
+
+	// This function is called when the user presses the '+' button and adds a dataset to a list to be downloaded later on.
 	$scope.addDataset = function(){
 		if($scope.userDatasets.length < MAX_DATASETS){
 			if(containsDataset($scope.currentDataset, $scope.userDatasets) == -1){
 				var copy = jQuery.extend(true, {}, $scope.currentDataset);
 				$scope.userDatasets.push(copy);
 			} else {
-				// TODO: write error message that it is already in the list
+				showErrorMessage("The list already contains this dataset with these columns!");
 			}
 		} else {
-			// TODO: write error message that maximum 3 different datasets are allowed
+			showErrorMessage("We support only up to three datasets!");
 		}
 	};
 
+	$scope.updateDataset=function(value){
+		$scope.selectedFile = value
+    	document.getElementById("datasetMenu").value = value;
+	}
+
+	// This function is called when the user presses the '-' button and removes the selected dataset.
 	$scope.removeDataset = function(){
 		$scope.userDatasets.splice(containsDataset($scope.currentDataset, $scope.userDatasets), 1);
 	}
 
+	// Function is called when the user clicks an element in the list of datasets
 	$scope.changeDataset = function(obj){
 		$scope.currentDataset = obj;
 		$scope.selectedFile = obj.name;
 	}
 
-	/*var Lst;
-
-	function changeClass(obj){
-		if (Lst) Lst.className='list-group-item';
-		obj.className+=' active';
-		Lst=obj;
-	}*/
-
-  	// This function is called when the user presses the 'Finish' button and downloads all datasets from the list.
+  	// This function is called when the user presses the 'V' button and downloads all datasets from the list.
 	$scope.downloadData = function(){
 		if($scope.fileData != null){
 			for(var i = 0; i < $scope.userDatasets.length; i++){
@@ -133,7 +154,7 @@ angular.module('dataVisualizationsApp.controllers')
 			  			// TODO: validate all columns
 			  		}).
 			  		error(function(data, status, headers, config) {
-				    	// TODO: show an error message on the homepage
+				    	showErrorMessage("We were unable to download the requested data.");
 					});
 			}
 		}
@@ -141,6 +162,18 @@ angular.module('dataVisualizationsApp.controllers')
 
   }]);
 
-	
 
+// The two functions below are to show and hide the error message box.
+var show = function(target) {
+    document.getElementById(target).style.display = 'block';
+}
 
+var hide = function(target) {
+    document.getElementById(target).style.display = 'none';
+}
+
+var showFileExplorer = function(target){
+	$('#fileExplorer').fileTree({ root: '/' }, function(file) {
+        alert(file);
+    });
+}
