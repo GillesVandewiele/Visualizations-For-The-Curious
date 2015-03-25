@@ -29,11 +29,15 @@ angular
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl'
       })
+      .when('/visualizations', {
+        templateUrl: 'views/visualizations.html'
+      })
       .otherwise({
         redirectTo: '/'
       });
   });
 
-angular.module('d3', []);  
+angular.module('d3', []);
+angular.module('topojson', []);
 angular.module('dataVisualizationsApp.controllers', []);
-angular.module('dataVisualizationsApp.directives', ['d3']);
+angular.module('dataVisualizationsApp.directives', ['d3','topojson']);
