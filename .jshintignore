@@ -1,1 +1,1 @@
-app/scripts/services/d3.js
+app/scripts/vendor/*.js
