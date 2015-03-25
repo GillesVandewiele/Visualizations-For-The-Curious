@@ -1,0 +1,620 @@
+{
+ "locations": [
+  {
+   "long": 4.8769847282413,
+   "address": "Daussoulx, Namur, Wallonie, 5020, België - Belgique - Belgien",
+   "nr": 0,
+   "routes": [
+    0,
+    48
+   ],
+   "lat": 50.51724395
+  },
+  {
+   "long": 4.3998268,
+   "address": "Boulevard Auguste Reyers - Auguste Reyerslaan, Schaerbeek - Schaarbeek, Bruxelles-Capitale - Brussel-Hoofdstad, Bruxelles-Capitale - Brussels Hoofdstedelijk Gewest, 1030, België - Belgique - Belgien",
+   "nr": 14,
+   "routes": [
+    7,
+    12,
+    28,
+    32,
+    37,
+    47,
+    86,
+    89
+   ],
+   "lat": 50.8532835
+  },
+  {
+   "long": 5.5846274,
+   "address": "Vottem, Liège, Wallonie, België - Belgique - Belgien",
+   "nr": 2,
+   "routes": [
+    1,
+    16
+   ],
+   "lat": 50.672653
+  },
+  {
+   "long": 5.3234358,
+   "address": "Hasselt Zuid, E313, Runkst, Hasselt, Limburg, Vlaanderen, 3500, België - Belgique - Belgien",
+   "nr": 3,
+   "routes": [
+    1,
+    16,
+    85,
+    90
+   ],
+   "lat": 50.9159492
+  },
+  {
+   "long": 4.4331389,
+   "address": "Auderghem - Oudergem, Bruxelles-Capitale - Brussel-Hoofdstad, Bruxelles-Capitale - Brussels Hoofdstedelijk Gewest, 1160, België - Belgique - Belgien",
+   "nr": 1,
+   "routes": [
+    0,
+    48
+   ],
+   "lat": 50.8156571
+  },
+  {
+   "long": 4.421096,
+   "address": "Antwerpen-Noord, Havenweg, Luchtbal, Antwerpen, Vlaanderen, 2000;2018;2020;2030;2040;2050;2060;2100;2140;2170;2180;2600;2610;2660, België - Belgique - Belgien",
+   "nr": 35,
+   "routes": [
+    30,
+    31,
+    43,
+    50,
+    75,
+    83
+   ],
+   "lat": 51.2640889
+  },
+  {
+   "long": 4.26356683723395,
+   "address": "Groot-Bijgaarden, Dilbeek, Halle-Vilvoorde, Vlaams-Brabant, Vlaanderen, 1702, België - Belgique - Belgien",
+   "nr": 4,
+   "routes": [
+    2,
+    10,
+    21,
+    22,
+    38,
+    40
+   ],
+   "lat": 50.8714357
+  },
+  {
+   "long": 3.0902953889402,
+   "address": "Jabbeke, Brugge, West-Vlaanderen, Vlaanderen, 8490, België - Belgique - Belgien",
+   "nr": 42,
+   "routes": [
+    39,
+    74
+   ],
+   "lat": 51.1846386
+  },
+  {
+   "long": 3.7022160043217,
+   "address": "Zwijnaarde, Gent, Oost-Vlaanderen, Vlaanderen, 9052, België - Belgique - Belgien",
+   "nr": 5,
+   "routes": [
+    2,
+    4,
+    11,
+    40,
+    44,
+    45,
+    54,
+    70
+   ],
+   "lat": 50.99905035
+  },
+  {
+   "long": 3.27841539175542,
+   "address": "Kortrijk, West-Vlaanderen, Vlaanderen, 8500;8501;8510;8511, België - Belgique - Belgien",
+   "nr": 8,
+   "routes": [
+    4
+   ],
+   "lat": 50.81788085
+  },
+  {
+   "long": 4.3487134,
+   "address": "Laeken / Laken, Laeken - Laken, Bruxelles-Capitale - Brussel-Hoofdstad, Bruxelles-Capitale - Brussels Hoofdstedelijk Gewest, 1020, België - Belgique - Belgien",
+   "nr": 7,
+   "routes": [
+    3,
+    92
+   ],
+   "lat": 50.883392
+  },
+  {
+   "long": 6.4249003,
+   "address": "Prüm, Eifelkreis Bitburg-Prüm, Rheinland-Pfalz, Deutschland",
+   "nr": 28,
+   "routes": [
+    23,
+    73
+   ],
+   "lat": 50.2069481
+  },
+  {
+   "long": 4.4159475,
+   "address": "Antwerpen-Zuid, Lode Craeybeckxtunnel, Middelheim, Antwerpen, Vlaanderen, 2000;2018;2020;2030;2040;2050;2060;2100;2140;2170;2180;2600;2610;2660, België - Belgique - Belgien",
+   "nr": 6,
+   "routes": [
+    3,
+    14,
+    62,
+    92
+   ],
+   "lat": 51.1858445
+  },
+  {
+   "long": 4.43067846239252,
+   "address": "Thiméon, Pont-à-Celles, Charleroi, Hainaut, Wallonie, 6230, België - Belgique - Belgien",
+   "nr": 48,
+   "routes": [
+    53,
+    60,
+    65,
+    93
+   ],
+   "lat": 50.4842821
+  },
+  {
+   "long": 3.2082431,
+   "address": "Lissewege, Zeebrugge, Brugge, West-Vlaanderen, Vlaanderen, België - Belgique - Belgien",
+   "nr": 27,
+   "routes": [
+    20,
+    72
+   ],
+   "lat": 51.3316389
+  },
+  {
+   "long": 5.1917136,
+   "address": "Lummen, Hasselt, Limburg, Vlaanderen, 3560, België - Belgique - Belgien",
+   "nr": 9,
+   "routes": [
+    5,
+    12,
+    28,
+    71,
+    76,
+    78,
+    91,
+    94
+   ],
+   "lat": 50.986447
+  },
+  {
+   "long": 4.4536952,
+   "address": "Antwerpen-Oost, E34-E313, Borgerhout, Antwerpen, Vlaanderen, 2140, België - Belgique - Belgien",
+   "nr": 10,
+   "routes": [
+    5,
+    52,
+    58,
+    66,
+    67,
+    78,
+    79,
+    81,
+    85,
+    90
+   ],
+   "lat": 51.2166911
+  },
+  {
+   "long": 4.9519869,
+   "address": "Steenweg op Zevendonk, Zevendonk, Turnhout, Antwerpen, Vlaanderen, 2300, België - Belgique - Belgien",
+   "nr": 17,
+   "routes": [
+    9,
+    58,
+    67,
+    69
+   ],
+   "lat": 51.2978294
+  },
+  {
+   "long": 4.29647195135907,
+   "address": "Haut-Ittre, Ittre, Nivelles, Brabant wallon, Wallonie, 1461, België - Belgique - Belgien",
+   "nr": 11,
+   "routes": [
+    6,
+    10,
+    19,
+    24,
+    38,
+    53,
+    57,
+    60
+   ],
+   "lat": 50.6488039
+  },
+  {
+   "long": 4.56375636140093,
+   "address": "Ranst, Antwerpen, Vlaanderen, 2520, België - Belgique - Belgien",
+   "nr": 18,
+   "routes": [
+    9,
+    69
+   ],
+   "lat": 51.1961732
+  },
+  {
+   "long": 4.4649854,
+   "address": "Carrefour Léonard - Leonardkruispunt, Tervuren, Leuven, Vlaams-Brabant, Vlaanderen, 3080, België - Belgique - Belgien",
+   "nr": 12,
+   "routes": [
+    6,
+    21,
+    22,
+    57
+   ],
+   "lat": 50.8010147
+  },
+  {
+   "long": 3.0706414,
+   "address": "Lille, Nord, Nord-Pas-de-Calais, France métropolitaine, 59000;59800, France",
+   "nr": 46,
+   "routes": [
+    44
+   ],
+   "lat": 50.6305089
+  },
+  {
+   "long": 6.129799,
+   "address": "Luxembourg, Canton Luxembourg, District Luxembourg, Luxembourg",
+   "nr": 16,
+   "routes": [
+    8,
+    29,
+    68,
+    77
+   ],
+   "lat": 49.6112768
+  },
+  {
+   "long": 4.89166445054899,
+   "address": "Bouge, Namur, Wallonie, 5004, België - Belgique - Belgien",
+   "nr": 15,
+   "routes": [
+    8,
+    29
+   ],
+   "lat": 50.47887385
+  },
+  {
+   "long": 4.4353614,
+   "address": "Machelen, Halle-Vilvoorde, Vlaams-Brabant, Vlaanderen, 1830;1831, België - Belgique - Belgien",
+   "nr": 21,
+   "routes": [
+    14,
+    62
+   ],
+   "lat": 50.9124219
+  },
+  {
+   "long": 4.69418278098918,
+   "address": "Leuven, Vlaams-Brabant, Vlaanderen, 3000, België - Belgique - Belgien",
+   "nr": 13,
+   "routes": [
+    7,
+    89
+   ],
+   "lat": 50.88121295
+  },
+  {
+   "long": 4.3742707,
+   "address": "Kennedytunnel, Kiel, Antwerpen, Vlaanderen, 2000;2018;2020;2030;2040;2050;2060;2100;2140;2170;2180;2600;2610;2660, België - Belgique - Belgien",
+   "nr": 19,
+   "routes": [
+    11,
+    13,
+    34,
+    54
+   ],
+   "lat": 51.2027875
+  },
+  {
+   "long": 5.5734203,
+   "address": "Liège, Wallonie, 4000;4020;4030;4031;4032, België - Belgique - Belgien",
+   "nr": 29,
+   "routes": [
+    23,
+    26,
+    37,
+    56,
+    73,
+    80,
+    86,
+    88
+   ],
+   "lat": 50.6451381
+  },
+  {
+   "long": 2.3772525,
+   "address": "Dunkerque, Nord, Nord-Pas-de-Calais, France métropolitaine, 59140;59240;59640, France",
+   "nr": 43,
+   "routes": [
+    39,
+    74
+   ],
+   "lat": 51.0347708
+  },
+  {
+   "long": 3.2661256,
+   "address": "Kortrijk-Zuid, Wolvendreef, Kortrijk, West-Vlaanderen, Vlaanderen, 8500;8501;8510;8511, België - Belgique - Belgien",
+   "nr": 50,
+   "routes": [
+    70
+   ],
+   "lat": 50.8109604
+  },
+  {
+   "long": 3.32404831933391,
+   "address": "Knokke, Knokke-Heist, Brugge, West-Vlaanderen, Vlaanderen, 8300;8301, België - Belgique - Belgien",
+   "nr": 23,
+   "routes": [
+    15,
+    49
+   ],
+   "lat": 51.34819975
+  },
+  {
+   "long": 3.20809951603418,
+   "address": "Brugge, West-Vlaanderen, Vlaanderen, 8000;8200;8310;8380, België - Belgique - Belgien",
+   "nr": 24,
+   "routes": [
+    17,
+    18,
+    20,
+    45,
+    72
+   ],
+   "lat": 51.2315785
+  },
+  {
+   "long": 4.28974079726371,
+   "address": "Bergen op Zoom, Noord-Brabant, Nederland",
+   "nr": 45,
+   "routes": [
+    43,
+    52,
+    79,
+    83
+   ],
+   "lat": 51.4965864
+  },
+  {
+   "long": 4.67791042729876,
+   "address": "Heverlee, Leuven, Vlaams-Brabant, Vlaanderen, 3001, België - Belgique - Belgien",
+   "nr": 51,
+   "routes": [
+    71,
+    91
+   ],
+   "lat": 50.85269645
+  },
+  {
+   "long": 6.0838618,
+   "address": "Aachen, Städteregion Aachen, Regierungsbezirk Köln, Nordrhein-Westfalen, Deutschland",
+   "nr": 49,
+   "routes": [
+    56,
+    88
+   ],
+   "lat": 50.776351
+  },
+  {
+   "long": 3.8105002,
+   "address": "Zelzate, Eeklo, Oost-Vlaanderen, Vlaanderen, 9060, België - Belgique - Belgien",
+   "nr": 20,
+   "routes": [
+    13,
+    34,
+    46,
+    82
+   ],
+   "lat": 51.2000036
+  },
+  {
+   "long": 2.89157691882307,
+   "address": "Oostende, West-Vlaanderen, Vlaanderen, 8400, België - Belgique - Belgien",
+   "nr": 30,
+   "routes": [
+    25,
+    42
+   ],
+   "lat": 51.2148712
+  },
+  {
+   "long": 4.3515464,
+   "address": "Antwerpen-West, R1, Linkeroever, Antwerpen, Vlaanderen, 2000;2018;2020;2030;2040;2050;2060;2100;2140;2170;2180;2600;2610;2660, België - Belgique - Belgien",
+   "nr": 34,
+   "routes": [
+    30,
+    50
+   ],
+   "lat": 51.2183926
+  },
+  {
+   "long": 4.24942444709701,
+   "address": "Beveren, Sint-Niklaas, Oost-Vlaanderen, Vlaanderen, 9120, België - Belgique - Belgien",
+   "nr": 22,
+   "routes": [
+    15,
+    27,
+    46,
+    49,
+    63,
+    82
+   ],
+   "lat": 51.21307425
+  },
+  {
+   "long": 3.9435255,
+   "address": "Avenue de l'Université, Mons, Hainaut, Wallonie, 7000, België - Belgique - Belgien",
+   "nr": 26,
+   "routes": [
+    19,
+    24,
+    35,
+    84,
+    87,
+    95
+   ],
+   "lat": 50.461449
+  },
+  {
+   "long": 4.36720169448285,
+   "address": "Bruxelles / Brussel, Ville de Bruxelles - Stad Brussel, Bruxelles-Capitale - Brussel-Hoofdstad, Bruxelles-Capitale - Brussels Hoofdstedelijk Gewest, 1000;1040, België - Belgique - Belgien",
+   "nr": 31,
+   "routes": [
+    25,
+    42,
+    51,
+    61,
+    68,
+    77
+   ],
+   "lat": 50.84404145
+  },
+  {
+   "long": 4.37031201604402,
+   "address": "Stabroek, Antwerpen, Vlaanderen, 2940, België - Belgique - Belgien",
+   "nr": 33,
+   "routes": [
+    27,
+    63
+   ],
+   "lat": 51.33518735
+  },
+  {
+   "long": 5.502732,
+   "address": "Loncin, Liège, Wallonie, België - Belgique - Belgien",
+   "nr": 39,
+   "routes": [
+    35,
+    84
+   ],
+   "lat": 50.665153
+  },
+  {
+   "long": 4.3257084,
+   "address": "Koekelberg, Bruxelles-Capitale - Brussel-Hoofdstad, Bruxelles-Capitale - Brussels Hoofdstedelijk Gewest, 1081, België - Belgique - Belgien",
+   "nr": 41,
+   "routes": [
+    36,
+    59
+   ],
+   "lat": 50.8622633
+  },
+  {
+   "long": 4.94642921342942,
+   "address": "Tienen, Leuven, Vlaams-Brabant, Vlaanderen, 3300, België - Belgique - Belgien",
+   "nr": 37,
+   "routes": [
+    32,
+    47
+   ],
+   "lat": 50.80843175
+  },
+  {
+   "long": 4.3123401,
+   "address": "Anderlecht, Bruxelles-Capitale - Brussel-Hoofdstad, Bruxelles-Capitale - Brussels Hoofdstedelijk Gewest, 1070, België - Belgique - Belgien",
+   "nr": 38,
+   "routes": [
+    33,
+    64,
+    65,
+    87,
+    93,
+    95
+   ],
+   "lat": 50.8381411
+  },
+  {
+   "long": 3.3878259,
+   "address": "Tournai, Hainaut, Wallonie, België - Belgique - Belgien",
+   "nr": 25,
+   "routes": [
+    17,
+    18,
+    33,
+    41,
+    55,
+    64
+   ],
+   "lat": 50.60566
+  },
+  {
+   "long": 5.4332602,
+   "address": "Neufchâteau, Luxembourg, Wallonie, 6840, België - Belgique - Belgien",
+   "nr": 32,
+   "routes": [
+    26,
+    80
+   ],
+   "lat": 49.840661
+  },
+  {
+   "long": 4.75122967848989,
+   "address": "Breda, Noord-Brabant, Nederland",
+   "nr": 36,
+   "routes": [
+    31,
+    66,
+    75,
+    81
+   ],
+   "lat": 51.5644477
+  },
+  {
+   "long": 4.21992381462057,
+   "address": "Halle, Halle-Vilvoorde, Vlaams-Brabant, Vlaanderen, 1500, België - Belgique - Belgien",
+   "nr": 44,
+   "routes": [
+    41,
+    55
+   ],
+   "lat": 50.736253
+  },
+  {
+   "long": 4.3362419,
+   "address": "Bruxelles-Midi - Brussel-Zuid, Avenue Fonsny - Fonsnylaan, Saint-Gilles - Sint-Gillis, Bruxelles-Capitale - Brussel-Hoofdstad, Bruxelles-Capitale - Brussels Hoofdstedelijk Gewest, 1060, België - Belgique - Belgien",
+   "nr": 40,
+   "routes": [
+    36,
+    59
+   ],
+   "lat": 50.8356748
+  },
+  {
+   "long": 3.5266657,
+   "address": "Valenciennes, Nord, Nord-Pas-de-Calais, France métropolitaine, 59300, France",
+   "nr": 47,
+   "routes": [
+    51,
+    61
+   ],
+   "lat": 50.3594889
+  },
+  {
+   "long": 5.98279521547417,
+   "address": "Heerlen, Parkstad Limburg, Limburg, Nederland",
+   "nr": 52,
+   "routes": [
+    76,
+    94
+   ],
+   "lat": 50.87627725
+  }
+ ]
+}
