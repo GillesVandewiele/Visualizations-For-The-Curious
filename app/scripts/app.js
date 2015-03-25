@@ -38,6 +38,5 @@ angular
   });
 
 angular.module('d3', []);
-angular.module('topojson', []);
 angular.module('dataVisualizationsApp.controllers', []);
-angular.module('dataVisualizationsApp.directives', ['d3','topojson']);
+angular.module('dataVisualizationsApp.directives', ['d3']);

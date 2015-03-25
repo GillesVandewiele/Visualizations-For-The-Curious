@@ -1,13 +1,13 @@
 'use strict';
 
 /**
- * @ngdoc service
- * @name topojson.topojson
+ * @ngdoc provider
+ * @name d3.topojson
  * @description
  * # topojson
- * Factory in the topojson.
+ * Provider for topojson.
  */
-angular.module('topojson')
+angular.module('d3')
   .provider('topojsonService',[function(){
         function createScript($document, callback) {
             var scriptTag = $document.createElement('script');
