@@ -11,8 +11,9 @@ angular.module('dataVisualizationsApp.controllers')
   .controller('Demo2Ctrl', ['$scope', function ($scope) {
       $scope.title = 'Demo2Ctrl';
       $scope.d3Data = [
-        {title: 'Greg', score:12},
-        {title: 'Ari', score:43},
-        {title: 'Loser', score: 87}
+        {name: 'Pieter', score:52},
+        {name: 'Bruno', score:50},
+        {name: 'Karel', score: 87},
+        {name: 'Gilles', score: 59}
       ];
   }]);
