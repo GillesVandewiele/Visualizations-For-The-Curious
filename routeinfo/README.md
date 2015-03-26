@@ -4,6 +4,7 @@
 To extract the routes succesfully, you need a standard Python3 with the packages:
   - [GeoPy](https://geopy.readthedocs.org/en/1.9.1/]), for geocoding the coordinates of the start and end route points
   - [Requests](http://docs.python-requests.org/en/latest/), allows to retreive the route information more intuitively
+  - [polyline] (http://polyline.readthedocs.org/en/v1.1/), for (de)compression of the route geometry
 
 We will use pip to install the dependencies. If you don't have pip, you can find it [here](https://pip.pypa.io/en/latest/installing.html).
 
