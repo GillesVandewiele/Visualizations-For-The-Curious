@@ -226,10 +226,10 @@ def decode(point_str):
     return points    
 
 # Get input path
-ROUTE_PATH = input("Give file with route repository: ")
-LOCATION_PATH = input("Give file with location repository: ")
-ROUTEU_PATH = input("Give destination for upgraded repository: ")
-LOCATIONU_PATH = input("Give destination for upgraded location repository: ")
+ROUTE_PATH = input("Give file with the route repository: ")
+LOCATION_PATH = input("Give file with the location repository: ")
+ROUTEU_PATH = input("Give path the upgraded route repository must be stored: ")
+LOCATIONU_PATH = input("Give path the upgraded location repository must be stored: ")
 
 route_file = open(ROUTE_PATH, "r")
 route_repo = RouteRespository(json.load(route_file))

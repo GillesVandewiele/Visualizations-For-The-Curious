@@ -70,7 +70,7 @@ class LocationRepository(object):
 INPUT_PATH = input("Give file with the route repository: ")
 
 # Get output path
-REPO_PATH = input("Give path were the location repository must be stored: ")
+REPO_PATH = input("Give path where the location repository must be stored: ")
 
 file = open(INPUT_PATH, "r")
 routes_as_string = json.load(file)
