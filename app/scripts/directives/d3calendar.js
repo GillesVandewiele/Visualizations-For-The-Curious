@@ -9,7 +9,7 @@
 angular.module('dataVisualizationsApp.directives')
   .directive('d3Calendar', ['d3Service','calHeatMapService', function(d3Service,calHeatMapService) {
     return {
-        template: '<div class="cal-heatmap" config="config"></div>'
+        template: '<div class="cal-heatmap" config="config"></div>',
         restrict: 'E',
         scope: {
           config: '='
