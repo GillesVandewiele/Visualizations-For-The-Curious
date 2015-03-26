@@ -1,0 +1,12 @@
+Karel: doordoen met Leaflet, baseren op coordinaten van Pieter zijn script (json)
+
+Bruno: CalendarView & Stacked Bar Chart (ook baseren op json)
+
+Pieter: - final tweaks aan script (datum converteren naar ISO-xxx, kijken voor meer compressie), 
+		- optioneel: kijken voor een andere dataset om het script op uit te voeren (test genericiteit)
+		- stream graph / line graph
+		
+Gilles: - afwerken start_screen (kolommen valideren, gebruiker zelf file uploaden + data binding (architectuur), zorgen dat data maar 1 keer gedownload wordt)
+		- pie chart
+		- mail naar dieter voor meeting (doodle) + github
+		- doodle (interne meeting) en op slack zetten

@@ -75,7 +75,7 @@ def search_recursive(to_find, to_iterate, setOfFounds):
 INPUT_PATH = input("Give file with aggregated traffic: ")
 
 # Get output path
-OUTPUT_PATH = input("Give path were extracted routes must be stored: ")
+OUTPUT_PATH = input("Give path where the route repository must be stored: ")
 
 rs_sep = input("Give the road-start separator (ex.: 'from'): ")
 sd_sep = input("Give the start-destination separator (ex.: 'to'): ")
