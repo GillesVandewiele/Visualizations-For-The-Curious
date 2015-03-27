@@ -30,7 +30,8 @@ angular
         controller: 'AboutCtrl'
       })
       .when('/visualizations', {
-        templateUrl: 'views/visualizations.html'
+        templateUrl: 'views/visualizations.html',
+        controller: 'VisualizationsCtrl'
       })
       .otherwise({
         redirectTo: '/'
