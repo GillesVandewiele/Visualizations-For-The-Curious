@@ -5,16 +5,18 @@ import math
 import string
 from geopy.geocoders import Nominatim
 import requests
+import getopt
+import sys
 
 class Location(object):
-	address = None
+	name = None
 	nr = -1
 	lat = -1
 	long = -1
 	routes = None
 
-	def __init__(self, address, lat, long, nr):
-		self.address = address
+	def __init__(self, name, lat, long, nr):
+		self.name = name
 		self.lat = lat
 		self.long = long
 		self.nr = nr
@@ -24,7 +26,7 @@ class Location(object):
 		self.routes.append(route_nr)
 				
 	def to_JSON(self):
-		return {"address": self.address, "lat":  self.lat, "long": self.long, "nr": self.nr, "routes": self.routes}
+		return {"name": self.name, "lat":  self.lat, "long": self.long, "nr": self.nr, "routes": self.routes}
 		
 class LocationRepository(object):
 	locationDict = dict()
@@ -66,11 +68,20 @@ class LocationRepository(object):
 			output[loc] = self.locationDict[loc].to_JSON()
 		return output
 
-# Get input path
-INPUT_PATH = input("Give file with the route repository: ")
-
-# Get output path
-REPO_PATH = input("Give path where the location repository must be stored: ")
+INPUT_PATH = None
+REPO_PATH = None
+	
+optlist, args = getopt.getopt(sys.argv[1:], "", ["in=", "out="])
+for o, a in optlist:
+	if o == "--in":
+		INPUT_PATH = a
+	elif o == "--out":
+		REPO_PATH = a
+	
+if (INPUT_PATH == None):
+	INPUT_PATH = input("Give file with the route repository: ")
+if (REPO_PATH == None):
+	REPO_PATH = input("Give path where the location repository must be stored: ")
 
 file = open(INPUT_PATH, "r")
 routes_as_string = json.load(file)

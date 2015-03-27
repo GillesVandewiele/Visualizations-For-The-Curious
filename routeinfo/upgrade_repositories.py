@@ -4,10 +4,12 @@ import json
 import string
 import requests
 from polyline.codec import PolylineCodec
+import getopt
+import sys
 
 # This is one route
 class Route(object):
-	fullName = None # The original route name
+	name = None # The original route name
 	start = None
 	startLoc = None
 	stop = None
@@ -18,7 +20,7 @@ class Route(object):
 	coordinates = None # All coordinates
 	
 	def __init__(self, dictionary):
-		self.fullName = dictionary["fullname"]
+		self.name = dictionary["name"]
 		self.start = dictionary["start"]
 		self.stop = dictionary["stop"]
 		self.roads = dictionary["roads"]
@@ -77,7 +79,7 @@ class Route(object):
 		return -1
 		
 	def to_JSON(self):
-		return {"fullname": self.fullName, "start": self.start_loc.nr, "stop": self.stop_loc.nr, "nr": self.nr, "coordinates": PolylineCodec().encode(self.coordinates)}
+		return {"name": self.name, "start": self.start_loc.nr, "stop": self.stop_loc.nr, "nr": self.nr, "coordinates": PolylineCodec().encode(self.coordinates)}
 
 class RouteRespository(object):
 	routes = list()
@@ -106,16 +108,16 @@ class RouteRespository(object):
 					
 		if (not len(fails) == 0):
 			for route in fails:
-				print("Fail: " + route.fullName + " - The route took too long to calculate, move the coordinates of the involved cities closer to a highway (in the location repository) and retry.")
+				print("Fail: " + route.name + " - The route took too long to calculate, move the coordinates of the involved cities closer to a highway (in the location repository) and retry.")
 		
 	def to_JSON(self):
-		out = list()
+		out = len(self.routes)*[None]
 		for route in self.routes:
-			out.insert(route.nr, route.to_JSON())
+			out[route.nr] = route.to_JSON()
 		return out
 		
 class Location(object):
-	address = None
+	name = None
 	nr = -1
 	lat = -1
 	long = -1
@@ -123,7 +125,7 @@ class Location(object):
 	highway_connection = dict()
 
 	def __init__(self, dictionary):
-		self.address = dictionary["address"]
+		self.name = dictionary["name"]
 		self.lat = dictionary["lat"]
 		self.long = dictionary["long"]
 		self.nr = dictionary["nr"]
@@ -131,7 +133,7 @@ class Location(object):
 		self.highway_connection = dict()
 		
 	def to_JSON(self):
-		return {"address": self.address, "lat":  self.lat, "long": self.long, "nr": self.nr, "routes": self.routes}
+		return {"name": self.name, "lat":  self.lat, "long": self.long, "nr": self.nr, "routes": self.routes}
 		
 	def get_connection(self, route_names):
 		for routename in route_names:
@@ -156,17 +158,37 @@ class LocationRepository(object):
 		return len(self.locationDict)
 		
 	def to_JSON(self):
-		out = list()
+		out = len(self.locationDict)*[None]
 		for loc_name in self.locationDict:
 			location = self.locationDict[loc_name]
-			out.insert(location.nr, location.to_JSON())
+			out[location.nr] = location.to_JSON()
 		return out
 
+ROUTE_PATH = None
+LOCATION_PATH = None
+ROUTEU_PATH = None
+LOCATIONU_PATH = None
+	
+optlist, args = getopt.getopt(sys.argv[1:], "", ["route_rep=", "loc_rep=", "route_rep_up=", "loc_rep_up="])
+for o, a in optlist:
+	if o == "--route_rep":
+		ROUTE_PATH = a
+	elif o == "--loc_rep":
+		LOCATION_PATH = a
+	elif o == "--route_rep_up":
+		ROUTEU_PATH = a
+	elif o == "--loc_rep_up":
+		LOCATIONU_PATH = a
+	
 # Get input path
-ROUTE_PATH = input("Give file with the route repository: ")
-LOCATION_PATH = input("Give file with the location repository: ")
-ROUTEU_PATH = input("Give path the upgraded route repository must be stored: ")
-LOCATIONU_PATH = input("Give path the upgraded location repository must be stored: ")
+if (ROUTE_PATH == None):
+	ROUTE_PATH = input("Give file with the route repository: ")
+if (LOCATION_PATH == None):
+	LOCATION_PATH = input("Give file with the location repository: ")
+if (ROUTEU_PATH == None):
+	ROUTEU_PATH = input("Give path the upgraded route repository must be stored: ")
+if (LOCATIONU_PATH == None):
+	LOCATIONU_PATH = input("Give path the upgraded location repository must be stored: ")
 
 route_file = open(ROUTE_PATH, "r")
 route_repo = RouteRespository(json.load(route_file))
