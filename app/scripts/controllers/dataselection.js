@@ -29,13 +29,14 @@ angular.module('dataVisualizationsApp.controllers')
 
   		$scope.fileData = null; // The data stored in files.json on the server
 
-	  	$scope.aggregations = ["MEAN", "SUM", "MAX", "MIN", "COUNT"];
-	  	$scope.grouping = ["WEEKDAY", "WEEKS", "MONTH", "YEAR"];
+	  	$scope.aggregations = ["NONE", "MEAN", "SUM", "MAX", "MIN", "COUNT"];
+	  	$scope.grouping = ["NONE", "WEEKDAY", "WEEKS", "MONTH", "YEAR"];
 
 	  	$scope.files; // Extra array for faster lookup in the datasets based on name
 	  	$scope.selectedFile;
 
-	  	$scope.datasets; // All datasets that were retrieved from the server
+	  	$scope.datasets; 	// All datasets that were retrieved from the server 
+	  						// Fields: location, value, aggregation, date, grouping
 	  	$scope.userDatasets = []; // The defined datasets by the user
 	  	$scope.currentDataset;
 
@@ -47,15 +48,29 @@ angular.module('dataVisualizationsApp.controllers')
 
   	// Private function to create a dataset (which has a lot of properties)
   	var updateDataset = function(data, index){
-  		return {name:data[index].Name, columns:data[index].Columns, location:data[index].Columns[0],
-			value:data[index].Columns[1], date:data[index].Columns[data[index].Columns.length-1],
-			path: data[index].Path, aggregation:$scope.aggregations[0], grouping:$scope.grouping[0]};
+  		var dataset = {name:data[index].Name, columns:data[index].Columns, location:{Path:data[index].Columns[0].Path, Name:data[index].Columns[0].Name},
+  		 value:{Path:data[index].Columns[1].Path, Name:data[index].Columns[1].Name},date:{Path:data[index].Columns[data[index].Columns.length-1].Path,
+  		  Name:data[index].Columns[data[index].Columns.length-1].Name}, path:data[index].Path, aggregation:$scope.aggregations[0], 
+  		  grouping:$scope.grouping[0]};
+  		dataset.location = dataset.columns[0];
+		dataset.value = dataset.columns[1];
+		dataset.date = dataset.columns[dataset.columns.length - 1];
+		return dataset;
   	};
 
   	// Private function to check if two specified datasets are not unique
   	var datasetTracker = function(dataset){
   		return dataset.name + dataset.location + dataset.value + dataset.date + dataset.aggregation + dataset.grouping;
   	};
+
+  	var searchInColumns = function(name, columns){
+  		for(var i = 0; i < columns.length; i++){
+  			if(columns[i].Name == name){
+  				return i;
+  			}
+  		}
+  		return -1;
+  	}
 
   	// Check if dataset is in userDatasets using datasetTracker
 	var containsDataset = function(dataset, userDatasets){
@@ -90,8 +105,8 @@ angular.module('dataVisualizationsApp.controllers')
 	    for(var file in data.Files) {
 	    	$scope.files.push(data.Files[file].Name);
 	    }
-	    $scope.currentDataset = updateDataset(data.Files, 0);
-	    $scope.selectedFile = $scope.files[0];
+	    //$scope.currentDataset = updateDataset(data.Files, 0);
+	    //$scope.selectedFile = $scope.files[0];
 
 	  }).
 	  error(function(data, status, headers, config) {
@@ -102,35 +117,36 @@ angular.module('dataVisualizationsApp.controllers')
 	$scope.$watch('selectedFile', function(){
     	if($scope.fileData != null){
 			var indexSelectedDataset = $scope.files.indexOf($scope.selectedFile);
-			console.log("Selected file = ", $scope.selectedFile);
 			// If the index is equal to -1, 'Add file..' was selected
 			if(indexSelectedDataset != -1){
 				$scope.currentDataset = updateDataset($scope.fileData.Files, indexSelectedDataset);
 			} else {
-				console.log("Add file selected");
 				showFileExplorer();
-				$scope.currentDataset.columns=[];
 			}
 		}
 	});
 
 	// This function is called when the user presses the '+' button and adds a dataset to a list to be downloaded later on.
 	$scope.addDataset = function(){
-		if($scope.userDatasets.length < MAX_DATASETS){
-			if(containsDataset($scope.currentDataset, $scope.userDatasets) == -1){
-				var copy = jQuery.extend(true, {}, $scope.currentDataset);
-				$scope.userDatasets.push(copy);
+		if($scope.currentDataset != null){
+			if($scope.userDatasets.length < MAX_DATASETS){
+				if(containsDataset($scope.currentDataset, $scope.userDatasets) == -1){
+					var copy = jQuery.extend(true, {}, $scope.currentDataset);
+					$scope.userDatasets.push(copy);
+				} else {
+					showErrorMessage("The list already contains this dataset with these columns!");
+				}
 			} else {
-				showErrorMessage("The list already contains this dataset with these columns!");
+				showErrorMessage("We support only up to three datasets!");
 			}
 		} else {
-			showErrorMessage("We support only up to three datasets!");
+			showErrorMessage("No dataset provided!");
 		}
 	};
 
 	$scope.updateDataset=function(value){
 		$scope.selectedFile = value
-    	document.getElementById("datasetMenu").value = value;
+    	//document.getElementById("datasetMenu").value = value;
 	}
 
 	// This function is called when the user presses the '-' button and removes the selected dataset.
@@ -139,27 +155,50 @@ angular.module('dataVisualizationsApp.controllers')
 	}
 
 	// Function is called when the user clicks an element in the list of datasets
-	$scope.changeDataset = function(obj){
-		$scope.currentDataset = obj;
+	$scope.changeDataset = function(obj){-
+		console.log(obj);
+		//document.getElementById("datasetMenu").value = obj.name;
+		//change = false;
 		$scope.selectedFile = obj.name;
+		$scope.currentDataset = obj;
+		$scope.currentDataset.location = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.location.Name, $scope.currentDataset.columns)];
+		$scope.currentDataset.value = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.value.Name, $scope.currentDataset.columns)];
+		$scope.currentDataset.date = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.date.Name, $scope.currentDataset.columns)];
+-
+		console.log($scope.currentDataset.location.Name);
 	}
 
   	// This function is called when the user presses the 'V' button and downloads all datasets from the list.
 	$scope.downloadData = function(){
-		if($scope.fileData != null){
-			for(var i = 0; i < $scope.userDatasets.length; i++){
-				$http.get($scope.userDatasets[i].path).
-			  		success(function(data, status, headers, config) { 
-			  			console.log("Data = ", data);
-			  			// TODO: validate all columns
-			  		}).
-			  		error(function(data, status, headers, config) {
-				    	showErrorMessage("We were unable to download the requested data.");
-					});
-			}
+		for(var i = 0; i < $scope.userDatasets.length; i++){
+			$http.get($scope.userDatasets[i].path).
+		  		success(function(data, status, headers, config) { 
+		  			// TODO: validate all columns
+		  		}).
+		  		error(function(data, status, headers, config) {
+			    	showErrorMessage("We were unable to download the requested data.");
+				});
 		}
 	};
 
+  }]).directive("fileread", [function () {
+    return {
+        scope: {
+            fileread: "="
+        },
+        link: function (scope, element, attributes) {
+            element.bind("change", function (changeEvent) {
+                var reader = new FileReader();
+                reader.onload = function (loadEvent) {
+                    scope.$apply(function () {
+                        scope.fileread = loadEvent.target.result;
+                        console.log("fileread =", scope.fileread);
+                    });
+                }
+                reader.readAsDataURL(changeEvent.target.files[0]);
+            });
+        }
+    }
   }]);
 
 

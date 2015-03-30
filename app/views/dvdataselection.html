@@ -18,7 +18,7 @@
 				<td> 
 
 					<div class="dropdown">
-				  		<input type="button" value="Select a dataset" class="form-control input-sm" type="button" id="datasetMenu" data-toggle="dropdown" aria-expanded="true">
+				  		<input type="button" ng-model="selectedFile" value="{{selectedFile || 'Select a dataset'}}" class="form-control input-sm" type="button" id="datasetMenu" data-toggle="dropdown" aria-expanded="true">
 					  <ul class="dropdown-menu" role="menu" aria-labelledby="datasetMenu">
 					  	<!-- ng-repeat is used instead of ng-options because I wanted Add file.. to be in the back for consistent indexing -->
 						<li role="presentation" ng-repeat="dataset in datasets"><a role="menuitem" ng-click="updateDataset(dataset.name)">{{dataset.name}}</a></li>
@@ -27,7 +27,7 @@
 								<label for="userFile" class="customFileUpload">
 								    Add file..
 								</label>
-								<input class="uploadFile" id="userFile" type="file" accept=".json">
+								<input class="uploadFile" id="userFile" fileread="vm.uploadme" type="file" accept=".json">
 							</div> 
 						</li>
 					  </ul>
@@ -56,7 +56,7 @@
 				</th>
 
 				<td>
-				 	<select class="form-control input-sm" ng-model="currentDataset.location" ng-options="column for column in currentDataset.columns"></select>
+				 	<select class="form-control input-sm" ng-model="currentDataset.location" ng-options="column.Name for column in currentDataset.columns"></select>
 				</td>
 			</tr>
 
@@ -76,7 +76,7 @@
 				</th>
 
 				<td>
-					<select class="form-control input-sm" ng-model="currentDataset.value" ng-options="column for column in currentDataset.columns"></select>
+					<select class="form-control input-sm" ng-model="currentDataset.value" ng-options="column.Name for column in currentDataset.columns"></select>
 				</td>
 			</tr>
 
@@ -108,7 +108,7 @@
 				</th>
 
 				<td>
-					<select class="form-control input-sm" ng-model="currentDataset.date" ng-options="column for column in currentDataset.columns"></select>				
+					<select class="form-control input-sm" ng-model="currentDataset.date" ng-options="column.Name for column in currentDataset.columns"></select>				
 				</td>
 			</tr>
 
@@ -130,7 +130,7 @@
 	<div class="col-xs-4 col-md-4">
 		<div class="row">
 			<div class="list-group">
-				<a ng-repeat="dataset in userDatasets" ng-class="{ 'list-group-item active': this.dataset == currentDataset, 'list-group-item': this.dataset != currentDataset}"class="list-group-item" ng-click="changeDataset(this.dataset)">{{dataset.name}}</a>
+				<a ng-repeat="dataset in userDatasets" ng-class="{ 'list-group-item active': dataset == currentDataset, 'list-group-item': dataset != currentDataset}" ng-click="changeDataset(dataset)">{{dataset.name}}</a>
 			</div>
 			<div class="btn-group" style="width: 100%;">
 				<a ng-click="addDataset()" class="btn btn-default" ><span class="glyphicon glyphicon-plus"></span></a>
