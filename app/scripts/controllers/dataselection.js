@@ -97,6 +97,16 @@ angular.module('dataVisualizationsApp.controllers')
 		$scope.errorMessage = message;
 	}
 
+	// Private function to check if the value column is correct
+	var validateValueColumn = function(column){
+		for(var value in column){
+			if(typeof(value) != "string"){
+				return false;
+			}
+		}
+		return true;
+	}
+
   	/************************************************/
 
     $http.get('data/files.json').
@@ -177,7 +187,9 @@ angular.module('dataVisualizationsApp.controllers')
 			console.log("userdataset = ", dataset);
 			console.log("data = ", jsonData);
 			console.log(jsonPath(jsonData, dataset.location.Path));
-			console.log(jsonPath(jsonData, dataset.value.Path));
+			var dataset_values = jsonPath(jsonData, dataset.value.Path);
+			console.log(dataset_values);
+			console.log("is value correct?", validateValueColumn(dataset_values));
 			console.log(jsonPath(jsonData, dataset.date.Path));
 		}
 	}
