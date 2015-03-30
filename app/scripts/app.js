@@ -18,7 +18,8 @@ angular
     'ngTouch',
     'dataVisualizationsApp.controllers',
     'dataVisualizationsApp.directives',
-    'dataVisualizationsApp.services'
+    'dataVisualizationsApp.services',
+    'ui.bootstrap'
   ])
   .config(function ($routeProvider) {
     $routeProvider

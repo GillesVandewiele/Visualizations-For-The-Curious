@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name dataVisualizationsApp.controller:AddFileCtrl
+ * @name dataVisualizationsApp.controllers.controller:AddFileCtrl
  * @description
  * # AddFileCtrl
  * Controller of the dataVisualizationsApp
  */
 angular.module('dataVisualizationsApp.controllers')
-  .controller('AddFileCtrl', ['$scope', '$location', 'modalService', function ($scope, modalService) {
+  .controller('AddFileCtrl', ['$scope', '$location', 'modalService', function ($scope, $location, modalService) {
 		$scope.deleteCustomer = function () {
 
 			console.log("test");

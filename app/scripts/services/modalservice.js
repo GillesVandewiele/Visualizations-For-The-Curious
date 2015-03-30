@@ -14,7 +14,7 @@ angular.module('dataVisualizationsApp.services')
             backdrop: true,
             keyboard: true,
             modalFade: true,
-            templateUrl: '/app/views/popup.html'
+            templateUrl: 'views/popup.html'
         };
 
         var modalOptions = {
