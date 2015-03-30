@@ -6,15 +6,15 @@
 			"Columns": [ 
 				{
 					"Name": "Locatie",
-					"Path": ""
+					"Path": "$.Verkeerstijden_daily[*].Collections.Reistijden[*].Route"
 				},
 				{
 					"Name": "Vertraging",
-					"Path": ""
+					"Path": "$.Verkeerstijden_daily[*].Collections.Reistijden[*].Vertraging"
 				},
 				{
 					"Name": "Tijdstip",
-					"Path": ""
+					"Path": "$.Verkeerstijden_daily[*].Time"
 				}
 			]
 		},
@@ -24,19 +24,19 @@
 			"Columns": [ 
 				{
 					"Name": "Locatie",
-					"Path": ""
+					"Path": "$.KMI_daily[*].Collections.Weerinfo[*].Station"
 				},
 				{
 					"Name": "Temperatuur",
-					"Path": ""
+					"Path": "$.KMI_daily[*].Collections.Weerinfo[*].Temperatuur (C)"
 				},
 				{
 					"Name": "Luchtvochtigheid",
-					"Path": ""
+					"Path": "$.KMI_daily[*].Collections.Weerinfo[*].Luchtvochtigheid (%)"
 				},
 				{
 					"Name": "Tijdstip",
-					"Path": ""
+					"Path": "$.KMI_daily[*].Time"
 				}
 			]
 		}

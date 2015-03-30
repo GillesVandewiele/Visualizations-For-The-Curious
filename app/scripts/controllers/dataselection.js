@@ -72,6 +72,15 @@ angular.module('dataVisualizationsApp.controllers')
   		return -1;
   	}
 
+  	/*var searchByPath = function(path, datasets){
+  		for(var i = 0; i < datasets.length; i++){
+  			if(path == datasets[i].path){
+  				return i;
+  			}
+  		}
+  		return -1;
+  	}*/
+
   	// Check if dataset is in userDatasets using datasetTracker
 	var containsDataset = function(dataset, userDatasets){
 		for(var i = 0; i < userDatasets.length; i++){
@@ -121,7 +130,6 @@ angular.module('dataVisualizationsApp.controllers')
 			if(indexSelectedDataset != -1){
 				$scope.currentDataset = updateDataset($scope.fileData.Files, indexSelectedDataset);
 			} else {
-				showFileExplorer();
 			}
 		}
 	});
@@ -155,29 +163,38 @@ angular.module('dataVisualizationsApp.controllers')
 	}
 
 	// Function is called when the user clicks an element in the list of datasets
-	$scope.changeDataset = function(obj){-
-		console.log(obj);
-		//document.getElementById("datasetMenu").value = obj.name;
-		//change = false;
+	$scope.changeDataset = function(obj){
 		$scope.selectedFile = obj.name;
 		$scope.currentDataset = obj;
+		//Had to write this hack in order to bind the model to the view...
 		$scope.currentDataset.location = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.location.Name, $scope.currentDataset.columns)];
 		$scope.currentDataset.value = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.value.Name, $scope.currentDataset.columns)];
 		$scope.currentDataset.date = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.date.Name, $scope.currentDataset.columns)];
--
-		console.log($scope.currentDataset.location.Name);
 	}
+
+	$scope.printData = function(dataset, jsonData){
+		if(jsonData != null){
+			console.log("userdataset = ", dataset);
+			console.log("data = ", jsonData);
+			console.log(jsonPath(jsonData, dataset.location.Path));
+			console.log(jsonPath(jsonData, dataset.value.Path));
+			console.log(jsonPath(jsonData, dataset.date.Path));
+		}
+	}
+
 
   	// This function is called when the user presses the 'V' button and downloads all datasets from the list.
 	$scope.downloadData = function(){
 		for(var i = 0; i < $scope.userDatasets.length; i++){
-			$http.get($scope.userDatasets[i].path).
-		  		success(function(data, status, headers, config) { 
-		  			// TODO: extract the correct columns, using "Path"
+			$http.get($scope.userDatasets[i].path, {params: {"dataSetNumber": i}})
+		  		.success(function(data, status, headers, config) { 
+		  			console.log("i =====", config.params.dataSetNumber);
+		  			//Extract right columns (and print them for now)
+					$scope.printData($scope.userDatasets[config.params.dataSetNumber], data);
 
 		  			// TODO: validate all columns (wait for right Date format etc)
-		  		}).
-		  		error(function(data, status, headers, config) {
+		  		})
+		  		.error(function(data, status, headers, config) {
 			    	showErrorMessage("We were unable to download the requested data.");
 				});
 		}
@@ -213,8 +230,11 @@ var hide = function(target) {
     document.getElementById(target).style.display = 'none';
 }
 
-var showFileExplorer = function(target){
-	$('#fileExplorer').fileTree({ root: '/' }, function(file) {
-        alert(file);
-    });
+var sleep = function(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
 }
