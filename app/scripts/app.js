@@ -17,7 +17,8 @@ angular
     'ngSanitize',
     'ngTouch',
     'dataVisualizationsApp.controllers',
-    'dataVisualizationsApp.directives'
+    'dataVisualizationsApp.directives',
+    'dataVisualizationsApp.services'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -40,4 +41,5 @@ angular
 
 angular.module('d3', []);
 angular.module('dataVisualizationsApp.controllers', []);
+angular.module('dataVisualizationsApp.services', []);
 angular.module('dataVisualizationsApp.directives', ['d3']);
