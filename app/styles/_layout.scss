@@ -58,7 +58,12 @@ body {
 }
 
 .layoutcol { 
-	top: 0; bottom: 0; 
+	top: 0; bottom: 0;
+
+	&.fullContent{
+		left:0;
+		right:0;
+	} 
 
 	&.mainLeftCol{
 		left:0;

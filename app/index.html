@@ -35,8 +35,6 @@
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
-    <!-- <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>-->
-    <script src="http://d3js.org/topojson.v1.min.js"></script>
   </head>
   <body ng-app="dataVisualizationsApp">
     <!--[if lt IE 7]>
@@ -46,6 +44,7 @@
     <!-- Add your site or application content here -->
     <div class="header layoutrow">
       <a href="#/">Interactive Data Visualizations</a>
+      <a href="#/visualizations/">View Visualizations</a>
     </div>
 
     <div class="content layoutrow">
@@ -69,6 +68,8 @@
     </script> 
     -->
 
+    <!-- <script src="scripts/vendor/cal-heatmap.min.js"></script>-->
+
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -85,14 +86,21 @@
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
-        <script src="scripts/services/d3.js"></script>
+        <script src="scripts/services/d3Service.js"></script>
+        <script src="scripts/services/topojsonService.js"></script>
+
+        <!-- make sure the d3Service is included before the calHeatMapService -->
+        <script src="scripts/services/calHeatMapService.js"></script>
+        
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/about.js"></script>
+        <script src="scripts/controllers/visualizations.js"></script>
         <script src="scripts/controllers/demo.js"></script>
         <script src="scripts/controllers/demo2.js"></script>
         <script src="scripts/directives/donutchart.js"></script>
         <script src="scripts/directives/d3bars.js"></script>
         <script src="scripts/directives/d3belgium.js"></script>
+        <script src="scripts/directives/d3calendar.js"></script>
         <script src="scripts/directives/dvdataselection.js"></script>
         <script src="scripts/directives/dvmanual.js"></script>
         <script src="scripts/directives/dvbarsdemo.js"></script>

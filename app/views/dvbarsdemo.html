@@ -1,46 +1,40 @@
-<div class="row">
-  <div class="col-xs-12 col-md-12">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-10 col-md-offset-1">Resize the page or change the numbers to see the d3 re-render!</div>
-    </div>
-    <div class="row">
-      <div class="col-md-10 col-md-offset-1"><hr></div>
-    </div>
+      <div class="col-xs-12 col-md-12">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">Resize the page or change the numbers to see the d3 re-render!</div>
+        </div>
+        <div class="row">
+          <div class="col-md-10 col-md-offset-1"><hr></div>
+        </div>
 
-    <div class="row">
-      <div class="col-md-10 col-md-offset-1" ng-controller="DemoCtrl">
-        <span>{{title}}</span>
-        <d3-bars data="d3Data" label="name" on-click="d3OnClick(item)"></d3-bars>
-        <br>
-        <br>
-        <span>First Item</span>
-        <input type="text" ng-model="d3Data[0].score"></input>
-        <br>
-        <span>Second Item</span>
-        <input type="text" ng-model="d3Data[1].score"></input>
-        <br>
-        <span>Third Item</span>
-        <input type="text" ng-model="d3Data[2].score"></input>
+        <div class="row">
+          <div class="col-md-10 col-md-offset-1" ng-controller="DemoCtrl">
+            <span>{{title}}</span>
+            <d3-bars data="d3Data" label="name" on-click="d3OnClick(item)"></d3-bars>
+            <br>
+            <br>
+            <div ng-repeat="theData in d3Data">
+                <span>{{theData.name}}</span>
+                <input type="text" ng-model="theData.score"></input>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-10 col-md-offset-1"><hr></div>
+        </div>
+        <div class="row">
+          <div class="col-md-10 col-md-offset-1" ng-controller="Demo2Ctrl">
+            <span>{{title}}</span>
+            <d3-bars data="d3Data" label="name"></d3-bars>
+            <br>
+            <br>
+            <div ng-repeat="theData in d3Data">
+                <span>{{theData.name}}</span>
+                <input type="text" ng-model="theData.score"></input>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-10 col-md-offset-1"><hr></div>
-    </div>
-    <div class="row">
-      <div class="col-md-10 col-md-offset-1" ng-controller="Demo2Ctrl">
-        <span>{{title}}</span>
-        <d3-bars data="d3Data" label="title"></d3-bars>
-        <br>
-        <br>
-        <span>First Item</span>
-        <input type="text" ng-model="d3Data[0].score"></input>
-        <br>
-        <span>Second Item</span>
-        <input type="text" ng-model="d3Data[1].score"></input>
-        <br>
-        <span>Third Item</span>
-        <input type="text" ng-model="d3Data[2].score"></input>
-      </div>
-    </div>
-  </div>
 </div>
