@@ -60,7 +60,7 @@ angular.module('dataVisualizationsApp.controllers')
 
   	// Private function to check if two specified datasets are not unique
   	var datasetTracker = function(dataset){
-  		return dataset.name + dataset.location + dataset.value + dataset.date + dataset.aggregation + dataset.grouping;
+  		return dataset.name + dataset.location.Name + dataset.value.Name + dataset.date.Name + dataset.aggregation + dataset.grouping;
   	};
 
   	var searchInColumns = function(name, columns){
@@ -173,7 +173,9 @@ angular.module('dataVisualizationsApp.controllers')
 		for(var i = 0; i < $scope.userDatasets.length; i++){
 			$http.get($scope.userDatasets[i].path).
 		  		success(function(data, status, headers, config) { 
-		  			// TODO: validate all columns
+		  			// TODO: extract the correct columns, using "Path"
+
+		  			// TODO: validate all columns (wait for right Date format etc)
 		  		}).
 		  		error(function(data, status, headers, config) {
 			    	showErrorMessage("We were unable to download the requested data.");
