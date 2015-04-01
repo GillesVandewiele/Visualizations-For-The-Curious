@@ -7,29 +7,31 @@
  * # fileread
  */
 angular.module('dataVisualizationsApp.directives')
-  .directive('fileread', ["$http", function ($http) {
+  .directive('fileread', ['modalService', function (modalService) {
     return {
         scope: {
             fileread: "="
         },
-        link: function (scope, element, attributes) {
+        link: function (scope, element) {
             element.bind("change", function (changeEvent) {
+                
                 var reader = new FileReader();
                 reader.onload = function (loadEvent) {
-                    scope.$apply(function () {
-                        scope.fileread = loadEvent.target.result;
-                        /*$http.get(scope.fileread)
-                        	.success(function(data, status, headers, config) { 
-                        		console.log("data = ", data);
-                        	})
-                        	.error(function(data, status, headers, config) {
+                    var jsonObject = JSON.parse(reader.result);
+                    console.log(JSON.stringify(jsonObject));
 
-                        	});*/
-                    	// TODO: pop-up where user can set name and columns
-                        console.log("fileread =", scope.fileread);
-                    });
+                    var modalOptions = {
+                        closeButtonText: 'Cancel',
+                        actionButtonText: 'Delete Customer',
+                        headerText: 'Delete ?',
+                        jsonData: JSON.stringify(jsonObject, null, "\n")
+                    };
+
+                    modalService.showModal({}, modalOptions);
                 }
-                reader.readAsDataURL(changeEvent.target.files[0]);
+                if(changeEvent.target.files[0]){
+                    reader.readAsText(changeEvent.target.files[0]);
+                }
             });
         }
     }

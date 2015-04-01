@@ -21,7 +21,7 @@ angular.module('dataVisualizationsApp.services')
             closeButtonText: 'Close',
             actionButtonText: 'OK',
             headerText: 'Proceed?',
-            bodyText: 'Perform this action?'
+            jsonData: 'Perform this action?'
         };
 
         this.showModal = function (customModalDefaults, customModalOptions) {
