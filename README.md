@@ -102,7 +102,10 @@ To run this scaffold you will need:
     
     `npm install -g generator-karma`
 
-5. **For Windows: Visual Studio**
+5. **Angular bootstrap**
+    Run bower install angular-ui-bootstrap
+
+6. **For Windows: Visual Studio**
 
     For compiling a project, Grunt uses the build tools from MS Visual studio. You can download the free version [here](http://www.visualstudio.com/).
 
