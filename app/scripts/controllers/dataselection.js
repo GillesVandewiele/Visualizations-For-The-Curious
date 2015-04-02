@@ -226,11 +226,11 @@ var hide = function(target) {
 
 
 var hideJsonCode = function(){
-	if(document.getElementById("toggleJson").className == "glyphicon glyphicon-minus"){
+	if(document.getElementById("toggleJson").className == "glyphicon glyphicon-minus-sign"){
 	    document.getElementById("jsonCode").style.display = 'none';
-	    document.getElementById("toggleJson").className = "glyphicon glyphicon-plus";
+	    document.getElementById("toggleJson").className = "glyphicon glyphicon-plus-sign";
 	} else {
 		document.getElementById("jsonCode").style.display = 'block';
-	    document.getElementById("toggleJson").className = "glyphicon glyphicon-minus";
+	    document.getElementById("toggleJson").className = "glyphicon glyphicon-minus-sign";
 	}
 }

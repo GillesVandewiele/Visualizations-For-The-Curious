@@ -44,12 +44,18 @@ angular.module('dataVisualizationsApp.services')
             if (!tempModalDefaults.controller) {
                 tempModalDefaults.controller = function ($scope, $modalInstance) {
                     $scope.modalOptions = tempModalOptions;
+                    $scope.columns = [];
+                    $scope.newColumnName;
+                    $scope.newColumnMapping;
                     $scope.modalOptions.ok = function (result) {
                         $modalInstance.close(result);
                     };
                     $scope.modalOptions.close = function (result) {
                         $modalInstance.dismiss('cancel');
                     };
+                    $scope.addNewColumn = function(){
+                        
+                    }
                 }
             }
 

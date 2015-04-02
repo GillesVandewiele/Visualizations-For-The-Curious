@@ -1,14 +1,24 @@
 <div class="modal-header">
   <h3>{{modalOptions.headerText}}</h3>
 </div>
-<div class="modal-body" style="height:300px;" >
-	<div id="row">
+<div class="modal-body" style="height:300px; overflow-y: auto;" >
+	<div class="row">
 		<div  id="jsonCode" class="right-column well" style="width:85%; float:left; overflow-y: auto; height: 125px;">
 		  <code>{{modalOptions.jsonData}}</code>
 		</div>
 		<div class="left-column" style="width:15%; float:right;">
-		  <button type="button" class="btn btn-default" style="background: Transparent; border:none;"><span id="toggleJson" onclick="hideJsonCode()" class="glyphicon glyphicon-minus"></span></button>
+		  <button type="button" class="btn btn-default" style="background: Transparent; border:none;"><span id="toggleJson" onclick="hideJsonCode()" class="glyphicon glyphicon-minus-sign"></span></button>
+		  <p ng-model="test">{{test}}</p>
 		</div>
+	</div>
+	<div class="row" id="addNewColumn">
+		<label>Column name:</label><input ng-model="newColumnName" type="text">
+		<label>Mapping:</label><input ng-model="newColumnMapping" type="text"> 
+		<button type="button" id="validateColumnBtn" class="btn btn-sm btn-danger"><span id="validateColumnSpan" class="glyphicon glyphicon-remove-circle"></span></button>
+		<button type="button" class="btn btn-sm btn-default"><span id="newColumn" class="glyphicon glyphicon-plus-sign"></span></button> <br>
+	</div>
+	<div class="row" id="addedColumns">
+
 	</div>
 </div>
 <div class="modal-footer">
