@@ -1,8 +1,15 @@
 <div class="modal-header">
   <h3>{{modalOptions.headerText}}</h3>
 </div>
-<div class="modal-body" style="width: 90%; height: 125px; overflow-y: auto;">
-  <code>{{modalOptions.jsonData}}</code>
+<div class="modal-body" style="height:300px;" >
+	<div id="row">
+		<div  id="jsonCode" class="right-column well" style="width:85%; float:left; overflow-y: auto; height: 125px;">
+		  <code>{{modalOptions.jsonData}}</code>
+		</div>
+		<div class="left-column" style="width:15%; float:right;">
+		  <button type="button" class="btn btn-default" style="background: Transparent; border:none;"><span id="toggleJson" onclick="hideJsonCode()" class="glyphicon glyphicon-minus"></span></button>
+		</div>
+	</div>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn" 
