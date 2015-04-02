@@ -14,16 +14,14 @@ angular.module('dataVisualizationsApp.directives')
         },
         link: function (scope, element) {
             element.bind("change", function (changeEvent) {
-                
                 var reader = new FileReader();
                 reader.onload = function (loadEvent) {
                     var jsonObject = JSON.parse(reader.result);
-                    console.log(JSON.stringify(jsonObject));
 
                     var modalOptions = {
                         closeButtonText: 'Cancel',
-                        actionButtonText: 'Delete Customer',
-                        headerText: 'Delete ?',
+                        actionButtonText: 'Add file',
+                        headerText: 'Add new file: ' + changeEvent.target.files[0].name,
                         jsonData: JSON.stringify(jsonObject, null, "\n")
                     };
 

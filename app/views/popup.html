@@ -1,24 +1,106 @@
 <div class="modal-header">
   <h3>{{modalOptions.headerText}}</h3>
 </div>
-<div class="modal-body" style="height:300px; overflow-y: auto;" >
+<div class="modal-body" style="height:500px; overflow-y: auto;" >
+	
+	<div class="row" id="manageColumns">
+		<div class="well" style="width:95%; float:left; overflow-y: auto; height: 200px;">
+			<label>Dataset name:</label><input ng-model="datasetName" type="text">
+			<label>Dataset path:</label><input ng-model="datasetPath" type="text"> 
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th><strong>Column name</strong></th>
+						<th><strong>Mapping</strong></th>
+						<th><strong>Delete?</strong></th>
+					</tr>
+				</thead>
+				<tbody ng-repeat="column in columns">
+					<tr>
+						<td>{{column.name}}</td>
+						<td>{{column.mapping}}</td>
+						<td><span style="cursor:pointer;" ng-click="deleteColumn(column)" class="glyphicon glyphicon-minus"></span></td>
+					</tr>
+				</tbody>
+			</table>
+			<label>Column name:</label><input ng-model="currentColumn.name" type="text">
+			<label>Mapping:</label><input ng-model="currentColumn.mapping" type="text"> 
+			<span id="validateColumnSpan" class="glyphicon glyphicon-remove-circle icon-danger"></span>
+			<span id="newColumn" ng-style="addColumnSpan" class="glyphicon glyphicon-plus-sign" ng-click="addColumn()" style="cursor:pointer;"></span> <br>
+			<div class="well">
+				<code>{{currentColumn.data}}</code>
+			</div>
+		</div>
+	</div>
 	<div class="row">
-		<div  id="jsonCode" class="right-column well" style="width:85%; float:left; overflow-y: auto; height: 125px;">
+		<h4>Data</h4>
+		<div id="jsonCode" class="well" style="width:90%; float:left; overflow-y: auto; height: 125px;">
 		  <code>{{modalOptions.jsonData}}</code>
 		</div>
-		<div class="left-column" style="width:15%; float:right;">
-		  <button type="button" class="btn btn-default" style="background: Transparent; border:none;"><span id="toggleJson" onclick="hideJsonCode()" class="glyphicon glyphicon-minus-sign"></span></button>
-		  <p ng-model="test">{{test}}</p>
+		<div style="width:10%; float:right;">
+		  <span id="toggleJson" onclick="hideJsonCode()" class="glyphicon glyphicon-minus-sign" style="cursor:pointer;"></span>
 		</div>
 	</div>
-	<div class="row" id="addNewColumn">
-		<label>Column name:</label><input ng-model="newColumnName" type="text">
-		<label>Mapping:</label><input ng-model="newColumnMapping" type="text"> 
-		<button type="button" id="validateColumnBtn" class="btn btn-sm btn-danger"><span id="validateColumnSpan" class="glyphicon glyphicon-remove-circle"></span></button>
-		<button type="button" class="btn btn-sm btn-default"><span id="newColumn" class="glyphicon glyphicon-plus-sign"></span></button> <br>
-	</div>
-	<div class="row" id="addedColumns">
+	<div class="row">
+		<h4>Example</h4>
+		<div id="exampleCode" class="right-column well" style="width:90%; float:left; overflow-y: auto; height: 125px;">
+			(<url>http://goessner.net/articles/JsonPath/</url>) <br> <br>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th><strong>Column name</strong></th>
+						<th><strong>Mapping</strong></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Locatie</td>
+						<td>$.KMI_daily[*].Collections.Weerinfo[*].Station</td>
+					</tr>
+					<tr>
+						<td>Temperatuur</td>
+						<td>$.KMI_daily[*].Collections.Weerinfo[*].Temperatuur (C)</td>
+					</tr>
+					<tr>
+						<td>Tijdstip</td>
+						<td>$.KMI_daily[*].Time</td>
+					</tr>
+				</tbody>
+			</table>
+			<hr>
+		  	<code>
+	{
+	"KMI_daily":  [
 
+		{
+			"Time": "Fri May 16 2014",
+			"Frequency": "Daily",
+			"Collections": { 
+				"Weerinfo": [ 
+					{
+						"Station": "Bierset",
+						"Temperatuur (C)": "13.7",
+						"Luchtvochtigheid (%)": "57.2",
+						"Windsnelheid": "13.4"
+					},
+					{
+						"Station": "Buzenol",
+						"Temperatuur (C)": "14.0",
+						"Luchtvochtigheid (%)": "55.9",
+						"Windsnelheid": "15.6"
+					},
+					...
+				]
+			},
+			...
+		}
+	]
+	}
+			</code>
+		</div>
+		<div class="left-column" style="width:10%; float:right;">
+		  <span id="toggleExample" onclick="hideExampleCode()" class="glyphicon glyphicon-minus-sign" style="cursor:pointer;"></span>
+		</div>
 	</div>
 </div>
 <div class="modal-footer">

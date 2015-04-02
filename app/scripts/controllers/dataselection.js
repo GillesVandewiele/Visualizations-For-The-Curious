@@ -200,7 +200,6 @@ angular.module('dataVisualizationsApp.controllers')
 		for(var i = 0; i < $scope.userDatasets.length; i++){
 			$http.get($scope.userDatasets[i].path, {params: {"dataSetNumber": i}})
 		  		.success(function(data, status, headers, config) { 
-		  			console.log("i =====", config.params.dataSetNumber);
 		  			//Extract right columns (and print them for now)
 					$scope.printData($scope.userDatasets[config.params.dataSetNumber], data);
 
@@ -232,5 +231,15 @@ var hideJsonCode = function(){
 	} else {
 		document.getElementById("jsonCode").style.display = 'block';
 	    document.getElementById("toggleJson").className = "glyphicon glyphicon-minus-sign";
+	}
+}
+
+var hideExampleCode = function(){
+	if(document.getElementById("toggleExample").className == "glyphicon glyphicon-minus-sign"){
+	    document.getElementById("exampleCode").style.display = 'none';
+	    document.getElementById("toggleExample").className = "glyphicon glyphicon-plus-sign";
+	} else {
+		document.getElementById("exampleCode").style.display = 'block';
+	    document.getElementById("toggleExample").className = "glyphicon glyphicon-minus-sign";
 	}
 }
