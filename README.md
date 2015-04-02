@@ -104,6 +104,8 @@ To run this scaffold you will need:
 
 5. **Angular bootstrap**
 
+    `bower install angular#1.3.15` and then select version 1.3.15 `!3`
+
 6. **For Windows: Visual Studio**
 
     For compiling a project, Grunt uses the build tools from MS Visual studio. You can download the free version [here](http://www.visualstudio.com/).
