@@ -70,7 +70,7 @@ angular.module('dataVisualizationsApp.controllers')
   			}
   		}
   		return -1;
-  	}
+  	};
 
   	/*var searchByPath = function(path, datasets){
   		for(var i = 0; i < datasets.length; i++){
@@ -89,13 +89,13 @@ angular.module('dataVisualizationsApp.controllers')
 			}
 		}
 		return -1;
-	}
+	};
 
 	// Private function to show an error message on top of the page
 	var showErrorMessage = function(message){
 		show('alert');
 		$scope.errorMessage = message;
-	}
+	};
 
 	// Private function to check if the value column is correct
 	var validateValueColumn = function(column){
@@ -105,7 +105,19 @@ angular.module('dataVisualizationsApp.controllers')
 			}
 		}
 		return true;
-	}
+	};
+
+	var validateDateColumn = function(column){
+		for(var value in column){
+			console.log(value);
+		}
+	};
+
+	var validateLocationColumn = function(column){
+		for(var value in column){
+			console.log(value);
+		}
+	};
 
   	/************************************************/
 
@@ -185,13 +197,12 @@ angular.module('dataVisualizationsApp.controllers')
 
 	$scope.printData = function(dataset, jsonData){
 		if(jsonData != null){
-			console.log("userdataset = ", dataset);
-			console.log("data = ", jsonData);
-			console.log(jsonPath(jsonData, dataset.location.Path));
+			var dataset_locations = jsonPath(jsonData, dataset.location.Path);
 			var dataset_values = jsonPath(jsonData, dataset.value.Path);
-			console.log(dataset_values);
+			var dataset_dates = jsonPath(jsonData, dataset.date.Path);
 			console.log("is value correct?", validateValueColumn(dataset_values));
-			console.log(jsonPath(jsonData, dataset.date.Path));
+			console.log("is date correct?", validateDateColumn(dataset_dates));
+			console.log("is location correct?", validateLocationColumn(dataset_locations));
 		}
 	}
 
