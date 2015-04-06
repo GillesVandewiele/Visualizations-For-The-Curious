@@ -75,8 +75,6 @@ angular.module('dataVisualizationsApp.services')
                             .success(function(data, status, headers, config) { 
                                 if($scope.datasetName != "" && $scope.datasetPath != "" && $scope.columns.length != 0){ 
                                     var index = data.Files.length;
-                                    console.log(data.Files[0].Name);
-                                    console.log(data.Files[index]);
                                     var datasetColumns = [];
                                     for(var i = 0; i < $scope.columns.length; i++){
                                         var newCol = {Name: $scope.columns[i].name, Path: $scope.columns[i].mapping};
@@ -84,14 +82,28 @@ angular.module('dataVisualizationsApp.services')
                                     }
                                     var dataset = {Name:$scope.datasetName, Path:$scope.datasetPath, Columns:datasetColumns};
                                     data.Files[index] = dataset;
-                                    console.log("data = ", data);
-                                    $http.put('data/files.json', data)
+                                    $http({
+                                        url: 'data/files.json',
+                                        method: "POST",
+                                        data: data,
+                                        headers: {'Content-Type': 'application/json; charset=UTF-8', 
+                                                  'Access-Control-Allow-Origin': '*', 
+                                                  'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'}
+                                    })
+                                    .then(function(response) {
+                                            console.log("SUCCESS: data = ", data);
+                                        }, 
+                                        function(response) { // optional
+                                            console.log("FAIL: data = ", data);
+                                        }
+                                    );
+                                    /*$http.post('data/files2.json', data)
                                         .success(function(data, status, headers, config) {
                                             console.log("dit is een test");
                                         })
                                         .error(function(data, status, headers, config){
 
-                                        });
+                                        });*/
                                 }
                             })
                             .error(function(data, status, headers, config){

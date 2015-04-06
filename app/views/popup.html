@@ -4,9 +4,24 @@
 <div class="modal-body" style="height:500px; overflow-y: auto;" >
 	
 	<div class="row" id="manageColumns">
-		<div class="well" style="width:95%; float:left; overflow-y: auto; height: 200px;">
-			<label>Dataset name:</label><input ng-model="datasetName" type="text">
-			<label>Dataset path:</label><input ng-model="datasetPath" type="text"> 
+		<div class="well" style="width:95%; overflow-y: auto; margin-left:2.5%; height: 200px;">
+			
+			<h4> General Information </h4>
+			
+			<label>Dataset name:</label><input ng-model="datasetName" type="text" style="width:30%;">
+			<label>Dataset path:</label><input ng-model="datasetPath" type="text" style="width:30%;"> 
+			<hr style="height:1px;border:none;color:#333;background-color:#333;" />
+
+			<h4> Column Information </h4>
+
+			<label>Column name:</label><input ng-model="currentColumn.name" type="text" style="width:30%;">
+			<label>Mapping:</label><input ng-model="currentColumn.mapping" type="text" style="width:30%;"> 
+			<span id="validateColumnSpan" class="glyphicon glyphicon-remove-circle icon-danger"></span>
+			<span id="newColumn" ng-style="addColumnSpan" class="glyphicon glyphicon-plus-sign" ng-click="addColumn()" style="cursor:pointer;"></span> <br>
+			<div class="well">
+				<code>{{currentColumn.data}}</code>
+			</div>
+
 			<table class="table table-striped">
 				<thead>
 					<tr>
@@ -23,28 +38,18 @@
 					</tr>
 				</tbody>
 			</table>
-			<label>Column name:</label><input ng-model="currentColumn.name" type="text">
-			<label>Mapping:</label><input ng-model="currentColumn.mapping" type="text"> 
-			<span id="validateColumnSpan" class="glyphicon glyphicon-remove-circle icon-danger"></span>
-			<span id="newColumn" ng-style="addColumnSpan" class="glyphicon glyphicon-plus-sign" ng-click="addColumn()" style="cursor:pointer;"></span> <br>
-			<div class="well">
-				<code>{{currentColumn.data}}</code>
-			</div>
+			
 		</div>
 	</div>
 	<div class="row">
-		<h4>Data</h4>
-		<div id="jsonCode" class="well" style="width:90%; float:left; overflow-y: auto; height: 125px;">
-		  <code>{{modalOptions.jsonData}}</code>
-		</div>
-		<div style="width:10%; float:right;">
-		  <span id="toggleJson" onclick="hideJsonCode()" class="glyphicon glyphicon-minus-sign" style="cursor:pointer;"></span>
+		<h4 class="glyphicon glyphicon-minus-sign" id="toggleJson" style="margin-left:2.5%; cursor:pointer;" onclick="hideJsonCode()">Data</h4>
+		<div id="jsonCode" class="well" style="width:90%; overflow-y: auto; margin-left:2.5%; height: 125px;">
+		  <pre>{{modalOptions.jsonData}}</pre>
 		</div>
 	</div>
 	<div class="row">
-		<h4>Example</h4>
-		<div id="exampleCode" class="right-column well" style="width:90%; float:left; overflow-y: auto; height: 125px;">
-			(<url>http://goessner.net/articles/JsonPath/</url>) <br> <br>
+		<h4 class="glyphicon glyphicon-minus-sign" id="toggleExample" onclick="hideExampleCode()" style="margin-left:2.5%; cursor:pointer;">Example</h4>
+		<div id="exampleCode" class="right-column well" style="width:90%; margin-left:2.5%; overflow-y: auto; height: 125px;">
 			<table class="table table-striped">
 				<thead>
 					<tr>
@@ -68,38 +73,33 @@
 				</tbody>
 			</table>
 			<hr>
-		  	<code>
+		  	<pre>
+{ 
+  "KMI_daily":  [
 	{
-	"KMI_daily":  [
-
+	  "Time": "Fri May 16 2014",
+	  "Frequency": "Daily",
+	  "Collections": { 
+	  "Weerinfo": [ 
 		{
-			"Time": "Fri May 16 2014",
-			"Frequency": "Daily",
-			"Collections": { 
-				"Weerinfo": [ 
-					{
-						"Station": "Bierset",
-						"Temperatuur (C)": "13.7",
-						"Luchtvochtigheid (%)": "57.2",
-						"Windsnelheid": "13.4"
-					},
-					{
-						"Station": "Buzenol",
-						"Temperatuur (C)": "14.0",
-						"Luchtvochtigheid (%)": "55.9",
-						"Windsnelheid": "15.6"
-					},
-					...
-				]
-			},
-			...
-		}
-	]
-	}
-			</code>
-		</div>
-		<div class="left-column" style="width:10%; float:right;">
-		  <span id="toggleExample" onclick="hideExampleCode()" class="glyphicon glyphicon-minus-sign" style="cursor:pointer;"></span>
+		  "Station": "Bierset",
+		  "Temperatuur (C)": "13.7",
+		  "Luchtvochtigheid (%)": "57.2",
+		  "Windsnelheid": "13.4"
+		},
+		{
+		  "Station": "Buzenol",
+		  "Temperatuur (C)": "14.0",
+		  "Luchtvochtigheid (%)": "55.9",
+		  "Windsnelheid": "15.6"
+		},
+		  ...
+	  ]
+	},
+	...
+  ]
+}
+			</pre>
 		</div>
 	</div>
 </div>
