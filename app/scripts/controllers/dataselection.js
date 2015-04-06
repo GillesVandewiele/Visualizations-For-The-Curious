@@ -151,6 +151,7 @@ angular.module('dataVisualizationsApp.controllers')
 				if(containsDataset($scope.currentDataset, $scope.userDatasets) == -1){
 					var copy = jQuery.extend(true, {}, $scope.currentDataset);
 					$scope.userDatasets.push(copy);
+					console.log($scope.userDatasets);
 				} else {
 					showErrorMessage("The list already contains this dataset with these columns!");
 				}
