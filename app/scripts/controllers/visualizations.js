@@ -12,7 +12,7 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.amtRows = 2;
     $scope.amtCols = 3;
     $scope.getNumber = function(num) {
-        return new Array(num);   
+    	return Array.apply(null, {length: num}).map(Number.call, Number);
     }
 
     function _initMap(){

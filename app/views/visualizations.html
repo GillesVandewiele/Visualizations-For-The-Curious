@@ -7,8 +7,7 @@
 		<div class="container-fluid">
 			<div class="row" ng-repeat="i in getNumber(amtRows) track by $index">
 				<div class="col-xs-{{12/amtCols}} col-md-{{12/amtCols}}" ng-repeat="j in getNumber(amtCols) track by $index">
-					<!--<d3-belgium></d3-belgium>-->
-					<leaflet id="map{{i*altCols+j}}" width="100%" height="300px" center="center2" layers="layers2"></leaflet>
+					<leaflet id="map{{i*amtCols+j}}" width="100%" height="300px" center="center{{i+1}}" layers="layers{{i+1}}"></leaflet>
 				</div>
 			</div>
 		</div>
