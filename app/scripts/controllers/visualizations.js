@@ -16,14 +16,15 @@ angular.module('dataVisualizationsApp.controllers')
     }
 
     function _initMap(){
+        //center the map on Belgium
+        $scope.center = {
+            lat: 50.5,
+            lng: 4.303,
+            zoom: 7
+        };
         
-        $scope.center1 = {
-            lat: 50.5,
-            lng: 4.303,
-            zoom: 7
-        };
-
-        $scope.layers1 = {
+        //use our own mapbox map
+        $scope.layers = {
             baselayers: {
                 mapbox_terrain: {
                     name: 'MapboxTerrain',
@@ -37,25 +38,7 @@ angular.module('dataVisualizationsApp.controllers')
             }
         };
 
-        $scope.center2 = {
-            lat: 50.5,
-            lng: 4.303,
-            zoom: 7
-        };
-
-        $scope.layers2 = {
-            baselayers: {
-                mapbox_terrain: {
-                    name: 'MapboxTerrain',
-                    url: 'http://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
-                    type: 'xyz',
-                    layerOptions: {
-                        apikey: 'pk.eyJ1Ijoia3NlcnJ1eXMiLCJhIjoiZk9JSWRQUSJ9.SvA5S_FzBKsyXVm6xf5lGQ',
-                        mapid: 'kserruys.lmilh1gp'
-                    }
-                }
-            }
-        };
+        
     }
 
    
