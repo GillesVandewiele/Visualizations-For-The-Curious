@@ -8,9 +8,11 @@
 			<div class="row" ng-repeat="i in getNumber(amtRows) track by $index">
 				<div class="col-xs-{{12/amtCols}} col-md-{{12/amtCols}}" ng-repeat="j in getNumber(amtCols) track by $index">
 					<d3-belgium></d3-belgium>
+
 				</div>
 			</div>
 		</div>
 		<d3-calendar></d3-calendar>
+		<d3-stacked-bar data='[]'></d3-stacked-bar>
 	</div>
 </div>
