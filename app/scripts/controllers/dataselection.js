@@ -6,7 +6,7 @@
  * @description Controller of the dataVisualizationsApp. Downloads a JSON-file from the server to populate all dropdowns and validates the user input.
  */
 angular.module('dataVisualizationsApp.controllers')
-  .controller('DataselectionCtrl', ['$scope', '$http', '$localStorage', function ($scope, $http, $localStorage) {
+  .controller('DataselectionCtrl', ['$scope', '$http', '$localStorage', 'dataService', function ($scope, $http, $localStorage, dataService) {
 
   	/****************** CONSTANTS ********************/
 
@@ -208,6 +208,7 @@ angular.module('dataVisualizationsApp.controllers')
 			    	showErrorMessage("We were unable to download the requested data.");
 				});
 		}
+		dataService.addMultipleDatasets($scope.userDatasets);
 	};
   }]);
 

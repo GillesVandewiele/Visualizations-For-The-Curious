@@ -5,12 +5,7 @@
 	<div class="layoutrow scroll-y">
 		<dv-bars-demo></dv-bars-demo>
 		<div class="container-fluid">
-			<div class="row" ng-repeat="i in getNumber(amtRows) track by $index">
-				<div class="col-xs-{{12/amtCols}} col-md-{{12/amtCols}}" ng-repeat="j in getNumber(amtCols) track by $index">
-					<d3-belgium></d3-belgium>
-
-				</div>
-			</div>
+			<leaflet center="center" layers="layers" height="300px"></leaflet>
 		</div>
 		<d3-calendar></d3-calendar>
 		<d3-stacked-bar data='[]'></d3-stacked-bar>
