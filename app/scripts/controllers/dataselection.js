@@ -219,6 +219,7 @@ angular.module('dataVisualizationsApp.controllers')
 
 
 // The two functions below are to show and hide the error message box.
+// TODO: maybe change this to a more angular way of doing things (ng-show, ng-hide)
 var show = function(target) {
     document.getElementById(target).style.display = 'block';
 }
