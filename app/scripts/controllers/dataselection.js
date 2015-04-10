@@ -1,16 +1,5 @@
 'use strict';
 
-/*
-	TODO:
-		- ERROR HANDLING (HTTP ERRORS + USER INPUT ERRORS)
-		- VALIDATE COLUMNS
-		- PASS THROUGH REQUIRED INFORMATION IN ORDER TO VISUALIZE EVERYTHING
-		- LET USER ADD HIS OWN FILES
-
-		- CLEAN UP CODE
-		- WRITE TEST?
-*/
-
 /**
  * @ngdoc function
  * @name dataVisualizationsApp.controller:DataselectionCtrl
@@ -97,7 +86,7 @@ angular.module('dataVisualizationsApp.controllers')
 	// Private function to check if the value column is correct
 	var validateValueColumn = function(column){
 		for(var value in column){
-			if(typeof(value) != "string"){
+			if(typeof(column[value]) != "string" && isNaN(column[value]) ){
 				return false;
 			}
 		}
@@ -105,14 +94,14 @@ angular.module('dataVisualizationsApp.controllers')
 	};
 
 	var validateDateColumn = function(column){
-		for(var value in column){
-			console.log(value);
+		for(var i = 0; i < 100; i++){
+			console.log(column[i]);
 		}
 	};
 
 	var validateLocationColumn = function(column){
-		for(var value in column){
-			console.log(value);
+		for(var i = 0; i < 100; i++){
+			console.log(column[i]);
 		}
 	};
 
@@ -141,6 +130,7 @@ angular.module('dataVisualizationsApp.controllers')
 			if(indexSelectedDataset != -1){
 				$scope.currentDataset = $localStorage.datasets[indexSelectedDataset];
 				// Ugly hack to update the dropdowns
+				// TODO: try to use $scope.apply();
 				$scope.currentDataset.location = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.location.Name, $scope.currentDataset.columns)];
 				$scope.currentDataset.value = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.value.Name, $scope.currentDataset.columns)];
 				$scope.currentDataset.date = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.date.Name, $scope.currentDataset.columns)];
@@ -206,6 +196,7 @@ angular.module('dataVisualizationsApp.controllers')
   	// This function is called when the user presses the 'V' button and downloads all datasets from the list.
 	$scope.downloadData = function(){
 		for(var i = 0; i < $scope.userDatasets.length; i++){
+			console.log($scope.userDatasets[i].path)
 			$http.get($scope.userDatasets[i].path, {params: {"dataSetNumber": i}})
 		  		.success(function(data, status, headers, config) { 
 		  			//Extract right columns (and print them for now)
@@ -232,20 +223,28 @@ var hide = function(target) {
 
 var hideJsonCode = function(){
 	if(document.getElementById("toggleJson").className == "glyphicon glyphicon-minus-sign"){
-	    document.getElementById("jsonCode").style.display = 'none';
+	    $(document.getElementById("jsonCode")).fadeOut("slow");
 	    document.getElementById("toggleJson").className = "glyphicon glyphicon-plus-sign";
+	    $(document.getElementById("exampleCode")).fadeIn("slow");
+	    document.getElementById("toggleExample").className = "glyphicon glyphicon-minus-sign";
 	} else {
-		document.getElementById("jsonCode").style.display = 'block';
+		$(document.getElementById("jsonCode")).fadeIn("slow");
 	    document.getElementById("toggleJson").className = "glyphicon glyphicon-minus-sign";
+	    $(document.getElementById("exampleCode")).fadeOut("slow");
+	    document.getElementById("toggleExample").className = "glyphicon glyphicon-plus-sign";
 	}
 }
 
 var hideExampleCode = function(){
 	if(document.getElementById("toggleExample").className == "glyphicon glyphicon-minus-sign"){
-	    document.getElementById("exampleCode").style.display = 'none';
+	    $(document.getElementById("exampleCode")).fadeOut("slow");
 	    document.getElementById("toggleExample").className = "glyphicon glyphicon-plus-sign";
+	    $(document.getElementById("jsonCode")).fadeIn("slow");
+	    document.getElementById("toggleJson").className = "glyphicon glyphicon-minus-sign";
 	} else {
-		document.getElementById("exampleCode").style.display = 'block';
+		$(document.getElementById("exampleCode")).fadeIn("slow");
 	    document.getElementById("toggleExample").className = "glyphicon glyphicon-minus-sign";
+	    $(document.getElementById("jsonCode")).fadeOut("slow");
+	    document.getElementById("toggleJson").className = "glyphicon glyphicon-plus-sign";
 	}
 }

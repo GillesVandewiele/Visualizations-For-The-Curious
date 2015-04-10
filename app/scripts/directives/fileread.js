@@ -22,7 +22,7 @@ angular.module('dataVisualizationsApp.directives')
                         closeButtonText: 'Cancel',
                         actionButtonText: 'Add file',
                         headerText: 'Add new file: ' + changeEvent.target.files[0].name,
-                        jsonData: JSON.stringify(jsonObject, null, 2)
+                        jsonData: JSON.stringify(jsonObject, null, 1)
                     };
 
                     modalService.showModal({}, modalOptions);

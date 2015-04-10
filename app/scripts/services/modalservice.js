@@ -46,7 +46,7 @@ angular.module('dataVisualizationsApp.services')
 
                     $scope.modalOptions = tempModalOptions;
                     $scope.columns = [];
-                    $scope.currentColumn = { name: "", mapping: "", data: "" };
+                    $scope.currentColumn = { name: "", mapping: "", data: "", dict: "" };
                     $scope.valid = false;
                     $scope.datasetName = "";
                     $scope.datasetPath = "";
@@ -111,7 +111,7 @@ angular.module('dataVisualizationsApp.services')
                             var copy = jQuery.extend(true, {}, $scope.currentColumn);
                             $scope.columns.push(copy); 
                             disableValid();
-                            $scope.currentColumn.name = ""; $scope.currentColumn.mapping = ""; $scope.currentColumn.data = "";
+                            $scope.currentColumn.name = ""; $scope.currentColumn.mapping = ""; $scope.currentColumn.data = ""; $scope.currentColumn.dict = "";
                         }
                         console.log($scope.columns);
                     };

@@ -2,41 +2,48 @@
 	"Files":  [
 		{
 			"Name": "verkeerstijden",
-			"Path": "data/Verkeerstijden_daily.json",
+			"Path": "data/verkeerstijden/data.json",
 			"Columns": [ 
 				{
 					"Name": "Locatie",
-					"Path": "$.Verkeerstijden_daily[*].Collections.Reistijden[*].Route"
+					"Path": "$.data[*][1][*][0]",
+					"Dict": "data/verkeerstijden/routes.json.gz"
 				},
 				{
 					"Name": "Vertraging",
-					"Path": "$.Verkeerstijden_daily[*].Collections.Reistijden[*].Vertraging"
+					"Path": "$.data[*][1][*][1]",
+					"Dict": ""
 				},
 				{
 					"Name": "Tijdstip",
-					"Path": "$.Verkeerstijden_daily[*].Time"
+					"Path": "$.data[*][0]",
+					"Dict": "data/verkeerstijden/times.json.gz"
 				}
 			]
 		},
 		{
 			"Name": "weerdata",
-			"Path": "data/KMI_daily.json",
+			"Path": "data/KMI/KMI_daily.json",
 			"Columns": [ 
 				{
 					"Name": "Locatie",
-					"Path": "$.KMI_daily[*].Collections.Weerinfo[*].Station"
+					"Path": "$.data[*][1][*][0]",
+					"Dict": "data/KMI/locations.json.gz"
 				},
 				{
 					"Name": "Temperatuur",
-					"Path": "$.KMI_daily[*].Collections.Weerinfo[*].Temperatuur (C)"
+					"Path": "$.data[*][1][*][0]",
+					"Dict": ""
 				},
 				{
 					"Name": "Luchtvochtigheid",
-					"Path": "$.KMI_daily[*].Collections.Weerinfo[*].Luchtvochtigheid (%)"
+					"Path": "$.data[*][1][*][0]",
+					"Dict": ""
 				},
 				{
 					"Name": "Tijdstip",
-					"Path": "$.KMI_daily[*].Time"
+					"Path": "$.data[*][0]",
+					"Dict": "data/KMI/times.json.gz"
 				}
 			]
 		}
