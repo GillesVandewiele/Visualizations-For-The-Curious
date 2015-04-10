@@ -85,12 +85,15 @@ angular.module('dataVisualizationsApp.controllers')
 
 	// Private function to check if the value column is correct
 	var validateValueColumn = function(column){
-		for(var value in column){
+		for(var i = 0; i < 100; i++){
+			console.log(column[i]);
+		}
+		/*for(var value in column){
 			if(typeof(column[value]) != "string" && isNaN(column[value]) ){
 				return false;
 			}
 		}
-		return true;
+		return true;*/
 	};
 
 	var validateDateColumn = function(column){

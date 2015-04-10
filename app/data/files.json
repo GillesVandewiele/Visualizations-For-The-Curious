@@ -23,21 +23,46 @@
 		},
 		{
 			"Name": "weerdata",
-			"Path": "data/KMI/KMI_daily.json",
+			"Path": "data/KMI/data.json",
 			"Columns": [ 
 				{
 					"Name": "Locatie",
-					"Path": "$.data[*][1][*][0]",
+					"Path": "$.data[*][2][*][0]",
 					"Dict": "data/KMI/locations.json.gz"
 				},
 				{
 					"Name": "Temperatuur",
-					"Path": "$.data[*][1][*][0]",
+					"Path": "$.data[*][2][*][1]",
 					"Dict": ""
 				},
 				{
 					"Name": "Luchtvochtigheid",
-					"Path": "$.data[*][1][*][0]",
+					"Path": "$.data[*][2][*][2]",
+					"Dict": ""
+				},
+				{
+					"Name": "Gemiddele Temperatuur",
+					"Path": "$.data[*][1]",
+					"Dict": ""
+				},
+				{
+					"Name": "Luchtdruk",
+					"Path": "$.data[*][2][*][3]",
+					"Dict": ""
+				},
+				{
+					"Name": "Windrichting",
+					"Path": "$.data[*][2][*][4]",
+					"Dict": ""
+				},
+				{
+					"Name": "Windsnelheid",
+					"Path": "$.data[*][2][*][5]",
+					"Dict": ""
+				},
+				{
+					"Name": "Weertype",
+					"Path": "$.data[*][2][*][6]",
 					"Dict": ""
 				},
 				{
