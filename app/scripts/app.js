@@ -12,6 +12,7 @@ angular
   .module('dataVisualizationsApp', [
     'ngAnimate',
     'ngCookies',
+    'ngStorage',
     'ngResource',
     'ngRoute',
     'ngSanitize',

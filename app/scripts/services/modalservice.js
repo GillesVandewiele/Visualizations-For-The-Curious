@@ -8,7 +8,7 @@
  * Service in the dataVisualizationsApp.
  */
 angular.module('dataVisualizationsApp.services')
-  .service('modalService', ['$modal', '$http', function ($modal, $http) {
+  .service('modalService', ['$modal', '$http','$localStorage', function ($modal, $http, $localStorage) {
 
         var modalDefaults = {
             backdrop: true,
@@ -68,47 +68,23 @@ angular.module('dataVisualizationsApp.services')
                     var disableValid = function(){
                         $scope.valid = false;
                         document.getElementById("validateColumnSpan").className = "glyphicon glyphicon-remove-circle icon-danger";
-                    };
+                    };			
 
                     $scope.modalOptions.ok = function (result) {
-                        $http.get('data/files.json')
-                            .success(function(data, status, headers, config) { 
-                                if($scope.datasetName != "" && $scope.datasetPath != "" && $scope.columns.length != 0){ 
-                                    var index = data.Files.length;
-                                    var datasetColumns = [];
-                                    for(var i = 0; i < $scope.columns.length; i++){
-                                        var newCol = {Name: $scope.columns[i].name, Path: $scope.columns[i].mapping};
-                                        datasetColumns.push(newCol);
-                                    }
-                                    var dataset = {Name:$scope.datasetName, Path:$scope.datasetPath, Columns:datasetColumns};
-                                    data.Files[index] = dataset;
-                                    $http({
-                                        url: 'data/files.json',
-                                        method: "POST",
-                                        data: data,
-                                        headers: {'Content-Type': 'application/json; charset=UTF-8', 
-                                                  'Access-Control-Allow-Origin': '*', 
-                                                  'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'}
-                                    })
-                                    .then(function(response) {
-                                            console.log("SUCCESS: data = ", data);
-                                        }, 
-                                        function(response) { // optional
-                                            console.log("FAIL: data = ", data);
-                                        }
-                                    );
-                                    /*$http.post('data/files2.json', data)
-                                        .success(function(data, status, headers, config) {
-                                            console.log("dit is een test");
-                                        })
-                                        .error(function(data, status, headers, config){
+                    	// TODO: Check if atleast 3 columns are given etc..
+                    	// TODO: Check if there is no dataset with the same name yet..
 
-                                        });*/
-                                }
-                            })
-                            .error(function(data, status, headers, config){
-
-                            });
+						var datasetColumns = [];
+                        for(var i = 0; i < $scope.columns.length; i++){
+                            var newCol = {Name: $scope.columns[i].name, Path: $scope.columns[i].mapping};
+                            datasetColumns.push(newCol);
+                        }
+						var dataset = {name:$scope.datasetName, path:$scope.datasetPath, columns:datasetColumns};
+						dataset.location = dataset.columns[0];
+						dataset.value = dataset.columns[1];
+						dataset.date = dataset.columns[dataset.columns.length - 1];
+						$localStorage.datasets.push(dataset);
+						console.log($localStorage.datasets);
                         $modalInstance.close(result);
                     };
 

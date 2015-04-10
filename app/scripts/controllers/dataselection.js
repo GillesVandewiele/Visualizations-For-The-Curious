@@ -17,7 +17,7 @@
  * @description Controller of the dataVisualizationsApp. Downloads a JSON-file from the server to populate all dropdowns and validates the user input.
  */
 angular.module('dataVisualizationsApp.controllers')
-  .controller('DataselectionCtrl', ['$scope', '$http', function ($scope, $http) {
+  .controller('DataselectionCtrl', ['$scope', '$http', '$localStorage', function ($scope, $http, $localStorage) {
 
   	/****************** CONSTANTS ********************/
 
@@ -27,16 +27,15 @@ angular.module('dataVisualizationsApp.controllers')
 
   	/****** VARIABLES USED IN START SCREEN VIEW ******/
 
-  		$scope.fileData = null; // The data stored in files.json on the server
-
 	  	$scope.aggregations = ["NONE", "MEAN", "SUM", "MAX", "MIN", "COUNT"];
 	  	$scope.grouping = ["NONE", "WEEKDAY", "WEEKS", "MONTH", "YEAR"];
 
-	  	$scope.files; // Extra array for faster lookup in the datasets based on name
 	  	$scope.selectedFile;
 
-	  	$scope.datasets; 	// All datasets that were retrieved from the server 
-	  						// Fields: location, value, aggregation, date, grouping
+	  	$localStorage.datasets; 	// All datasets that were retrieved from the server 
+	  						        // Fields: location, value, aggregation, date, grouping
+		$scope.datasets = $localStorage.datasets;
+
 	  	$scope.userDatasets = []; // The defined datasets by the user
 	  	$scope.currentDataset;
 
@@ -48,9 +47,7 @@ angular.module('dataVisualizationsApp.controllers')
 
   	// Private function to create a dataset (which has a lot of properties)
   	var updateDataset = function(data, index){
-  		var dataset = {name:data[index].Name, columns:data[index].Columns, location:{Path:data[index].Columns[0].Path, Name:data[index].Columns[0].Name},
-  		 value:{Path:data[index].Columns[1].Path, Name:data[index].Columns[1].Name},date:{Path:data[index].Columns[data[index].Columns.length-1].Path,
-  		  Name:data[index].Columns[data[index].Columns.length-1].Name}, path:data[index].Path, aggregation:$scope.aggregations[0], 
+  		var dataset = {name:data[index].Name, columns:data[index].Columns, path:data[index].Path, aggregation:$scope.aggregations[0], 
   		  grouping:$scope.grouping[0]};
   		dataset.location = dataset.columns[0];
 		dataset.value = dataset.columns[1];
@@ -72,14 +69,14 @@ angular.module('dataVisualizationsApp.controllers')
   		return -1;
   	};
 
-  	/*var searchByPath = function(path, datasets){
+  	var searchDatasetsByName = function(datasets, name){
   		for(var i = 0; i < datasets.length; i++){
-  			if(path == datasets[i].path){
+  			if(datasets[i].name == name){
   				return i;
   			}
   		}
   		return -1;
-  	}*/
+  	}
 
   	// Check if dataset is in userDatasets using datasetTracker
 	var containsDataset = function(dataset, userDatasets){
@@ -121,37 +118,34 @@ angular.module('dataVisualizationsApp.controllers')
 
   	/************************************************/
 
-    $http.get('data/files.json').
-	  success(function(data, status, headers, config) {  
-
-	  	// Save the data for later checks
-	  	$scope.fileData = data;
-
-	    // If the JSON-file was downloaded successfully, we populate all the dropdowns (files, columns) on the start screen
-	    $scope.datasets = [];
-	    for(var i = 0; i < data.Files.length; i++){
-	    	$scope.datasets.push(updateDataset(data.Files, i));
-	    }
-	    $scope.files = []; 
-	    for(var file in data.Files) {
-	    	$scope.files.push(data.Files[file].Name);
-	    }
-	    //$scope.currentDataset = updateDataset(data.Files, 0);
-	    //$scope.selectedFile = $scope.files[0];
-
-	  }).
-	  error(function(data, status, headers, config) {
-	  	showErrorMessage("We were unable to retrieve files.json from the server.");
-	  });
+  	if($localStorage.datasets == null){
+	    $http.get('data/files.json').
+		  success(function(data, status, headers, config) {  
+		    // If the JSON-file was downloaded successfully, we populate all the dropdowns (files, columns) on the start screen
+		    $localStorage.datasets=[];
+		    for(var i = 0; i < data.Files.length; i++){
+		    	$localStorage.datasets.push(updateDataset(data.Files, i));
+		    }
+		  }).
+		  error(function(data, status, headers, config) {
+		  	showErrorMessage("We were unable to retrieve files.json from the server.");
+		  });
+	}
 
 	// Based on the selection of dataset, we populate the other dropdowns
 	$scope.$watch('selectedFile', function(){
-    	if($scope.fileData != null){
-			var indexSelectedDataset = $scope.files.indexOf($scope.selectedFile);
+    	if($localStorage.datasets != null){
+			var indexSelectedDataset = searchDatasetsByName($localStorage.datasets, $scope.selectedFile);
 			// If the index is equal to -1, 'Add file..' was selected
+			console.log(indexSelectedDataset);
 			if(indexSelectedDataset != -1){
-				$scope.currentDataset = updateDataset($scope.fileData.Files, indexSelectedDataset);
-			} else {
+				$scope.currentDataset = $localStorage.datasets[indexSelectedDataset];
+				// Ugly hack to update the dropdowns
+				$scope.currentDataset.location = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.location.Name, $scope.currentDataset.columns)];
+				$scope.currentDataset.value = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.value.Name, $scope.currentDataset.columns)];
+				$scope.currentDataset.date = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.date.Name, $scope.currentDataset.columns)];
+				$scope.currentDataset.aggregation = $scope.aggregations[0];
+				$scope.currentDataset.grouping = $scope.grouping[0];
 			}
 		}
 	});
@@ -161,9 +155,9 @@ angular.module('dataVisualizationsApp.controllers')
 		if($scope.currentDataset != null){
 			if($scope.userDatasets.length < MAX_DATASETS){
 				if(containsDataset($scope.currentDataset, $scope.userDatasets) == -1){
+					// Take a deep copy
 					var copy = jQuery.extend(true, {}, $scope.currentDataset);
 					$scope.userDatasets.push(copy);
-					console.log($scope.userDatasets);
 				} else {
 					showErrorMessage("The list already contains this dataset with these columns!");
 				}
@@ -177,7 +171,6 @@ angular.module('dataVisualizationsApp.controllers')
 
 	$scope.updateDataset=function(value){
 		$scope.selectedFile = value
-    	//document.getElementById("datasetMenu").value = value;
 	}
 
 	// This function is called when the user presses the '-' button and removes the selected dataset.
@@ -189,7 +182,6 @@ angular.module('dataVisualizationsApp.controllers')
 	$scope.changeDataset = function(obj){
 		$scope.selectedFile = obj.name;
 		$scope.currentDataset = obj;
-		//Had to write this hack in order to bind the model to the view...
 		$scope.currentDataset.location = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.location.Name, $scope.currentDataset.columns)];
 		$scope.currentDataset.value = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.value.Name, $scope.currentDataset.columns)];
 		$scope.currentDataset.date = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.date.Name, $scope.currentDataset.columns)];
@@ -206,6 +198,10 @@ angular.module('dataVisualizationsApp.controllers')
 		}
 	}
 
+	$scope.resetLocalStorage = function(dataset, jsonData){
+		$localStorage.$reset();
+		document.location.reload(true);
+	}
 
   	// This function is called when the user presses the 'V' button and downloads all datasets from the list.
 	$scope.downloadData = function(){
@@ -222,7 +218,6 @@ angular.module('dataVisualizationsApp.controllers')
 				});
 		}
 	};
-
   }]);
 
 
@@ -234,7 +229,6 @@ var show = function(target) {
 var hide = function(target) {
     document.getElementById(target).style.display = 'none';
 }
-
 
 var hideJsonCode = function(){
 	if(document.getElementById("toggleJson").className == "glyphicon glyphicon-minus-sign"){
