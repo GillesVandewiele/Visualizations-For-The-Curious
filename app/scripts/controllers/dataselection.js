@@ -30,6 +30,12 @@ angular.module('dataVisualizationsApp.controllers')
 
 	  	$scope.errorMessage = ""; // Used to show all errors
 
+	  	$scope.dataVisible = true;
+	  	$scope.toggleJSON = function() {
+	  		console.log("executed toggleJSON");
+            $scope.dataVisible = $scope.dataVisible === false ? true: false;
+        };
+
   	/*************************************************/
 
   	/************* PRIVATE FUNCTIONS *****************/
@@ -219,32 +225,4 @@ var show = function(target) {
 
 var hide = function(target) {
     document.getElementById(target).style.display = 'none';
-}
-
-var hideJsonCode = function(){
-	if(document.getElementById("toggleJson").className == "glyphicon glyphicon-minus-sign"){
-	    $(document.getElementById("jsonCode")).fadeOut("slow");
-	    document.getElementById("toggleJson").className = "glyphicon glyphicon-plus-sign";
-	    $(document.getElementById("exampleCode")).fadeIn("slow");
-	    document.getElementById("toggleExample").className = "glyphicon glyphicon-minus-sign";
-	} else {
-		$(document.getElementById("jsonCode")).fadeIn("slow");
-	    document.getElementById("toggleJson").className = "glyphicon glyphicon-minus-sign";
-	    $(document.getElementById("exampleCode")).fadeOut("slow");
-	    document.getElementById("toggleExample").className = "glyphicon glyphicon-plus-sign";
-	}
-}
-
-var hideExampleCode = function(){
-	if(document.getElementById("toggleExample").className == "glyphicon glyphicon-minus-sign"){
-	    $(document.getElementById("exampleCode")).fadeOut("slow");
-	    document.getElementById("toggleExample").className = "glyphicon glyphicon-plus-sign";
-	    $(document.getElementById("jsonCode")).fadeIn("slow");
-	    document.getElementById("toggleJson").className = "glyphicon glyphicon-minus-sign";
-	} else {
-		$(document.getElementById("exampleCode")).fadeIn("slow");
-	    document.getElementById("toggleExample").className = "glyphicon glyphicon-minus-sign";
-	    $(document.getElementById("jsonCode")).fadeOut("slow");
-	    document.getElementById("toggleJson").className = "glyphicon glyphicon-plus-sign";
-	}
 }
