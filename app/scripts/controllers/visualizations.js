@@ -12,7 +12,7 @@ angular.module('dataVisualizationsApp.controllers')
 
     function _initMap(){
         
-        $scope.center = {
+        $scope.center = 
             lat: 50.5,
             lng: 4.303,
             zoom: 8
