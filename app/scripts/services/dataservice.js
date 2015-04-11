@@ -16,11 +16,13 @@ angular.module('dataVisualizationsApp.services')
 	var timesDict = [];
 	var locationsDict = [];
 
+	//add one dataset a the time
 	this.addOneDataset = function(d){
 		userDatasets[count] = d;
 		count++;	
 	};
 
+	//add mutliple datasets at once
 	this.addMultipleDatasets = function(ds){
 		for(var i=0;i<ds.length;i++){
 			userDatasets[count] = ds[i];
@@ -28,30 +30,28 @@ angular.module('dataVisualizationsApp.services')
 		}
 	};
 
+	//get all datasets
 	this.getDatasets = function(){
 	    var deferredGetDatasets = $q.defer();
     	var promiseGetDatasets = deferredGetDatasets.promise;
 
     	if(userDatasets.length > 0){
     		deferredGetDatasets.resolve(userDatasets);
-    	} else {
-    		deferredGetDatasets.reject('userDatasets not yet loaded');
     	}
 
 		return deferredGetDatasets.promise;	
 	};
 
+	//get dataset with index index
 	this.getDataset = function(index){
 	    var deferredGetDataset = $q.defer();
     	var promiseGetDataset = deferredGetDataset.promise;
 
     	if(userDatasets[index]){
     		deferredGetDataset.resolve(userDatasets[index]);
-    	} else {
-    		deferredGetDataset.reject('userDatasets not yet loaded');
     	}
 
-		return deferredGetDataset.promise;		
+		return deferredGetDataset.promise;	
 	};
 
 	//function returning the actual data of the dataset with index index
@@ -71,14 +71,10 @@ angular.module('dataVisualizationsApp.services')
 					.then(function(data){
 						actualData[index] = data.data;
 						deferredData.resolve(actualData[index]);
+						deferredGetActualData.resolve(actualData[index]);
+						return deferredGetActualData.promise;
 					});
 			});
-
-		if(actualData[index]){
-			deferredGetActualData.resolve(actualData[index]);
-		} else {
-			deferredGetActualData.reject('actualData not yet loaded');
-		}
 
 		return deferredGetActualData.promise;
 	}
@@ -100,16 +96,12 @@ angular.module('dataVisualizationsApp.services')
 					.then(function(data){
 						timesDict[index] = data.data;
 						deferredTimesDict.resolve(timesDict[index]);
+						deferredGetTimesDict.resolve(timesDict[index]);
+						return deferredGetTimesDict.promise;	
 					});
 			});
 
-		if(timesDict[index]){
-			deferredGetTimesDict.resolve(timesDict[index]);
-		} else {
-			deferredGetTimesDict.reject('timesDict not yet loaded');
-		}
-
-		return deferredGetTimesDict.promise;
+		return deferredGetTimesDict.promise;	
 	}
 
 	//function returning the locations dictionnary of the dataset with index index
@@ -129,14 +121,10 @@ angular.module('dataVisualizationsApp.services')
 					.then(function(data){
 						locationsDict[index] = data.data;
 						deferredLocationsDict.resolve(locationsDict[index]);
+						deferredGetLocationsDict.resolve(locationsDict[index]);
+						return deferredGetLocationsDict.promise;
 					});
 			});
-
-		if(locationsDict[index]){
-			deferredGetLocationsDict.resolve(locationsDict[index]);
-		} else {
-			deferredGetLocationsDict.reject('locationsDict not yet loaded');
-		}
 
 		return deferredGetLocationsDict.promise;
 	}

@@ -100,15 +100,15 @@ angular.module('dataVisualizationsApp.controllers')
 	};
 
 	var validateDateColumn = function(column){
-		for(var i = 0; i < 100; i++){
+		/*for(var i = 0; i < 100; i++){
 			console.log(column[i]);
-		}
+		}*/
 	};
 
 	var validateLocationColumn = function(column){
-		for(var i = 0; i < 100; i++){
+		/*for(var i = 0; i < 100; i++){
 			console.log(column[i]);
-		}
+		}*/
 	};
 
   	/************************************************/

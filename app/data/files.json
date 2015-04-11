@@ -28,7 +28,7 @@
 				{
 					"Name": "Locatie",
 					"Path": "$.data[*][1][*][0]",
-					"Dict": "data/KMI/locations.json.gz"
+					"Dict": "data/KMI/locations.json"
 				},
 				{
 					"Name": "Temperatuur",
@@ -43,7 +43,7 @@
 				{
 					"Name": "Tijdstip",
 					"Path": "$.data[*][0]",
-					"Dict": "data/KMI/times.json.gz"
+					"Dict": "data/KMI/times.json"
 				}
 			]
 		}
