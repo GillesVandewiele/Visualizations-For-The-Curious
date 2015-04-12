@@ -16,6 +16,17 @@ angular.module('dataVisualizationsApp.services')
 	var timesDict = [];
 	var locationsDict = [];
 
+	var values = [];
+	var times = [];
+	var locations = [];
+
+	var valuesLoaded = [];
+	var timesLoaded = [];
+	var locationsLoaded = [];
+
+
+	/*************** DECLARE USERSDATASETS **********************/
+
 	//add one dataset a the time
 	this.addOneDataset = function(d){
 		userDatasets[count] = d;
@@ -26,107 +37,142 @@ angular.module('dataVisualizationsApp.services')
 	this.addMultipleDatasets = function(ds){
 		for(var i=0;i<ds.length;i++){
 			userDatasets[count] = ds[i];
-			count++;			
+			count++;		
 		}
 	};
 
-	//get all datasets
-	this.getDatasets = function(){
-	    var deferredGetDatasets = $q.defer();
-    	var promiseGetDatasets = deferredGetDatasets.promise;
 
-    	if(userDatasets.length > 0){
-    		deferredGetDatasets.resolve(userDatasets);
-    	}
 
-		return deferredGetDatasets.promise;	
-	};
+	/*************** LOAD THE DATA INTO THE SERVICE ***************/
 
-	//get dataset with index index
-	this.getDataset = function(index){
-	    var deferredGetDataset = $q.defer();
-    	var promiseGetDataset = deferredGetDataset.promise;
+	//function that loads the actual data of all the datasets
+	function loadActualData(index){
+		var deferred = $q.defer();
 
-    	if(userDatasets[index]){
-    		deferredGetDataset.resolve(userDatasets[index]);
-    	}
+		var deferredData = $q.defer();
+		var promiseData = deferredData.promise;
+		promiseData = $http.get(userDatasets[index].path);
 
-		return deferredGetDataset.promise;	
-	};
-
-	//function returning the actual data of the dataset with index index
-	this.getActualData = function(index){
-		var deferredGetActualData = $q.defer();
-		var promiseGetActualData = deferredGetActualData.promise;
-
-		var datasetInfoPromise = this.getDataset(index);
-
-		datasetInfoPromise
+		promiseData
 			.then(function(data){
-				var deferredData = $q.defer();
-				var promiseData = deferredData.promise;
-				promiseData = $http.get(userDatasets[index].path);
-
-				promiseData
-					.then(function(data){
-						actualData[index] = data.data;
-						deferredData.resolve(actualData[index]);
-						deferredGetActualData.resolve(actualData[index]);
-						return deferredGetActualData.promise;
-					});
+				actualData[index] = data.data;
+				deferredData.resolve(actualData[index]);
+				deferred.resolve(index);
+				return deferred.promise;
 			});
 
-		return deferredGetActualData.promise;
+		return deferred.promise;
 	}
 
-	//function returning the times dictionnary of the dataset with index index
-	this.getTimesDict = function(index){
-		var deferredGetTimesDict = $q.defer();
-		var promiseGetTimesDict = deferredGetTimesDict.promise;
+	//function that loads the times dictionnary of all the datasets
+	function loadTimesDict(index){
+		var deferred = $q.defer();
 
-		var datasetInfoPromise = this.getDataset(index);
+		var deferredTimesDict = $q.defer();
+		var promiseTimesDict = deferredTimesDict.promise;
+		promiseTimesDict = $http.get(userDatasets[index].date.Dict);
 
-		datasetInfoPromise
+		promiseTimesDict
 			.then(function(data){
-				var deferredTimesDict = $q.defer();
-				var promiseTimesDict = deferredTimesDict.promise;
-				promiseTimesDict = $http.get(userDatasets[index].date.Dict);
-
-				promiseTimesDict
-					.then(function(data){
-						timesDict[index] = data.data;
-						deferredTimesDict.resolve(timesDict[index]);
-						deferredGetTimesDict.resolve(timesDict[index]);
-						return deferredGetTimesDict.promise;	
-					});
+				timesDict[index] = jsonPath(data.data, "$.times[*]");
+				deferredTimesDict.resolve(timesDict[index]);
+				deferred.resolve(index);
+				return deferred.promise;
 			});
 
-		return deferredGetTimesDict.promise;	
+		return deferred.promise;
 	}
 
-	//function returning the locations dictionnary of the dataset with index index
-	this.getLocationsDict = function(index){
-		var deferredGetLocationsDict = $q.defer();
-		var promiseGetLocationsDict = deferredGetLocationsDict.promise;
+	//function that loads the locations dictionnary of all the datasets
+	function loadLocationsDict(index){
+		var deferred = $q.defer();
 
-		var datasetInfoPromise = this.getDataset(index);
+		var deferredLocationsDict = $q.defer();
+		var promiseLocationsDict = deferredLocationsDict.promise;
+		promiseLocationsDict = $http.get(userDatasets[index].location.Dict);
 
-		datasetInfoPromise
+		promiseLocationsDict
 			.then(function(data){
-				var deferredLocationsDict = $q.defer();
-				var promiseLocationsDict = deferredLocationsDict.promise;
-				promiseLocationsDict = $http.get(userDatasets[index].location.Dict);
-
-				promiseLocationsDict
-					.then(function(data){
-						locationsDict[index] = data.data;
-						deferredLocationsDict.resolve(locationsDict[index]);
-						deferredGetLocationsDict.resolve(locationsDict[index]);
-						return deferredGetLocationsDict.promise;
-					});
+				locationsDict[index] = jsonPath(data.data, "$.routes[*]");
+				deferredLocationsDict.resolve(locationsDict[index]);
+				deferred.resolve(index);
+				return deferred.promise;
 			});
+		
+		return deferred.promise;
+	}
 
-		return deferredGetLocationsDict.promise;
+	/***************** AGGREGATION FUNCTIONS *********************/
+
+	function aggregateData(index){
+		//uses actualData and timesDict to aggregate given userDatasets[index].aggregation and userDatasets[index].aggregation
+
+		//for now we will pretend no aggregation or grouping is given
+
+
+		values = jsonPath(actualData[index], userDatasets[index].value.Path);
+		times = jsonPath(actualData[index], userDatasets[index].date.Path);
+		locations = jsonPath(actualData[index], userDatasets[index].location.Path);
+	}
+
+	
+	/***************** INITIALISE DATASERVICE *******************/
+	this.loadDataInService = function() {
+		//fist make sure userDatasets is loaded
+		for(var i=0; i<count; i++){
+			while(userDatasets[i] == undefined){}
+
+			var promiseData = loadActualData(i);
+
+			//problem: when giving i as parameter for aggregateData: i is already incremented when entering the .then
+
+			promiseData
+				.then(function(index){
+					aggregateData(index);
+				});
+
+			loadTimesDict(i);
+			loadLocationsDict(i);
+		}
+	}
+
+
+	/***************** GET DATA FROM SERVICE ********************/
+	this.getNumDatasets = function(){
+		return count;
+	}
+
+	this.getValues = function(index){
+	    var deferredGetValues = $q.defer();
+
+	    //wait until values are loaded
+    	while(!valuesLoaded[index]){
+    	}
+
+		deferredGetValues.resolve(values);	
+		return deferredGetValues.promise;	
+	}
+
+	this.getTimes = function(index){
+	    var deferredGetTimes = $q.defer();
+
+	    //wait until times are loaded
+    	while(!timesLoaded[index]){
+    	}
+
+		deferredGetTimes.resolve(values);
+		return deferredGetTimes.promise;	
+	}
+
+	this.getLocations = function(index){
+	    var deferredGetLocations = $q.defer();
+
+	    //wait until locations are loaded
+    	while(!locationsLoaded[index]){
+    	}
+
+		deferredGetLocations.resolve(values);
+		return deferredGetLocations.promise;	
 	}
 
   }]);

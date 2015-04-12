@@ -16,7 +16,7 @@ angular.module('dataVisualizationsApp.controllers')
     //this code is for testing porposes only,
     //a watch should be used to check wether the data is updated or not
     //after data is succesfully loaded into dataset,
-    $scope.actualDataLoaded = [];
+    /*$scope.actualDataLoaded = [];
     $scope.timesDictLoaded = [];
     $scope.locationsDictLoaded = [];
 
@@ -30,9 +30,15 @@ angular.module('dataVisualizationsApp.controllers')
 
     var promiseActualData = [];
     var promiseTimesDict = [];
-    var promiseLocationsDict = [];
+    var promiseLocationsDict = [];*/
 
-    promiseDatasets
+    dataService.loadDataInService();
+
+    $scope.numDatasets = dataService.getNumDatasets();
+
+
+
+    /*promiseDatasets
         .then(function(data){
             datasets = data;
             console.log(data);           
@@ -68,7 +74,7 @@ angular.module('dataVisualizationsApp.controllers')
                         console.log(locationsDict);
                     });
             }
-        });
+        });*/
 
 
     /****************** MAP INITIALISATION *********************/
