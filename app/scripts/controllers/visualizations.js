@@ -32,11 +32,16 @@ angular.module('dataVisualizationsApp.controllers')
     var promiseTimesDict = [];
     var promiseLocationsDict = [];*/
 
-    dataService.loadDataInService();
+    
 
     $scope.numDatasets = dataService.getNumDatasets();
 
+    var promiseValues = dataService.getValues(0);
 
+    promiseValues
+        .then(function(values){
+            console.log(values);
+        });
 
     /*promiseDatasets
         .then(function(data){

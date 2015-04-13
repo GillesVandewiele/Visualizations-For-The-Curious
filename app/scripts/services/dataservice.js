@@ -20,9 +20,7 @@ angular.module('dataVisualizationsApp.services')
 	var times = [];
 	var locations = [];
 
-	var valuesLoaded = [];
-	var timesLoaded = [];
-	var locationsLoaded = [];
+	var dataIsLoading = []
 
 
 	/*************** DECLARE USERSDATASETS **********************/
@@ -30,20 +28,53 @@ angular.module('dataVisualizationsApp.services')
 	//add one dataset a the time
 	this.addOneDataset = function(d){
 		userDatasets[count] = d;
-		count++;	
+		count++;
+		dataIsLoading[count] = false;
+
+		loadDataInService();
 	};
 
 	//add mutliple datasets at once
 	this.addMultipleDatasets = function(ds){
 		for(var i=0;i<ds.length;i++){
 			userDatasets[count] = ds[i];
-			count++;		
+			count++;
+			dataIsLoading[count] = false;		
 		}
+
+		loadDataInService();
 	};
+
+	this.deleteDatasets = function(){
+		userDatasets = [];
+		count = 0;
+
+		actualData = [];
+		timesDict = [];
+		locationsDict = [];
+
+		values = [];
+		times = [];
+		locations = [];
+
+		dataIsLoading = [];
+	}
 
 
 
 	/*************** LOAD THE DATA INTO THE SERVICE ***************/
+
+	function loadDataset(index){
+		var deferred = $q.defer();
+
+		//hack to make return wait until userDataset has been loaded.
+		//this is missing the purpose of promises...
+		//must be checked
+		while(userDatasets[index] == undefined || userDatasets == undefined){}
+		deferred.resolve(index);
+
+		return deferred.promise;
+	}
 
 	//function that loads the actual data of all the datasets
 	function loadActualData(index){
@@ -117,22 +148,30 @@ angular.module('dataVisualizationsApp.services')
 
 	
 	/***************** INITIALISE DATASERVICE *******************/
-	this.loadDataInService = function() {
+
+	function loadDataInService() {
 		//fist make sure userDatasets is loaded
 		for(var i=0; i<count; i++){
-			while(userDatasets[i] == undefined){}
+			if(!dataIsLoading[i]){
+				var promiseDataset = loadDataset(i);
 
-			var promiseData = loadActualData(i);
+				promiseDataset
+					.then(function(index){
+						var promiseActualData = loadActualData(index);
 
-			//problem: when giving i as parameter for aggregateData: i is already incremented when entering the .then
+						//problem: when giving i as parameter for aggregateData: i is already incremented when entering the .then
 
-			promiseData
-				.then(function(index){
-					aggregateData(index);
-				});
+						promiseActualData
+							.then(function(index){
+								aggregateData(index);
+							});
 
-			loadTimesDict(i);
-			loadLocationsDict(i);
+						loadTimesDict(index);
+						loadLocationsDict(index);
+					})
+
+				dataIsLoading[i] = true;
+			}
 		}
 	}
 
@@ -144,34 +183,42 @@ angular.module('dataVisualizationsApp.services')
 
 	this.getValues = function(index){
 	    var deferredGetValues = $q.defer();
+ 
+	    if(index < count){	    	
+		    //wait until values are loaded
+	    	while(values[index] == undefined){}
+			deferredGetValues.resolve(values);	
+	    } else {
+	    	deferredGetValues.reject('No dataset with index '+index);
+	    }
 
-	    //wait until values are loaded
-    	while(!valuesLoaded[index]){
-    	}
-
-		deferredGetValues.resolve(values);	
 		return deferredGetValues.promise;	
 	}
 
 	this.getTimes = function(index){
 	    var deferredGetTimes = $q.defer();
 
-	    //wait until times are loaded
-    	while(!timesLoaded[index]){
-    	}
-
-		deferredGetTimes.resolve(values);
+	    if(index < count){	  
+		    //wait until times are loaded
+	    	while(times[index] == undefined){}
+			deferredGetTimes.resolve(times);
+		} else {
+			deferredGetTimes.reject('No dataset with index '+index);
+		}
 		return deferredGetTimes.promise;	
 	}
 
 	this.getLocations = function(index){
 	    var deferredGetLocations = $q.defer();
 
+	    if(index < count){	  
 	    //wait until locations are loaded
-    	while(!locationsLoaded[index]){
-    	}
+	    	while(locations[index] == undefined){}
+			deferredGetLocations.resolve(locations);
+		} else {
+			deferredGetLocations.reject('No dataset with index '+index);
+		}
 
-		deferredGetLocations.resolve(values);
 		return deferredGetLocations.promise;	
 	}
 
