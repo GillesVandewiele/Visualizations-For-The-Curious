@@ -273,7 +273,7 @@ angular.module('dataVisualizationsApp.services')
 		return deferredGetLocations.promise;	
 	}
 
-	//function returning the timesDict
+	//function returning the valuesDict
 	this.getValuesDict = function(index){
 		var deferredGetValuesDict = $q.defer();
 
