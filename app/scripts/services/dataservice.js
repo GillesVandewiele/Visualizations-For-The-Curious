@@ -171,6 +171,7 @@ angular.module('dataVisualizationsApp.services')
 	
 	/***************** INITIALISE DATASERVICE *******************/
 
+	//function loading all data into the service
 	function loadDataInService() {
 		//fist make sure userDatasets is loaded
 		for(var i=0; i<count; i++){
@@ -199,6 +200,8 @@ angular.module('dataVisualizationsApp.services')
 
 
 	/***************** GET DATA FROM SERVICE ********************/
+
+	//function returning the number of datasets in the service
 	this.getNumDatasets = function(){
 		return count;
 	}
@@ -247,11 +250,12 @@ angular.module('dataVisualizationsApp.services')
 		return deferredGetLocations.promise;	
 	}
 
+	//function returning the timesDict
 	this.getTimesDict = function(index){
 		var deferredGetTimesDict = $q.defer();
 
 	    if(index < count){	  
-	    //wait until locations are loaded
+	    //wait until timesDict is loaded
 	    	while(timesDict[index] == undefined){}
 			deferredGetTimesDict.resolve(timesDict[index]);
 		} else {
@@ -261,12 +265,13 @@ angular.module('dataVisualizationsApp.services')
 		return deferredGetTimesDict.promise;	
 	}
 
+	//function returning the locationsDict
 	this.getLocationsDict = function(index){
 		var deferredGetLocationsDict = $q.defer();
 
 	    if(index < count){	  
-	    //wait until locations are loaded
-	    	while(timesDict[index] == undefined){}
+	    //wait until locationsDict is loaded
+	    	while(locationsDict[index] == undefined){}
 			deferredGetLocationsDict.resolve(locationsDict[index]);
 		} else {
 			deferredGetLocationsDict.reject('No locationsDict with index '+index);
