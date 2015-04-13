@@ -20,6 +20,8 @@ angular.module('dataVisualizationsApp.services')
 	var times = [];
 	var locations = [];
 
+	var returnData = [];
+
 	var dataIsLoading = []
 
 
@@ -136,14 +138,34 @@ angular.module('dataVisualizationsApp.services')
 	/***************** AGGREGATION FUNCTIONS *********************/
 
 	function aggregateData(index){
-		//uses actualData and timesDict to aggregate given userDatasets[index].aggregation and userDatasets[index].aggregation
-
 		//for now we will pretend no aggregation or grouping is given
+		times[index] = jsonPath(actualData[index], userDatasets[index].date.Path);
+		var tmpValues = jsonPath(actualData[index], userDatasets[index].value.Path);		
+		var tmpLocations = jsonPath(actualData[index], userDatasets[index].location.Path);
+
+		//free unused memory
+		actualData = [];
 
 
-		values = jsonPath(actualData[index], userDatasets[index].value.Path);
-		times = jsonPath(actualData[index], userDatasets[index].date.Path);
-		locations = jsonPath(actualData[index], userDatasets[index].location.Path);
+		///
+		/// TODO: aggregation
+		///
+
+
+		//one problem: we do not know what times belong to which locations and values
+		//if we can assume every time entry has an equal amount of value/locations pairs, the problem is solved. --> implemented
+		//else actualData can be used and unnecessary attributes can be deleted --> best option --> would require hack i'd rather not implement
+
+		var timesLength = times[index].length;
+		var entriesPerTime = tmpValues.length/timesLength;
+
+		values[index] = [];
+		locations[index] = [];
+
+		for(var i=0; i<timesLength; i++){
+			values[index][i] = tmpValues.slice(i*entriesPerTime,(i+1)*entriesPerTime);
+			locations[index][i] = tmpLocations.slice(i*entriesPerTime,(i+1)*entriesPerTime);
+		}
 	}
 
 	
@@ -181,45 +203,77 @@ angular.module('dataVisualizationsApp.services')
 		return count;
 	}
 
+	//return the values: in some cases a dict will be necessary to map numbers to text
 	this.getValues = function(index){
 	    var deferredGetValues = $q.defer();
  
 	    if(index < count){	    	
 		    //wait until values are loaded
 	    	while(values[index] == undefined){}
-			deferredGetValues.resolve(values);	
+			deferredGetValues.resolve(values[index]);	
 	    } else {
-	    	deferredGetValues.reject('No dataset with index '+index);
+	    	deferredGetValues.reject('No values with index '+index);
 	    }
 
 		return deferredGetValues.promise;	
 	}
 
+	//return the times: dict will be necessary to convert numbers to real times
 	this.getTimes = function(index){
 	    var deferredGetTimes = $q.defer();
 
 	    if(index < count){	  
 		    //wait until times are loaded
 	    	while(times[index] == undefined){}
-			deferredGetTimes.resolve(times);
+			deferredGetTimes.resolve(times[index]);
 		} else {
-			deferredGetTimes.reject('No dataset with index '+index);
+			deferredGetTimes.reject('No times with index '+index);
 		}
 		return deferredGetTimes.promise;	
 	}
 
+	//returns the locations: dict will be necessary to convert numbers to real locations
 	this.getLocations = function(index){
 	    var deferredGetLocations = $q.defer();
 
 	    if(index < count){	  
 	    //wait until locations are loaded
 	    	while(locations[index] == undefined){}
-			deferredGetLocations.resolve(locations);
+			deferredGetLocations.resolve(locations[index]);
 		} else {
-			deferredGetLocations.reject('No dataset with index '+index);
+			deferredGetLocations.reject('No locations with index '+index);
 		}
 
 		return deferredGetLocations.promise;	
 	}
+
+	this.getTimesDict = function(index){
+		var deferredGetTimesDict = $q.defer();
+
+	    if(index < count){	  
+	    //wait until locations are loaded
+	    	while(timesDict[index] == undefined){}
+			deferredGetTimesDict.resolve(timesDict[index]);
+		} else {
+			deferredGetTimesDict.reject('No timesDict with index '+index);
+		}
+
+		return deferredGetTimesDict.promise;	
+	}
+
+	this.getLocationsDict = function(index){
+		var deferredGetLocationsDict = $q.defer();
+
+	    if(index < count){	  
+	    //wait until locations are loaded
+	    	while(timesDict[index] == undefined){}
+			deferredGetLocationsDict.resolve(locationsDict[index]);
+		} else {
+			deferredGetLocationsDict.reject('No locationsDict with index '+index);
+		}
+
+		return deferredGetLocationsDict.promise;
+	}
+
 
   }]);

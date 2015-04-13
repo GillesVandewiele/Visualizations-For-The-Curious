@@ -12,75 +12,34 @@ angular.module('dataVisualizationsApp.controllers')
 
     /********************LOAD DATA**********************/
 
-    //getting data using promises
-    //this code is for testing porposes only,
-    //a watch should be used to check wether the data is updated or not
-    //after data is succesfully loaded into dataset,
-    /*$scope.actualDataLoaded = [];
-    $scope.timesDictLoaded = [];
-    $scope.locationsDictLoaded = [];
-
-    var datasets = [];
-
-    var promiseDatasets = dataService.getDatasets();
-
-    var actualData = [];
-    var timesDict = [];
-    var locationsDict = []; 
-
-    var promiseActualData = [];
-    var promiseTimesDict = [];
-    var promiseLocationsDict = [];*/
-
-    
 
     $scope.numDatasets = dataService.getNumDatasets();
+
+    $scope.values = [];
+    $scope.times = [];
+    $scope.locations = [];
 
     var promiseValues = dataService.getValues(0);
 
     promiseValues
         .then(function(values){
-            console.log(values);
+            $scope.values[0] = values;
         });
 
-    /*promiseDatasets
-        .then(function(data){
-            datasets = data;
-            console.log(data);           
-        })
-        .then(function(){
-            for(var i=0; i<datasets.length; i++){
-                //there is always actualData
-                promiseActualData[i] = dataService.getActualData(i);
-                promiseActualData[i]  
-                    .then(function(data) {
-                        console.log('Data loaded');
-                        actualData = data;
-                        console.log(actualData);
-                    });
+    var promiseTimes = dataService.getTimes(0);
 
-                //there is always a timesDict
-                promiseTimesDict[i] = dataService.getTimesDict(i);
-                promiseTimesDict[i]  
-                    .then(function(data) {
-                        console.log('Data loaded');
-                        timesDict = data;
-                        console.log(timesDict);
-                    });
+    promiseTimes
+        .then(function(times){
+            $scope.times[0] = times;
+        });
 
-                //not every dataset has locations!! (Weginfo not)
-                //TODO: there must be a check for all existing DICTS
-                //These dicts must also be accessable... somehow...
-                promiseLocationsDict[i] = dataService.getLocationsDict(i);
-                promiseLocationsDict[i]  
-                    .then(function(data) {
-                        console.log('Data loaded');
-                        locationsDict = data;
-                        console.log(locationsDict);
-                    });
-            }
-        });*/
 
+    var promiseLocations = dataService.getLocations(0);
+
+    promiseLocations
+        .then(function(locations){
+            $scope.locations[0] = locations;
+        });
 
     /****************** MAP INITIALISATION *********************/
 
@@ -108,6 +67,8 @@ angular.module('dataVisualizationsApp.controllers')
 
     //if data has been loaded, visualise (use a watch function)
     //wait untill all data has been loaded. but how?
-    //$scope.$watch('', function(){});
+    $scope.$watch('values', function(){
+        console.log($scope.values);
+    });
 
   }]);
