@@ -143,9 +143,6 @@ angular.module('dataVisualizationsApp.services')
 		var tmpValues = jsonPath(actualData[index], userDatasets[index].value.Path);		
 		var tmpLocations = jsonPath(actualData[index], userDatasets[index].location.Path);
 
-		//free unused memory
-		actualData = [];
-
 
 		///
 		/// TODO: aggregation
@@ -180,17 +177,15 @@ angular.module('dataVisualizationsApp.services')
 
 				promiseDataset
 					.then(function(index){
+						loadTimesDict(index);
+						loadLocationsDict(index);
+						
 						var promiseActualData = loadActualData(index);
-
-						//problem: when giving i as parameter for aggregateData: i is already incremented when entering the .then
 
 						promiseActualData
 							.then(function(index){
 								aggregateData(index);
 							});
-
-						loadTimesDict(index);
-						loadLocationsDict(index);
 					})
 
 				dataIsLoading[i] = true;
