@@ -13,6 +13,8 @@ angular.module('dataVisualizationsApp.services')
 	var count = 0;
 
 	var actualData = [];
+
+	var valuesDict = [];
 	var timesDict = [];
 	var locationsDict = [];
 
@@ -97,6 +99,34 @@ angular.module('dataVisualizationsApp.services')
 		return deferred.promise;
 	}
 
+	//function that loads the locations dictionnary of all the datasets
+	function loadValuesDict(index){
+		var deferred = $q.defer();
+
+		if(userDatasets[index].value.Dict ==! ""){
+			var deferredValuesDict = $q.defer();
+			var promiseValuesDict = deferredValuesDict.promise;
+			promiseValuesDict = $http.get(userDatasets[index].value.Dict);
+
+			promiseValuesDict
+				.then(function(data){
+					locationsDict[index] = jsonPath(data.data, "$.data[*]");
+					deferredValuesDict.resolve(locationsDict[index]);
+					deferred.resolve(index);
+					return deferred.promise;
+				});
+			
+			return deferred.promise;
+
+		} else {
+			valuesDict[index] = false;
+			deferred.resolve(index);
+
+			return deferred.promise;
+		}
+	}
+
+
 	//function that loads the times dictionnary of all the datasets
 	function loadTimesDict(index){
 		var deferred = $q.defer();
@@ -135,6 +165,33 @@ angular.module('dataVisualizationsApp.services')
 		return deferred.promise;
 	}
 
+	//function loading all data into the service
+	function loadDataInService() {
+		//fist make sure userDatasets is loaded
+		for(var i=0; i<count; i++){
+			if(!dataIsLoading[i]){
+				var promiseDataset = loadDataset(i);
+
+				promiseDataset
+					.then(function(index){
+						loadValuesDict(index);
+						loadTimesDict(index);
+						loadLocationsDict(index);
+						
+						var promiseActualData = loadActualData(index);
+
+						promiseActualData
+							.then(function(index){
+								aggregateData(index);
+							});
+					})
+
+				dataIsLoading[i] = true;
+			}
+		}
+	}
+
+
 	/***************** AGGREGATION FUNCTIONS *********************/
 
 	function aggregateData(index){
@@ -164,35 +221,6 @@ angular.module('dataVisualizationsApp.services')
 			locations[index][i] = tmpLocations.slice(i*entriesPerTime,(i+1)*entriesPerTime);
 		}
 	}
-
-	
-	/***************** INITIALISE DATASERVICE *******************/
-
-	//function loading all data into the service
-	function loadDataInService() {
-		//fist make sure userDatasets is loaded
-		for(var i=0; i<count; i++){
-			if(!dataIsLoading[i]){
-				var promiseDataset = loadDataset(i);
-
-				promiseDataset
-					.then(function(index){
-						loadTimesDict(index);
-						loadLocationsDict(index);
-						
-						var promiseActualData = loadActualData(index);
-
-						promiseActualData
-							.then(function(index){
-								aggregateData(index);
-							});
-					})
-
-				dataIsLoading[i] = true;
-			}
-		}
-	}
-
 
 	/***************** GET DATA FROM SERVICE ********************/
 
@@ -243,6 +271,21 @@ angular.module('dataVisualizationsApp.services')
 		}
 
 		return deferredGetLocations.promise;	
+	}
+
+	//function returning the timesDict
+	this.getValuesDict = function(index){
+		var deferredGetValuesDict = $q.defer();
+
+	    if(index < count){	  
+	    //wait until timesDict is loaded
+	    	while(valuesDict[index] == undefined){}
+			deferredGetValuesDict.resolve(valuesDict[index]);
+		} else {
+			deferredGetValuesDict.reject('No valuesDict with index '+index);
+		}
+
+		return deferredGetValuesDict.promise;	
 	}
 
 	//function returning the timesDict

@@ -19,6 +19,7 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.times = [];
     $scope.locations = [];
 
+    $scope.valuesDict = [];
     $scope.timesDict = [];
     $scope.locationsDict = [];
 
@@ -42,6 +43,13 @@ angular.module('dataVisualizationsApp.controllers')
     promiseLocations
         .then(function(locations){
             $scope.locations[0] = locations;
+        });
+
+    var promiseValuesDict = dataService.getValuesDict(0);
+
+    promiseValuesDict
+        .then(function(valuesDict){
+            $scope.valuesDict[0] = valuesDict;
         });
 
     var promiseTimesDict = dataService.getTimesDict(0);
@@ -84,8 +92,8 @@ angular.module('dataVisualizationsApp.controllers')
 
     //if data has been loaded, visualise (use a watch function)
     //wait untill all data has been loaded. but how?
-    $scope.$watch('locations', function(){
-         
+    $scope.$watch('valuesDict', function(){
+         console.log($scope.valuesDict[0]);
     });
 
   }]);
