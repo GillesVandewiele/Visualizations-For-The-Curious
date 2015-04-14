@@ -5,38 +5,53 @@ import math
 import subprocess
 
 def clean_kmi(input_dir, output_dir):
+	# List all files in input_dir
 	allFiles = os.listdir(input_dir)
+	# Counters for the number of cleaned/uncleaned files
 	uncleaned = 0
 	cleaned = 0
 
+	# Make sure output_dir is present
 	try:
 		os.stat(output_dir)
 	except:
 		os.mkdir(output_dir) 
 
+	# Now, we will process each file in input_dir separately
 	for f in allFiles:
+	
+		# Open the file, load it into a data structure (nested dicts and lists), and close it
 		file = open(os.path.join(input_dir, f), "r")
 		indata = json.load(file)
 		file.close()
 		
+		# Throw away all files with an incorrect number of observations
 		if(indata['count'] == 12):
+			# The try-except is for in case the float casting fails (see further)
 			try:
+				# The output file should be a dictionary (=a json non-array object)
 				outdata = dict()
 			
+				# Initialize the Time and Gemiddelde attributes of the object we will write
 				outdata['Time'] = indata['thisversionrun']
 				outdata['Gemiddelden'] = float(indata['results']['collection2'][0]['property2'].replace(',','.'))
 			
+				# We will store weathers_clean as the data field or the json object
 				weathers_clean = list()
 				weathers_unclean = indata["results"]["collection1"]
 			
+				# The first two observations are useless in the weather data
 				for i in range(2, len(weathers_unclean)):
+					# weather_unclean is one of the observations of one of the stations
 					weather_unclean = weathers_unclean[i]
+					# weather_clean is the cleaned observation
 					weather_clean = dict()
 					weather_clean['Station'] = weather_unclean['property1']
 					weather_clean['Temperatuur (C)'] = float(weather_unclean['property3'].replace(',','.'))
 					weather_clean['Luchtvochtigheid (%)'] = int(weather_unclean['property4'])
 					weather_clean['Luchtdruk (hPa)'] = float(weather_unclean['property5'].replace(',','.'))
 					weather_clean['Windrichting'] = weather_unclean['property6']
+					# If 'Windrichting' was not properly observed, ignore this file
 					if (weather_clean['Windrichting'] == "" or weather_clean['Windrichting'] == "-"):
 						raise Exception('Bad windrichting')
 					weather_clean['Windsnelheid'] = int(weather_unclean['property7'])
@@ -46,17 +61,22 @@ def clean_kmi(input_dir, output_dir):
 
 				outdata['data'] = weathers_clean
 
+				# Write the cleaned file
 				with open(os.path.join(output_dir, f), 'w') as outfile:
 					json.dump(outdata, outfile, ensure_ascii = False, indent = 1)
 				
+				# Increase the cleaned file counter (for reporting)
 				cleaned +=  1
 			except:
+				# In case of an exception when casting to floats --> increase the uncleaned file counter (for reporting)
 				uncleaned += 1
 				pass
 			 
 		else:
+			# In case of an invalid nr of measurements --> increase the uncleaned file counter (for reporting)
 			uncleaned += 1
 
+	# Report the nr of cleaned/ignored files
 	print("not cleanable: ", str(uncleaned))
 	print("cleaned: ", str(cleaned))
 

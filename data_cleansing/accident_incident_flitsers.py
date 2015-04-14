@@ -9,6 +9,7 @@ def clean_aifw(input_dir, output_dir):
 	uncleaned = 0
 	cleaned = 0
 
+	# Make sure output_dir is present
 	try:
 		os.stat(output_dir)
 	except:
