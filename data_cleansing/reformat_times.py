@@ -32,7 +32,7 @@ if (OUTPUT_PATH == None):
 	OUTPUT_PATH = input("Give path the updated time dictionary must be stored: ")
 
 file = open(INPUT_PATH, "r")
-time_dict_list = json.load(file)["times"]
+time_dict_list = json.load(file)
 file.close()
 
 time_dict_list_updated = list()
@@ -41,4 +41,4 @@ for time in time_dict_list:
 	time_dict_list_updated.append(time)
 	
 with open(OUTPUT_PATH, 'w') as outfile:
-    json.dump({"times": time_dict_list_updated}, outfile, ensure_ascii = False, indent = 1)
+    json.dump(time_dict_list_updated, outfile, ensure_ascii = False, indent = 1)

@@ -21,8 +21,6 @@ def clean_verkeerstijd(input_dir, output_dir):
 		
 		if(indata['count'] == 96):
 			outdata = dict()
-			
-			outdata['Time'] = indata['thisversionrun']
 			outdata['Time'] = indata['thisversionrun']
 			jams_clean = []
 			jams_unclean = indata["results"]["Reistijden"]
@@ -55,24 +53,25 @@ def execute(command):
 	command = "python " + command;
 	subprocess.call(command, shell=True)
 
-execute("JSONize.py --in kmihourly --out kmihourly_JSON")
+execute("JSONize.py --in verkeerstijden --out verkeerstijden_JSON")
 clean_verkeerstijd('verkeerstijden_JSON', 'verkeerstijden_clean')
 execute("aggregate_data.py --in verkeerstijden_clean --out Verkeerstijden.json")
 execute("extract_attribute.py --in Verkeerstijden.json --out route_names_unclean.json --attr_name Route")
 execute("create_correcting_dictionary.py --in route_names_unclean.json --dict route_names_corrector.json --updated_attr route_names.json")
 execute("create_enumeration_dictionary.py --in route_names.json --out route_names_dict.json")
-execute("create_route_repository.py --in route_names_dict.json --out route_repo.json --rs van --sd naar")
-execute("create_location_repository.py --in route_repo.json --out location_repo.json")
-execute("upgrade_repositories.py --route_rep route_repo.json --loc_rep location_repo.json --route_rep_up routes.json --loc_rep_up locations.json")
+execute("create_route_dictionary.py --in route_names_dict.json --out route_dict_simple.json --rs van --sd naar")
+execute("create_location_dictionary.py --in route_dict_simple.json --loc_rep location_dict.json --route_rep route_dict.json")
+execute("upgrade_location_dictionary.py --in location_dict.json --out locations.json")
+execute("upgrade_route_dictionary.py --route_rep route_dict.json --loc_rep locations.json --out routes.json")
 subprocess.call("gzip routes.json -9", shell=True)
 subprocess.call("gzip locations.json -9", shell=True)
 execute("extract_attribute.py --in Verkeerstijden.json --out time_list.json --attr_name Time")
 execute("create_enumeration_dictionary.py --in time_list.json --out time_dict.json")
-execute("swap_enumeration_dictionary.py --in time_dict.json --out times_not_standard.json --dict_name times")
+execute("swap_enumeration_dictionary.py --in time_dict.json --out times_not_standard.json")
 execute("reformat_times.py --in times_not_standard.json --out times.json")
 subprocess.call("gzip times.json -9", shell=True)
 execute("update_attribute.py --to_update Verkeerstijden.json --updated Verkeerstijden_short.json --dict time_dict.json --attr_name Time")
 execute("update_attribute.py --to_update Verkeerstijden_short.json --updated Verkeerstijden_short.json --dict route_names_corrector.json --attr_name Route")
 execute("update_attribute.py --to_update Verkeerstijden_short.json --updated Verkeerstijden_short.json --dict route_names_dict.json --attr_name Route")
+execute("compress_data.py --in Verkeerstijden_short.json --out data.json --prime_order ['Time'] --second_order ['Route','Vertraging']")
 subprocess.call("gzip data.json -9", shell=True)
-execute("compress_data.py --in Verkeerstijden.json --out data.json --prime_order ['Time'] --second_order ['Route','Vertraging']")

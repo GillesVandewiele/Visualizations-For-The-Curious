@@ -18,17 +18,17 @@ def compress(input_file, output_file, prime_order, second_order):
 		for element in prime_order:
 			pl_compressed.append(prime_level[element])
 			
-		data = prime_level["data"]
-		pl_backpart = list()
-		for second_level in data:
-			sl_compressed = list()
+		if (not second_order == None):
+			data = prime_level["data"]
+			pl_backpart = list()
+			for second_level in data:
+				sl_compressed = list()
 			
-			for element in second_order:
-				sl_compressed.append(second_level[element])
+				for element in second_order:
+					sl_compressed.append(second_level[element])
 		
-			pl_backpart.append(sl_compressed)
-			
-		pl_compressed.append(pl_backpart)
+				pl_backpart.append(sl_compressed)	
+			pl_compressed.append(pl_backpart)
 		
 		compressed.append(pl_compressed)
 
