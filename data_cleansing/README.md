@@ -130,6 +130,42 @@ This is similar to 4.5.
 
 ### Other library scripts
 #### Locations
+If you want to create a map visualisation, you will inevitably get at the point where you want to find coordinates for a certain location attribute of your dataset. The process of getting these coordinates starting from an informal name is called [geocoding](http://en.wikipedia.org/wiki/Geocoding). We have created a script that allows you to geocode any dictionary that is a mapping a number to a location name. This script uses the [Nominatim](http://wiki.openstreetmap.org/wiki/Nominatim) geocoder API. Since the location name from a dataset are typically not unambiguously defined, for each location from the dataset, the precise human readable address will be presented to you. If this location is correct, you can just press enter. Otherwise, you can keep changing the query until the retrieved location is correct.
+To add positional information to a dictionary with location names, just execute:
+ ```sh
+$ python upgrade_location_dioctionary.py --in dict_with_location_names.json --out dict_with_location_names_and_coordinates.json
+```
+##### Troubleshooting
+If the geocoder keeps failing to retrieve the correct location, you can try to search the location via [this](http://map.project-osrm.org/) site. The site will give similar queries when you enter an address. You can copy the correct entry from the site. If your entry works on the site, but our command prompt says that no results were found, this probably means that the Nominatim server is over loaded and did not respond. Just re-enter your query. If the server keeps giving no response, you should try again at a later time.
 #### Routes
+Even more than collecting location coordinates, collecting route data (series of coordinates) seems hard. However, we've created some scipts that make this somewhat less hard for you.
+
+As a first step, we will parse a dictionary that maps numbers to routes, in order to find for each route the start location, end location, and start and ending roads. We have created a script that allows you to parse any string that is formatted like: 'start_or_ending_road/start_or_ending_road/.../start_or_ending_road road-start_separator start start-destination_separator destination'. For example, for the input string 'A1/A115 from Berlin to Paris', 'A1' and 'A115' are start or ending roads, 'from' is the road-start separator, 'Berlin' is the start, 'to' is the start-destination separator and 'Paris' is the destination.
+To parse the route dictionary and add the parsed information, you can execute:
+ ```sh
+$ python create_route_dictionary.py --in dict_with_route_names.json --out dict_with_route_names_and_parsed_info.json --rs road-start_separator --sd start-destination_separator
+```
+When you have a dataset af a country, a certain location typically occurs as start or ending point of many routes. Of course we don't want to manually verify the geocoding of the same location over and over. To avoid this, we will extract all the start and ending points of our route in a dictionary that maps numbers to location names, and we will update the route dictionary to hold references to the correct locations from the location dictionary. This is easy:
+ ```sh
+$ python create_location_dictionary.py --in dict_with_parsed_route_info.json --loc_rep dict_with_locations.json --route_rep dict_with_parsed_route_info_refering_to_location_dict.json
+```
+Now we can add coordinates to this location dictionary as described in the section above.
+
+Finally, we can find the route coordinates! Our algorithm to to this asks the [OSRM API](https://github.com/Project-OSRM/osrm-backend/wiki/Server-api) for the shortest route between the starting and ending location. It will return this route from the moment it enters the one of the start or ending roads that were extracted in the parsing step until it leaves the last start or ending road.
+Execute:
+ ```sh
+$ python upgrade_route_dictionary.py --route_rep dict_with_parsed_route_info.json --loc_rep dict_with_location_names_and_coordinates.json --out dict_with_parsed_info_and_route_coordinates.json
+```
+Open the updated dictionary and make sure the word 'error' does not occur. If it does, there will be a detailed error message with an explanation. Don't worry if the coordinates of a route look strange. The routes are in the [Google encoded polyline format](https://developers.google.com/maps/documentation/utilities/polylinealgorithm) for compression reasons.
 #### Inconsistent attribute values
+Some screenscrapers are unable to recognize special characters (é, è, â) and read them each time they encounter them as a different variation of one or more other characters. The consistency in this mistake is that none of the wrongly detected characters are ASCII-characters. This means that, when we remove the non-ascii characters from the incorrect words, all different variations of the same word are equal. We have written a script that allows you to replace all words with the same ASCII-substring by a corrected word. The input of this script is a list of all possible attribute values (after executing extract_attribute, you have such a list). The output consist of a list of the corrected attribute names, and a dictionary that can be used with update_attribute to update the incorrect values in the data file.
+You do this by executing:
+```sh
+$ python create_correcting_dictionary.py --in list_with_wrong_attr_values.json --updated_attr list_with_correct_attribute_values.json --dict mapping_from_wrong_to_correct_attribute_value.json
+```
 #### ISO8601
+The scraping times of [Kimono](https://www.kimonolabs.com/welcome.html), a popular web scraper app, is in a non-standard time format. This is not ideal for processing it in javascript. We have created a script that allows you to convert a dictionary with a mapping from numbers to the non-standard Kimono time into one that maps these numbers to the corresponding ISO8601 time format.
+This goes as follows:
+```sh
+$ python reformat_times.py --in dict_from_nr_to_kimono_time.json --out dict_from_nr_to_ISO1801.json
+```
