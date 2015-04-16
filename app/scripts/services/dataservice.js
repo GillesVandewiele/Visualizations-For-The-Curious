@@ -90,9 +90,13 @@ angular.module('dataVisualizationsApp.services')
 
 		promiseData
 			.then(function(data){
+				setWaitingCursor();
+
 				actualData[index] = data.data;
 				deferredData.resolve(actualData[index]);
 				deferred.resolve(index);
+
+				setDefaultCursor();
 				return deferred.promise;
 			});
 
@@ -182,7 +186,9 @@ angular.module('dataVisualizationsApp.services')
 
 						promiseActualData
 							.then(function(index){
+								setWaitingCursor();
 								aggregateData(index);
+								setDefaultCursor();
 							});
 					})
 
