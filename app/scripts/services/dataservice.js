@@ -273,91 +273,33 @@ angular.module('dataVisualizationsApp.services')
 
 	//return the values: in some cases a dict will be necessary to map numbers to text
 	this.getValues = function(index){
-	    var deferredGetValues = $q.defer();
- 
-	    if(index < count){	    	
-		    //wait until values are loaded
-	    	while(values[index] == undefined){}
-			deferredGetValues.resolve(values[index]);	
-	    } else {
-	    	deferredGetValues.reject('No values with index '+index);
-	    }
-
-		return deferredGetValues.promise;	
+		return values[index];
 	}
 
 	//return the times: dict will be necessary to convert numbers to real times
 	this.getTimes = function(index){
-	    var deferredGetTimes = $q.defer();
-
-	    if(index < count){	  
-		    //wait until times are loaded
-	    	while(times[index] == undefined){}
-			deferredGetTimes.resolve(times[index]);
-		} else {
-			deferredGetTimes.reject('No times with index '+index);
-		}
-		return deferredGetTimes.promise;	
+		return times[index];
 	}
 
 	//returns the locations: dict will be necessary to convert numbers to real locations
 	this.getLocations = function(index){
-	    var deferredGetLocations = $q.defer();
-
-	    if(index < count){	  
-	    //wait until locations are loaded
-	    	while(locations[index] == undefined){}
-			deferredGetLocations.resolve(locations[index]);
-		} else {
-			deferredGetLocations.reject('No locations with index '+index);
-		}
-
-		return deferredGetLocations.promise;	
+		return locations[index];
 	}
 
 	//function returning the valuesDict
 	this.getValuesDict = function(index){
-		var deferredGetValuesDict = $q.defer();
-
-	    if(index < count){	  
-	    //wait until timesDict is loaded
-	    	while(valuesDict[index] == undefined){}
-			deferredGetValuesDict.resolve(valuesDict[index]);
-		} else {
-			deferredGetValuesDict.reject('No valuesDict with index '+index);
-		}
-
-		return deferredGetValuesDict.promise;	
+		return valuesDict[index];
 	}
 
 	//function returning the timesDict
 	this.getTimesDict = function(index){
-		var deferredGetTimesDict = $q.defer();
 
-	    if(index < count){	  
-	    //wait until timesDict is loaded
-	    	while(timesDict[index] == undefined){}
-			deferredGetTimesDict.resolve(timesDict[index]);
-		} else {
-			deferredGetTimesDict.reject('No timesDict with index '+index);
-		}
-
-		return deferredGetTimesDict.promise;	
+		return timesDict[index];	
 	}
 
 	//function returning the locationsDict
 	this.getLocationsDict = function(index){
-		var deferredGetLocationsDict = $q.defer();
-
-	    if(index < count){	  
-	    //wait until locationsDict is loaded
-	    	while(locationsDict[index] == undefined){}
-			deferredGetLocationsDict.resolve(locationsDict[index]);
-		} else {
-			deferredGetLocationsDict.reject('No locationsDict with index '+index);
-		}
-
-		return deferredGetLocationsDict.promise;
+		return locationsDict[index];
 	}
 
 

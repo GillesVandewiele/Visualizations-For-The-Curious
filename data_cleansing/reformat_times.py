@@ -14,7 +14,7 @@ def to_ISO_8601(scraper_date):
 	time = scraper_date[16:24]
 	zone1 = scraper_date[28:31]
 	zone2 = scraper_date[31:33]
-	return str(year)+"-"+str(month)+"-"+str(day)+"T"+time+zone1+":"+zone2
+	return str(year)+"-"+str(month).zfill(2)+"-"+str(day).zfill(2)+"T"+time+zone1+":"+zone2
 
 INPUT_PATH = None
 OUTPUT_PATH = None

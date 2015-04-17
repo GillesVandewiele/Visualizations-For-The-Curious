@@ -20,6 +20,7 @@ angular.module('dataVisualizationsApp.controllers')
 	  	$scope.grouping = ["NONE", "WEEKDAY", "WEEKS", "MONTH", "YEAR"];
 
 	  	$scope.selectedFile;
+	  	$scope.downloadingData=false;
 
 	  	$scope.$storage = $localStorage;
 
@@ -212,7 +213,7 @@ angular.module('dataVisualizationsApp.controllers')
 
 	$scope.afterDataLoaded = function(){
 		setDefaultCursor();
-
+		$scope.downloadingData=false;
 		console.log("data is loaded");
 
 		
@@ -221,6 +222,7 @@ angular.module('dataVisualizationsApp.controllers')
   	// This function is called when the user presses the 'V' button and downloads all datasets from the list.
 	$scope.downloadData = function(){
 		setWaitingCursor();
+		$scope.downloadingData=true;
 		/*
 		var allGetPromises=[];
 

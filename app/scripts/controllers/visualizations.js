@@ -23,48 +23,24 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.timesDict = [];
     $scope.locationsDict = [];
 
-    var promiseValues = dataService.getValues(0);
-
-    promiseValues
-        .then(function(values){
-            $scope.values[0] = values;
-        });
-
-    var promiseTimes = dataService.getTimes(0);
-
-    promiseTimes
-        .then(function(times){
-            $scope.times[0] = times;
-        });
+    $scope.values[0] = dataService.getValues(0);
+    $scope.times[0] = dataService.getTimes(0);
+    $scope.locations[0] = dataService.getLocations(0);
+    $scope.valuesDict[0] = dataService.getValuesDict(0);
+    $scope.timesDict[0] = dataService.getTimesDict(0);
+    $scope.locationsDict[0] = dataService.getLocationsDict(0);
 
 
-    var promiseLocations = dataService.getLocations(0);
+    $scope.calendarData = {};
+    if($scope.values[0]){
+        for (var calIndex = 0; calIndex < $scope.values[0].length; calIndex++) {
+            var time = $scope.times[0][calIndex];
+            var stringTime = $scope.timesDict[0][time].name;
+            var secondsTime = Date.parse(stringTime)/1000;
+            $scope.calendarData[secondsTime] = $scope.values[0][calIndex];
+        };
+    }
 
-    promiseLocations
-        .then(function(locations){
-            $scope.locations[0] = locations;
-        });
-
-    var promiseValuesDict = dataService.getValuesDict(0);
-
-    promiseValuesDict
-        .then(function(valuesDict){
-            $scope.valuesDict[0] = valuesDict;
-        });
-
-    var promiseTimesDict = dataService.getTimesDict(0);
-
-    promiseTimesDict
-        .then(function(timesDict){
-            $scope.timesDict[0] = timesDict;
-        });
-
-    var promiseLocationsDict = dataService.getLocationsDict(0);
-
-    promiseLocationsDict
-        .then(function(locationsDict){
-            $scope.locationsDict[0] = locationsDict;
-        });
 
     /****************** MAP INITIALISATION *********************/
 
@@ -91,7 +67,7 @@ angular.module('dataVisualizationsApp.controllers')
     };
 
     //if data has been loaded, visualise (use a watch function)
-    //wait untill all data has been loaded. but how?
+    //wait untill all data has been loaded. but how? => callbacks and $q.all()
     $scope.$watch('valuesDict', function(){
          console.log($scope.valuesDict[0]);
     });
