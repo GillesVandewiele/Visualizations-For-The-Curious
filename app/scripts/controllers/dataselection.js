@@ -6,7 +6,7 @@
  * @description Controller of the dataVisualizationsApp. Downloads a JSON-file from the server to populate all dropdowns and validates the user input.
  */
 angular.module('dataVisualizationsApp.controllers')
-  .controller('DataselectionCtrl', ['$scope', '$http', '$q', '$localStorage', 'dataService', function ($scope, $http, $q, $localStorage, dataService) {
+  .controller('DataselectionCtrl', ['$scope','$location', '$http', '$q', '$localStorage', 'dataService',  function ($scope,$location, $http, $q, $localStorage, dataService) {
 
   	/****************** CONSTANTS ********************/
 
@@ -206,7 +206,7 @@ angular.module('dataVisualizationsApp.controllers')
 	}
 
 	$scope.resetLocalStorage = function(dataset, jsonData){
-		//$scope.$storage.$reset(); //either of these two works
+		$scope.$storage.$reset(); //either of these two works
 		$localStorage.$reset();
 		document.location.reload(true);
 	}
@@ -216,7 +216,7 @@ angular.module('dataVisualizationsApp.controllers')
 		$scope.downloadingData=false;
 		console.log("data is loaded");
 
-		
+		window.location.assign("#/visualizations/");
 	}
 
   	// This function is called when the user presses the 'V' button and downloads all datasets from the list.

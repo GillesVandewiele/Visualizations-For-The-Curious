@@ -31,15 +31,27 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.locationsDict[0] = dataService.getLocationsDict(0);
 
 
-    $scope.calendarData = {};
+    $scope.accidentsData = {};//locations
+    $scope.incidentsData = {};//values
+    if($scope.locations[0]){
+        for (var calIndex = 0; calIndex < $scope.locations[0].length; calIndex++) {
+            var time = $scope.times[0][calIndex];
+            var stringTime = $scope.timesDict[0][time].name;
+            var secondsTime = Date.parse(stringTime)/1000;
+            $scope.accidentsData[secondsTime] = $scope.locations[0][calIndex][0];
+        };
+    }
+
     if($scope.values[0]){
         for (var calIndex = 0; calIndex < $scope.values[0].length; calIndex++) {
             var time = $scope.times[0][calIndex];
             var stringTime = $scope.timesDict[0][time].name;
             var secondsTime = Date.parse(stringTime)/1000;
-            $scope.calendarData[secondsTime] = $scope.values[0][calIndex];
+            $scope.incidentsData[secondsTime] = $scope.values[0][calIndex][0];
         };
     }
+
+    $scope.firstDate = new Date(2014, 4, 1);
 
 
     /****************** MAP INITIALISATION *********************/

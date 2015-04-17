@@ -46,6 +46,37 @@
 					"Dict": "data/KMI/times.json"
 				}
 			]
+		},
+		{
+			"Name": "acc_inc_fli_wer",
+			"Path": "data/acc_inc_fli_wer/data.json",
+			"Columns": [ 
+				{
+					"Name": "Accidenten",
+					"Path": "$.data[*][1]",
+					"Dict": ""
+				},
+				{
+					"Name": "Incidenten",
+					"Path": "$.data[*][2]",
+					"Dict": ""
+				},
+				{
+					"Name": "Files",
+					"Path": "$.data[*][3]",
+					"Dict": ""
+				},
+				{
+					"Name": "Werken",
+					"Path": "$.data[*][4]",
+					"Dict": ""
+				},
+				{
+					"Name": "Tijdstip",
+					"Path": "$.data[*][0]",
+					"Dict": "data/acc_inc_fli_wer/times.json"
+				}
+			]
 		}
 	]
 }
