@@ -6,7 +6,7 @@
  * @description Controller of the dataVisualizationsApp. Downloads a JSON-file from the server to populate all dropdowns and validates the user input.
  */
 angular.module('dataVisualizationsApp.controllers')
-  .controller('DataselectionCtrl', ['$scope', '$http', '$localStorage', 'dataService', function ($scope, $http, $localStorage, dataService) {
+  .controller('DataselectionCtrl', ['$scope', '$http', '$q', '$localStorage', 'dataService', function ($scope, $http, $q, $localStorage, dataService) {
 
   	/****************** CONSTANTS ********************/
 
@@ -210,23 +210,49 @@ angular.module('dataVisualizationsApp.controllers')
 		document.location.reload(true);
 	}
 
+	$scope.afterDataLoaded = function(){
+		setDefaultCursor();
+
+		
+	}
+
   	// This function is called when the user presses the 'V' button and downloads all datasets from the list.
 	$scope.downloadData = function(){
 		setWaitingCursor();
-		for(var i = 0; i < $scope.userDatasets.length; i++){
-			console.log($scope.userDatasets[i].path)
-			$http.get($scope.userDatasets[i].path, {params: {"dataSetNumber": i}})
-		  		.success(function(data, status, headers, config) { 
-		  			//Extract right columns (and print them for now)
-					$scope.printData($scope.userDatasets[config.params.dataSetNumber], data);
+		/*
+		var allGetPromises=[];
 
-		  			// TODO: validate all columns (wait for right Date format etc)
-		  		})
-		  		.error(function(data, status, headers, config) {
-			    	showErrorMessage("We were unable to download the requested data.");
-				});
+		for(var i = 0; i < $scope.userDatasets.length; i++){
+			console.log($scope.userDatasets[i].path);
+
+			allGetPromises.push($http.get($scope.userDatasets[i].path, {params: {"dataSetNumber": i}}));
+
+
+			// $http.get($scope.userDatasets[i].path, {params: {"dataSetNumber": i}})
+		 //  		.success(function(data, status, headers, config) { 
+		 //  			//Extract right columns (and print them for now)
+			// 		$scope.printData($scope.userDatasets[config.params.dataSetNumber], data);
+
+		 //  			// TODO: validate all columns (wait for right Date format etc)
+		 //  		})
+		 //  		.error(function(data, status, headers, config) {
+			//     	showErrorMessage("We were unable to download the requested data.");
+			// 	});
 		}
-		dataService.addMultipleDatasets($scope.userDatasets);
+
+		$q.all(allGetPromises).then(function(arrayOfResponses){
+			var index;
+			for (index = 0; index < arrayOfResponses.length; ++index) {
+				var result = arrayOfResponses[index];
+			    $scope.printData($scope.userDatasets[result.config.params.dataSetNumber], result.data);
+			}
+
+			dataService.addMultipleDatasets($scope.userDatasets);
+
+		},function(){
+			showErrorMessage("We were unable to download the requested data.");
+		});*/
+		dataService.addMultipleDatasets($scope.userDatasets, $scope.afterDataLoaded);
 	};
   }]);
 

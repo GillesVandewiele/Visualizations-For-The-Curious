@@ -39,14 +39,14 @@ angular.module('dataVisualizationsApp.services')
 	};
 
 	//add mutliple datasets at once
-	this.addMultipleDatasets = function(ds){
+	this.addMultipleDatasets = function(ds, callback){
 		for(var i=0;i<ds.length;i++){
 			userDatasets[count] = ds[i];
 			count++;
 			dataIsLoading[count] = false;		
 		}
 
-		loadDataInService();
+		loadDataInService(callback);
 	};
 
 	this.deleteDatasets = function(){
@@ -90,13 +90,11 @@ angular.module('dataVisualizationsApp.services')
 
 		promiseData
 			.then(function(data){
-				setWaitingCursor();
 
 				actualData[index] = data.data;
 				deferredData.resolve(actualData[index]);
 				deferred.resolve(index);
 
-				setDefaultCursor();
 				return deferred.promise;
 			});
 
@@ -170,31 +168,63 @@ angular.module('dataVisualizationsApp.services')
 	}
 
 	//function loading all data into the service
-	function loadDataInService() {
+	function loadDataInService(callback) {
 		//fist make sure userDatasets is loaded
+		var promiseDatasets = [];
+
 		for(var i=0; i<count; i++){
 			if(!dataIsLoading[i]){
 				var promiseDataset = loadDataset(i);
 
-				promiseDataset
-					.then(function(index){
-						loadValuesDict(index);
-						loadTimesDict(index);
-						loadLocationsDict(index);
-						
-						var promiseActualData = loadActualData(index);
-
-						promiseActualData
-							.then(function(index){
-								setWaitingCursor();
-								aggregateData(index);
-								setDefaultCursor();
-							});
-					})
+				promiseDatasets.push(promiseDataset);
 
 				dataIsLoading[i] = true;
 			}
 		}
+
+		// promiseDataset
+		// 			.then(function(index){
+		// 				loadValuesDict(index);
+		// 				loadTimesDict(index);
+		// 				loadLocationsDict(index);
+						
+		// 				var promiseActualData = loadActualData(index);
+
+		// 				promiseActualData
+		// 					.then(function(index){
+		// 						aggregateData(index);
+		// 					});
+		// 			})
+
+		$q.all(promiseDatasets).then(function(arrayOfResults){
+			var ind;
+			var loadPromises=[];
+
+			for(ind=0;ind<arrayOfResults.length;ind++){
+				loadPromises.push(loadValuesDict(ind));
+				loadPromises.push(loadTimesDict(ind));
+				loadPromises.push(loadLocationsDict(ind));
+				loadPromises.push(loadActualData(ind));
+			}
+
+			$q.all(loadPromises).then(function(loadResults){
+				var ind2;
+				var amt=loadResults.length/4;
+				for(ind2=0;ind2<amt;ind2++){
+					aggregateData(ind2);
+				}
+
+				if(callback){
+					callback();
+				}
+
+			},function(){
+				//when a load promise is rejected
+			});
+
+		},function(){
+			//when a promiseDataset is rejected
+		});
 	}
 
 
