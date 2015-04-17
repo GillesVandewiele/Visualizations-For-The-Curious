@@ -213,6 +213,8 @@ angular.module('dataVisualizationsApp.controllers')
 	$scope.afterDataLoaded = function(){
 		setDefaultCursor();
 
+		console.log("data is loaded");
+
 		
 	}
 
@@ -252,7 +254,7 @@ angular.module('dataVisualizationsApp.controllers')
 		},function(){
 			showErrorMessage("We were unable to download the requested data.");
 		});*/
-		dataService.addMultipleDatasets($scope.userDatasets, $scope.afterDataLoaded);
+		dataService.addMultipleDatasets($scope.userDatasets, $scope.afterDataLoaded, showErrorMessage.bind(null,"We were unable to download the requested data."));
 	};
   }]);
 

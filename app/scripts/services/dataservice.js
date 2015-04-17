@@ -30,23 +30,23 @@ angular.module('dataVisualizationsApp.services')
 	/*************** DECLARE USERSDATASETS **********************/
 
 	//add one dataset a the time
-	this.addOneDataset = function(d){
+	this.addOneDataset = function(d, callbackSuccess, callbackFail){
 		userDatasets[count] = d;
 		count++;
 		dataIsLoading[count] = false;
 
-		loadDataInService();
+		loadDataInService(callbackSuccess, callbackFail);
 	};
 
 	//add mutliple datasets at once
-	this.addMultipleDatasets = function(ds, callback){
+	this.addMultipleDatasets = function(ds, callbackSuccess, callbackFail){
 		for(var i=0;i<ds.length;i++){
 			userDatasets[count] = ds[i];
 			count++;
 			dataIsLoading[count] = false;		
 		}
 
-		loadDataInService(callback);
+		loadDataInService(callbackSuccess, callbackFail);
 	};
 
 	this.deleteDatasets = function(){
@@ -168,7 +168,7 @@ angular.module('dataVisualizationsApp.services')
 	}
 
 	//function loading all data into the service
-	function loadDataInService(callback) {
+	function loadDataInService(callbackSuccess, callbackFail) {
 		//fist make sure userDatasets is loaded
 		var promiseDatasets = [];
 
@@ -214,16 +214,22 @@ angular.module('dataVisualizationsApp.services')
 					aggregateData(ind2);
 				}
 
-				if(callback){
-					callback();
+				if(callbackSuccess){
+					callbackSuccess();
 				}
 
 			},function(){
 				//when a load promise is rejected
+				if(callbackFail){
+					callbackFail();
+				}
 			});
 
 		},function(){
 			//when a promiseDataset is rejected
+			if(callbackFail){
+				callbackFail();
+			}
 		});
 	}
 
