@@ -9,7 +9,7 @@
 angular.module('dataVisualizationsApp.directives')
   .directive('d3Calendar', ['d3Service','calHeatMapService', function(d3Service,calHeatMapService) {
     return {
-        template: '<button class="btn" id="btn-previous">Previous</button><button class="btn" id="btn-next">Next</button><div class="cal-heatmap" config="config"></div>',
+        template: '<div class="cal-heatmap" config="config"></div>',
         restrict: 'E',
         scope: {
           config: '='
@@ -31,9 +31,7 @@ angular.module('dataVisualizationsApp.directives')
                         range: 3,
                         domainGutter: 10,
                         legend: [2, 4, 6, 8, 10],
-                        itemName: 'item',
-                        nextSelector: '#btn-next',
-                        previousSelector: '#btn-previous'
+                        itemName: 'item'
                     };
                     angular.extend(defaults, config);
                     cal.init(defaults);

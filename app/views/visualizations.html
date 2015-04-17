@@ -5,7 +5,11 @@
 	<div class="layoutrow titlecontent scroll-y">
 		<!-- <dv-bars-demo></dv-bars-demo> -->
 		<!-- <div class="container-fluid"> -->
-		<d3-calendar config="{domain:'month',range:6,data:accidentsData,start:firstDate,tooltip: true, highlight: 'now'}"></d3-calendar>
+		<button class="btn" id="btn-previous">Previous</button><button class="btn" id="btn-next">Next</button>
+		<d3-calendar config="{domain:'month',range:6,data:accidentsData,start:firstDate, highlight: 'now', legend: [30,60,90,120,150],nextSelector: '#btn-next',previousSelector: '#btn-previous'}"></d3-calendar>
+
+		<button class="btn" id="btn-previous2">Previous</button><button class="btn" id="btn-next2">Next</button>
+		<d3-calendar config="{domain:'month',range:6,data:incidentsData,start:firstDate, highlight: 'now', legend: [30,60,90,120,150],nextSelector: '#btn-next2',previousSelector: '#btn-previous2'}"></d3-calendar>
 
 		<leaflet center="center" layers="layers" height="300px"></leaflet>
 		
