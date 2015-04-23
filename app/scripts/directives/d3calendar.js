@@ -16,10 +16,15 @@ angular.module('dataVisualizationsApp.directives')
         },
         link: function(scope, iElement, iAttrs) {
             d3Service.then(function(d3){
-                calHeatMapService.then(function(){
+                calHeatMapService.then(function(calHeatMap){
                     var config = scope.config || {};
                     var element = iElement[0];
-                    var cal = new CalHeatMap();
+                    var cal;
+                    if(CalHeatMap){
+                        cal = new CalHeatMap();
+                    }else{
+                        cal = calHeatMap;
+                    }
                     var defaults = {
                         itemSelector: element,
                         domain: 'month',

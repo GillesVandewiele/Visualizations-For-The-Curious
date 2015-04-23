@@ -27,7 +27,7 @@ angular.module('d3')
             function($document, $q, $window, $rootScope) {
                 var deferred = $q.defer();
                 createScript($document[0], function() {
-                    $rootScope.$apply(function()  { deferred.resolve(); });
+                    $rootScope.$apply(function()  { deferred.resolve($window.CalHeatMap); });
                 });
                 return deferred.promise;
             }]; 
