@@ -28,7 +28,6 @@ angular.module('dataVisualizationsApp.controllers')
 
 	  	//$localStorage.datasets; 	// All datasets that were retrieved from the server 
 	  	//					        // Fields: location, value, aggregation, date, grouping
-		$scope.datasets = $scope.$storage.datasets;
 
 	  	$scope.userDatasets = []; // The defined datasets by the user
 	  	$scope.currentDataset = null;
@@ -121,8 +120,8 @@ angular.module('dataVisualizationsApp.controllers')
 
   	/************************************************/
 
-  	if($scope.$storage.datasets == null){
-	    $http.get('data/files.json').
+  	$scope.populateFirstDropdown = function(){
+		$http.get('data/files.json').
 		  success(function(data, status, headers, config) {  
 		    // If the JSON-file was downloaded successfully, we populate all the dropdowns (files, columns) on the start screen
 		    $scope.$storage.datasets=[];
@@ -133,6 +132,10 @@ angular.module('dataVisualizationsApp.controllers')
 		  error(function(data, status, headers, config) {
 		  	showErrorMessage("We were unable to retrieve files.json from the server.");
 		  });
+	};
+
+  	if($scope.$storage.datasets == null){
+	    $scope.populateFirstDropdown();
 	}
 
 	// Based on the selection of dataset, we populate the other dropdowns
@@ -216,7 +219,9 @@ angular.module('dataVisualizationsApp.controllers')
 	$scope.resetLocalStorage = function(dataset, jsonData){
 		$scope.$storage.$reset(); //either of these two works
 		$localStorage.$reset();
-		document.location.reload(true);
+
+		$scope.populateFirstDropdown();
+		//document.location.reload(true);
 	}
 
 	$scope.afterDataLoaded = function(){
