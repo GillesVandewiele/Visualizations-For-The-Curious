@@ -2,81 +2,87 @@
 	"Files":  [
 		{
 			"Name": "verkeerstijden",
-			"Path": "data/verkeerstijden/data.json",
+			"Path": "data/verkeerstijden/data.json.gz",
 			"Columns": [ 
 				{
 					"Name": "Locatie",
-					"Path": "$.data[*][1][*][0]",
-					"Dict": "data/verkeerstijden/routes.json"
+					"Path": "$.data[*][0]",
+					"Dict": "data/verkeerstijden/routes.json.gz",
+					"Dict_mapping": "$.routes[*]"
 				},
 				{
 					"Name": "Vertraging",
-					"Path": "$.data[*][1][*][1]",
-					"Dict": ""
+					"Path": "$.data[*][1][*]",
+					"Dict": "",
+					"Dict_mapping": ""
 				},
 				{
 					"Name": "Tijdstip",
-					"Path": "$.data[*][0]",
-					"Dict": "data/verkeerstijden/times.json"
+					"Path": "$.data[*][1][*]",
+					"Dict": "data/verkeerstijden/times.json.gz",
+					"Dict_mapping": "$.times[*]"
 				}
 			]
 		},
 		{
 			"Name": "weerdata",
-			"Path": "data/KMI/KMI_daily.json",
+			"Path": "data/KMI/data.json.gz",
 			"Columns": [ 
 				{
 					"Name": "Locatie",
-					"Path": "$.data[*][1][*][0]",
-					"Dict": "data/KMI/locations.json"
+					"Path": "$.data[*][2]",
+					"Dict": "data/KMI/stations.json.gz",
+					"Dict_mapping": "$.stations[*]"
 				},
 				{
 					"Name": "Temperatuur",
-					"Path": "$.data[*][1][*][0]",
-					"Dict": ""
+					"Path": "$.data[*][2][*][1]",
+					"Dict": "",
+					"Dict_mapping": "$.stations[*]"
 				},
 				{
 					"Name": "Luchtvochtigheid",
-					"Path": "$.data[*][1][*][0]",
-					"Dict": ""
+					"Path": "$.data[*][2][*][2]",
+					"Dict": "",
+					"Dict_mapping": "$.stations[*]"
+				},
+				{
+					"Name": "Gemiddele Temperatuur",
+					"Path": "$.data[*][1]",
+					"Dict": "",
+					"Dict_mapping": "$.stations[*]"
+				},
+				{
+					"Name": "Luchtdruk",
+					"Path": "$.data[*][2][*][3]",
+					"Dict": "",
+					"Dict_mapping": "$.stations[*]"
+				},
+				{
+					"Name": "Windrichting",
+					"Path": "$.data[*][2][*][4]",
+					"Dict": "",
+					"Dict_mapping": "$.stations[*]"
+				},
+				{
+					"Name": "Windsnelheid",
+					"Path": "$.data[*][2][*][5]",
+					"Dict": "",
+					"Dict_mapping": ""
+				},
+				{
+					"Name": "Weertype",
+					"Path": "$.data[*][2][*][6]",
+					"Dict": "data/KMI/weertype.json.gz",
+					"Dict_mapping": "$.weertypes[*]"
 				},
 				{
 					"Name": "Tijdstip",
 					"Path": "$.data[*][0]",
-					"Dict": "data/KMI/times.json"
+					"Dict": "data/KMI/times.json",
+					"Dict_mapping": "$.stations[*]"
 				}
 			]
 		},
-		{
-			"Name": "acc_inc_fli_wer",
-			"Path": "data/acc_inc_fli_wer/data.json",
-			"Columns": [ 
-				{
-					"Name": "Accidenten",
-					"Path": "$.data[*][1]",
-					"Dict": ""
-				},
-				{
-					"Name": "Incidenten",
-					"Path": "$.data[*][2]",
-					"Dict": ""
-				},
-				{
-					"Name": "Files",
-					"Path": "$.data[*][3]",
-					"Dict": ""
-				},
-				{
-					"Name": "Werken",
-					"Path": "$.data[*][4]",
-					"Dict": ""
-				},
-				{
-					"Name": "Tijdstip",
-					"Path": "$.data[*][0]",
-					"Dict": "data/acc_inc_fli_wer/times.json"
-				}
-			]
-		}
 	]
 }

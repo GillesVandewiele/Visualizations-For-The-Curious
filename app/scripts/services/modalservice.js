@@ -46,7 +46,7 @@ angular.module('dataVisualizationsApp.services')
 
                     $scope.modalOptions = tempModalOptions;
                     $scope.columns = [];
-                    $scope.currentColumn = { name: "", mapping: "", data: "", dict: "" };
+                    $scope.currentColumn = { name: "", mapping: "", data: "", dict: "", dict_mapping: "" };
                     $scope.valid = false;
                     $scope.datasetName = "";
                     $scope.datasetPath = "";
@@ -71,7 +71,7 @@ angular.module('dataVisualizationsApp.services')
                     };			
 
                     $scope.modalOptions.ok = function (result) {
-                    	// TODO: Check if atleast 3 columns are given etc..
+                    	// TODO: Check if at least 2 columns are given etc..
                     	// TODO: Check if there is no dataset with the same name yet..
 
 						var datasetColumns = [];
@@ -111,7 +111,8 @@ angular.module('dataVisualizationsApp.services')
                             var copy = jQuery.extend(true, {}, $scope.currentColumn);
                             $scope.columns.push(copy); 
                             disableValid();
-                            $scope.currentColumn.name = ""; $scope.currentColumn.mapping = ""; $scope.currentColumn.data = ""; $scope.currentColumn.dict = "";
+                            $scope.currentColumn.name = ""; $scope.currentColumn.mapping = ""; $scope.currentColumn.data = ""; 
+                            $scope.currentColumn.dict = ""; $scope.currentColumn.dict_mapping = "";
                         }
                         console.log($scope.columns);
                     };
@@ -124,14 +125,14 @@ angular.module('dataVisualizationsApp.services')
                         }
                     });
 
-                    $scope.$watch('currentColumn.mapping', function(){
+                    $scope.updateMapping = function(){
                         var data = jsonPath(JSON.parse(customModalOptions.jsonData), $scope.currentColumn.mapping);
                         if(data){
                             $scope.currentColumn.data = data;
                         } else if($scope.currentColumn.mapping != "") {
                             $scope.currentColumn.data = "Wrong mapping!";
                         }
-                    });
+                    };
                 }
             }
 

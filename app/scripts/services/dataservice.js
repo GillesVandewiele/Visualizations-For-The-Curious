@@ -139,7 +139,7 @@ angular.module('dataVisualizationsApp.services')
 
 		promiseTimesDict
 			.then(function(data){
-				timesDict[index] = jsonPath(data.data, "$.times[*]");
+				timesDict[index] = jsonPath(data.data, "$.times[*]"); // TODO: get dict json path
 				deferredTimesDict.resolve(timesDict[index]);
 				deferred.resolve(index);
 				return deferred.promise;
