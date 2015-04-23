@@ -43,9 +43,21 @@
 
 			<tr class="subtitle">
 				<td> 
-					Locations: <div class="iconcontainer"><span title="Give a location here (OPTIONAL)" class="glyphicon glyphicon-question-sign"></span></div>
+					Dates: <div class="iconcontainer"><span title="Dates must be conform to ISO 8601; e.g. 2015-04-01T08:41:51+00:00" class="glyphicon glyphicon-question-sign" ></span></div>
 				</td>
+				<td> 
+				</td>
+			</tr>
+
+			<tr></tr>
+
+			<tr>
+				<th>
+					Column:
+				</th>
+
 				<td>
+					<select class="form-control input-sm" ng-model="currentDataset.date" ng-options="column.Name for column in currentDataset.columns"></select>				
 				</td>
 			</tr>
 
@@ -53,11 +65,11 @@
 
 			<tr class="lastrow">
 				<th>
-					Column:
+					Group by:
 				</th>
 
 				<td>
-				 	<select class="form-control input-sm" ng-model="currentDataset.location" ng-options="column.Name for column in currentDataset.columns"></select>
+					<select class="form-control input-sm" ng-model="currentDataset.grouping" ng-options="group for group in grouping"></select>
 				</td>
 			</tr>
 
@@ -91,25 +103,13 @@
 				<td>
 					<select class="form-control input-sm" ng-model="currentDataset.aggregation" ng-options="aggregation for aggregation in aggregations"></select>
 				</td>
-			</tr>		
+			</tr>	
 
 			<tr class="subtitle">
 				<td> 
-					Dates: <div class="iconcontainer"><span title="Dates must be conform to ISO 8601; e.g. 2015-04-01T08:41:51+00:00" class="glyphicon glyphicon-question-sign" ></span></div>
+					Locations: <div class="iconcontainer"><span title="Give a location here (OPTIONAL)" class="glyphicon glyphicon-question-sign"></span></div>
 				</td>
-				<td> 
-				</td>
-			</tr>
-
-			<tr></tr>
-
-			<tr>
-				<th>
-					Column:
-				</th>
-
 				<td>
-					<select class="form-control input-sm" ng-model="currentDataset.date" ng-options="column.Name for column in currentDataset.columns"></select>				
 				</td>
 			</tr>
 
@@ -117,13 +117,15 @@
 
 			<tr class="lastrow">
 				<th>
-					Group by:
+					Column:
 				</th>
 
 				<td>
-					<select class="form-control input-sm" ng-model="currentDataset.grouping" ng-options="group for group in grouping"></select>
+				 	<select class="form-control input-sm" ng-model="currentDataset.location" ng-options="column.Name for column in currentDataset.columns">
+				 		<option value="">None</option>
+				 	</select>
 				</td>
-			</tr>
+			</tr>	
 
 		</table>
 	</div>

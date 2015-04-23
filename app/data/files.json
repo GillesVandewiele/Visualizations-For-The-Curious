@@ -7,43 +7,81 @@
 				{
 					"Name": "Locatie",
 					"Path": "$.data[*][1][*][1]",
-					"Dict": "data/verkeerstijden/routes.json"
+					"Dict": "data/verkeerstijden/routes.json",
+					"Dict_mapping": "$.routes[*]"
+
 				},
 				{
 					"Name": "Vertraging",
 					"Path": "$.data[*][1][*][0]",
-					"Dict": ""
+					"Dict": "",
+					"Dict_mapping": ""
 				},
 				{
 					"Name": "Tijdstip",
 					"Path": "$.data[*][0]",
-					"Dict": "data/verkeerstijden/times.json"
+					"Dict": "data/verkeerstijden/times.json",
+					"Dict_mapping": "$.times[*]"
 				}
 			]
 		},
 		{
 			"Name": "weerdata",
-			"Path": "data/KMI/KMI_daily.json",
+			"Path": "data/KMI/data.json",
 			"Columns": [ 
 				{
 					"Name": "Locatie",
-					"Path": "$.data[*][1][*][0]",
-					"Dict": "data/KMI/locations.json"
+					"Path": "$.data[*][2][*][0]",
+					"Dict": "data/KMI/stations.json",
+					"Dict_mapping": "$.stations[*]"
 				},
 				{
 					"Name": "Temperatuur",
-					"Path": "$.data[*][1][*][0]",
-					"Dict": ""
+					"Path": "$.data[*][2][*][1]",
+					"Dict": "",
+					"Dict_mapping": ""
 				},
 				{
 					"Name": "Luchtvochtigheid",
-					"Path": "$.data[*][1][*][0]",
-					"Dict": ""
+					"Path": "$.data[*][2][*][2]",
+					"Dict": "",
+					"Dict_mapping": ""
+				},
+				{
+					"Name": "Gemiddele Temperatuur",
+					"Path": "$.data[*][1]",
+					"Dict": "",
+					"Dict_mapping": ""
+				},
+				{
+					"Name": "Luchtdruk",
+					"Path": "$.data[*][2][*][3]",
+					"Dict": "",
+					"Dict_mapping": ""
+				},
+				{
+					"Name": "Windrichting",
+					"Path": "$.data[*][2][*][4]",
+					"Dict": "data/KMI/windrichting.json",
+					"Dict_mapping": "$.windrichtingen[*]"
+				},
+				{
+					"Name": "Windsnelheid",
+					"Path": "$.data[*][2][*][5]",
+					"Dict": "",
+					"Dict_mapping": ""
+				},
+				{
+					"Name": "Weertype",
+					"Path": "$.data[*][2][*][6]",
+					"Dict": "data/KMI/weertype.json",
+					"Dict_mapping": "$.weertypes[*]"
 				},
 				{
 					"Name": "Tijdstip",
 					"Path": "$.data[*][0]",
-					"Dict": "data/KMI/times.json"
+					"Dict": "data/KMI/times.json",
+					"Dict_mapping": "$.stations[*]"
 				}
 			]
 		},

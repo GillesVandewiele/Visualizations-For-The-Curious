@@ -8,7 +8,7 @@
  * Service in the dataVisualizationsApp.
  */
 angular.module('dataVisualizationsApp.services')
-  .service('dataService', ['$q', '$http', function ($q, $http) {	
+  .service('dataService', ['$q', '$http', function ($q, $http) {
 	var userDatasets = [];
 	var count = 0;
 
@@ -24,7 +24,7 @@ angular.module('dataVisualizationsApp.services')
 
 	var returnData = [];
 
-	var dataIsLoading = []
+	var dataIsLoading = [];
 
 
 	/*************** DECLARE USERSDATASETS **********************/
@@ -90,7 +90,7 @@ angular.module('dataVisualizationsApp.services')
 
 		promiseData
 			.then(function(data){
-
+				
 				actualData[index] = data.data;
 				deferredData.resolve(actualData[index]);
 				deferred.resolve(index);
@@ -139,7 +139,7 @@ angular.module('dataVisualizationsApp.services')
 
 		promiseTimesDict
 			.then(function(data){
-				timesDict[index] = jsonPath(data.data, "$.times[*]");
+				timesDict[index] = jsonPath(data.data, "$.times[*]"); // TODO: get dict json path
 				deferredTimesDict.resolve(timesDict[index]);
 				deferred.resolve(index);
 				return deferred.promise;

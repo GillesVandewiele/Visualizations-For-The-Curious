@@ -41,7 +41,6 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.timesDict[0] = dataService.getTimesDict(0);
     $scope.locationsDict[0] = dataService.getLocationsDict(0);
 
-    /*
     $scope.accidentsData = {};//locations
     $scope.incidentsData = {};//values
     if($scope.locations[0]){
@@ -62,23 +61,8 @@ angular.module('dataVisualizationsApp.controllers')
         };
     }
 
-    $scope.firstDate = new Date(2014, 10, 1);*/
+    $scope.firstDate = new Date(2014, 10, 1);
 
-    if($scope.times[0]){
-        $scope.minTime = 0;
-        $scope.maxTime = $scope.times[0].length-1;
-        $scope.currentTime = 200;
-        $scope.translateTime = function(currentTime){
-            return $scope.timesDict[0][$scope.times[0][currentTime]].name;
-        };
-    } else {
-        $scope.minTime = 0;
-        $scope.maxTime = 10000;
-        $scope.currentTime = 200;
-        $scope.translateTime = function(currentTime){
-            return "No times loaded";
-        };
-    }
 
 
 

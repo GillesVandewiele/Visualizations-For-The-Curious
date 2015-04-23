@@ -7,7 +7,7 @@
  * # d3Calendar
  */
 angular.module('dataVisualizationsApp.directives')
-  .directive('d3Calendar', ['d3Service','calHeatMapService', function(d3Service,calHeatMapService) {
+  .directive('d3Calendar', ['d3Service','calHeatMapService',function(d3Service,calHeatMapService) {
     return {
         template: '<div class="cal-heatmap" config="config"></div>',
         restrict: 'E',
@@ -19,7 +19,12 @@ angular.module('dataVisualizationsApp.directives')
                 calHeatMapService.then(function(calHeatMap){
                     var config = scope.config || {};
                     var element = iElement[0];
-                    var cal = new CalHeatMap();
+                    var cal;
+                    if(angular.isUndefined(CalHeatMap)){
+                        cal = calHeatMap;
+                    }else{
+                        cal = new CalHeatMap();
+                    }
                     var defaults = {
                         itemSelector: element,
                         domain: 'month',
