@@ -8,7 +8,7 @@
  * Controller of the dataVisualizationsApp
  */
 angular.module('dataVisualizationsApp.controllers')
-  .controller('VisualizationsCtrl', ['$scope', 'dataService', 'd3Service', function ($scope, dataService, d3Service) {
+  .controller('VisualizationsCtrl', ['$scope', 'dataService', 'd3Service', '$interval', function ($scope, dataService, d3Service, $interval) {
 
     /********************LOAD DATA**********************/
 
@@ -18,7 +18,8 @@ angular.module('dataVisualizationsApp.controllers')
     if locations --> cities = points on a map, can be represented with markers
     if locations --> routes = lines on a map, can be represented with polylines
     */ 
-    var heatMap = ['#00ff00', '#66ff33', '#99ff33', '#ccff33', '#ffff00', '#ffcc00','#ff9933','#ff6600', '#ff3300', '#ff0000'];  
+    $scope.heatMap = ['#00ff00', '#66ff33', '#99ff33', '#ccff33', '#ffff00', '#ffcc00','#ff9933','#ff6600', '#ff3300', '#ff0000'];
+    $scope.heatMapBoundaries = ["","","","","","","","","","",""];  
     var locationsType = 0;
 
     $scope.cities = {};
@@ -69,10 +70,15 @@ angular.module('dataVisualizationsApp.controllers')
 
     //this function initialises the leafletmap by centering the map
     //and by selecting the right map on mapbox.  
+    $scope.defaults = {
+        maxZoom: 14,
+        minZoom: 8
+    }
+
     $scope.center = {
         lat: 50.5,
         lng: 4.303,
-        zoom: 8
+        zoom: 8,
     };
 
     $scope.layers = {
@@ -126,29 +132,37 @@ angular.module('dataVisualizationsApp.controllers')
 
     /************* BUTTON CLICKS *************/
     $scope.mapPlayPauseButton = "Play";
+    $scope.mapPlaying = false;
+    var mapPlayPromise;
 
     $scope.mapPlayPause = function(){
-        if($scope.mapPlayPauseButton == "Play"){
-            //start thread
-            mapPlay(true);
-
+        if($scope.mapPlaying){
+            //pause playing
+            if($interval.cancel(mapPlayPromise)){
+                //change Pause --> Play
+                $scope.mapPlayPauseButton = "Play";
+                $scope.mapPlaying = false;
+            }
+        } else {
+            //start playing
+            mapPlayPromise = $interval(mapNextTimestep, 100, $scope.maxTime-$scope.currentTime);
+            $scope.mapPlaying = true;
             //change Play --> Pause
             $scope.mapPlayPauseButton = "Pause";
-        } else if($scope.mapPlayPauseButton == "Pause"){
-            //pause thread
-            mapPlay(false);
-
-            //change Pause --> Play
-            $scope.mapPlayPauseButton = "Play";
         }
     };
 
     $scope.mapStop = function(){
-        //stop thread
-        mapPlay(false);
-
-        //reset currentTime
-        $scope.currentTime = 0;
+        //stop playing
+        if($scope.mapPlaying){
+            if($interval.cancel(mapPlayPromise)){
+                $scope.mapPlayPauseButton = "Play";
+                $scope.mapPlaying = false;
+                $scope.currentTime = 0;
+            }
+        } else {
+            $scope.currentTime = 0;
+        }
 
     };
 
@@ -204,14 +218,20 @@ angular.module('dataVisualizationsApp.controllers')
 
             //now that we have min and max, map all values to a color between green and red.
             for(var k=0; k<$scope.values[index][$scope.currentTime].length; k++){
-                var temp = Math.floor(($scope.values[index][$scope.currentTime][k]-extent[0])/(extent[1]-extent[0])*(heatMap.length-1));
-                $scope.routes['route_'+$scope.locations[index][$scope.currentTime][k]].color = heatMap[temp];
+                var temp = Math.floor(($scope.values[index][$scope.currentTime][k]-extent[0])/(extent[1]-extent[0])*($scope.heatMap.length-1));
+                $scope.routes['route_'+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
             }
+
+            //for the legend, the heatmapboudaries must be set.
+            for(var j=0; j<$scope.heatMapBoundaries.length; j++){
+                $scope.heatMapBoundaries[j] = (Math.floor(extent[0] + j*(extent[1]-extent[0])/$scope.heatMapBoundaries.length)).toString();
+            }
+
         });
     }
 
-    function mapPlay(play){
-        
+    function mapNextTimestep(){
+        $scope.currentTime++;
     }
 
   }]);
