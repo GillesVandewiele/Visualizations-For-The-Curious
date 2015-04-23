@@ -124,8 +124,36 @@ angular.module('dataVisualizationsApp.controllers')
         editLocationColors(0);  
     });
 
+    /************* BUTTON CLICKS *************/
+    $scope.mapPlayPauseButton = "Play";
 
-    /*********************************** HELPER FUCNTIONS *****************************************/
+    $scope.mapPlayPause = function(){
+        if($scope.mapPlayPauseButton == "Play"){
+            //start thread
+            mapPlay(true);
+
+            //change Play --> Pause
+            $scope.mapPlayPauseButton = "Pause";
+        } else if($scope.mapPlayPauseButton == "Pause"){
+            //pause thread
+            mapPlay(false);
+
+            //change Pause --> Play
+            $scope.mapPlayPauseButton = "Play";
+        }
+    };
+
+    $scope.mapStop = function(){
+        //stop thread
+        mapPlay(false);
+
+        //reset currentTime
+        $scope.currentTime = 0;
+
+    };
+
+
+    /************* HELPER FUCNTIONS FOR MAP *************/
 
     function drawLocations(index){
         if( locationsType == 0){
@@ -180,6 +208,10 @@ angular.module('dataVisualizationsApp.controllers')
                 $scope.routes['route_'+$scope.locations[index][$scope.currentTime][k]].color = heatMap[temp];
             }
         });
+    }
+
+    function mapPlay(play){
+        
     }
 
   }]);
