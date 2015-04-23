@@ -51,7 +51,7 @@ angular.module('dataVisualizationsApp.controllers')
         };
     }
 
-    $scope.firstDate = new Date(2014, 10, 1);
+    $scope.firstDate = new Date(2014, 11, 1);
 
 
     /****************** MAP INITIALISATION *********************/
