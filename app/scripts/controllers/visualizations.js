@@ -144,11 +144,18 @@ angular.module('dataVisualizationsApp.controllers')
                 $scope.mapPlaying = false;
             }
         } else {
-            //start playing
-            mapPlayPromise = $interval(mapNextTimestep, 100, $scope.maxTime-$scope.currentTime);
-            $scope.mapPlaying = true;
-            //change Play --> Pause
-            $scope.mapPlayPauseButton = "Pause";
+            if($scope.currentTime < $scope.maxTime){
+                //change Play --> Pause
+                $scope.mapPlayPauseButton = "Pause";
+                $scope.mapPlaying = true;
+                //start playing
+                
+                mapPlayPromise = $interval(mapNextTimestep, 10, $scope.maxTime-$scope.currentTime);
+                mapPlayPromise.then(function(){
+                    $scope.mapPlayPauseButton = "Play";
+                    $scope.mapPlaying = false;
+                });
+            }
         }
     };
 
@@ -202,7 +209,8 @@ angular.module('dataVisualizationsApp.controllers')
             var msg = "<p>"+$scope.locationsDict[index][i].name+"</p>";
 
             $scope.routes['route_'+i] = {
-                    weight: 2,
+                    weight: 3,
+                    opacity: 0.6,
                     color: '#00ff00',
                     latlngs: decoded,
                     message: msg,
