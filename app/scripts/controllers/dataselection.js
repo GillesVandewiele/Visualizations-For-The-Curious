@@ -49,7 +49,7 @@ angular.module('dataVisualizationsApp.controllers')
   	var updateDataset = function(data, index){
   		var dataset = {name:data[index].Name, columns:data[index].Columns, path:data[index].Path, aggregation:$scope.aggregations[0], 
   		  grouping:$scope.grouping[0]};
-  		dataset.location = dataset.columns[0];
+  		dataset.location = "None";
 		dataset.value = dataset.columns[1];
 		dataset.date = dataset.columns[dataset.columns.length - 1];
 		return dataset;
@@ -231,39 +231,6 @@ angular.module('dataVisualizationsApp.controllers')
 	$scope.downloadData = function(){
 		setWaitingCursor();
 		$scope.downloadingData=true;
-		/*
-		var allGetPromises=[];
-
-		for(var i = 0; i < $scope.userDatasets.length; i++){
-			console.log($scope.userDatasets[i].path);
-
-			allGetPromises.push($http.get($scope.userDatasets[i].path, {params: {"dataSetNumber": i}}));
-
-
-			// $http.get($scope.userDatasets[i].path, {params: {"dataSetNumber": i}})
-		 //  		.success(function(data, status, headers, config) { 
-		 //  			//Extract right columns (and print them for now)
-			// 		$scope.printData($scope.userDatasets[config.params.dataSetNumber], data);
-
-		 //  			// TODO: validate all columns (wait for right Date format etc)
-		 //  		})
-		 //  		.error(function(data, status, headers, config) {
-			//     	showErrorMessage("We were unable to download the requested data.");
-			// 	});
-		}
-
-		$q.all(allGetPromises).then(function(arrayOfResponses){
-			var index;
-			for (index = 0; index < arrayOfResponses.length; ++index) {
-				var result = arrayOfResponses[index];
-			    $scope.printData($scope.userDatasets[result.config.params.dataSetNumber], result.data);
-			}
-
-			dataService.addMultipleDatasets($scope.userDatasets);
-
-		},function(){
-			showErrorMessage("We were unable to download the requested data.");
-		});*/
 		dataService.addMultipleDatasets($scope.userDatasets, $scope.afterDataLoaded, showErrorMessage.bind(null,"We were unable to download the requested data."));
 	};
   }]);

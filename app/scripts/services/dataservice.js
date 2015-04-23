@@ -90,7 +90,6 @@ angular.module('dataVisualizationsApp.services')
 
 		promiseData
 			.then(function(data){
-				
 				actualData[index] = data.data;
 				deferredData.resolve(actualData[index]);
 				deferred.resolve(index);
@@ -150,21 +149,24 @@ angular.module('dataVisualizationsApp.services')
 
 	//function that loads the locations dictionnary of all the datasets
 	function loadLocationsDict(index){
-		var deferred = $q.defer();
+		if(userDatasets[index].location){
+			var deferred = $q.defer();
 
-		var deferredLocationsDict = $q.defer();
-		var promiseLocationsDict = deferredLocationsDict.promise;
-		promiseLocationsDict = $http.get(userDatasets[index].location.Dict);
+			var deferredLocationsDict = $q.defer();
+			var promiseLocationsDict = deferredLocationsDict.promise;
+			promiseLocationsDict = $http.get(userDatasets[index].location.Dict);
 
-		promiseLocationsDict
-			.then(function(data){
-				locationsDict[index] = jsonPath(data.data, "$.routes[*]");
-				deferredLocationsDict.resolve(locationsDict[index]);
-				deferred.resolve(index);
-				return deferred.promise;
-			});
-		
-		return deferred.promise;
+			promiseLocationsDict
+				.then(function(data){
+					locationsDict[index] = jsonPath(data.data, "$.routes[*]");
+					deferredLocationsDict.resolve(locationsDict[index]);
+					deferred.resolve(index);
+					return deferred.promise;
+				});
+			
+			return deferred.promise;
+		}
+		return null;
 	}
 
 	//function loading all data into the service
@@ -240,17 +242,11 @@ angular.module('dataVisualizationsApp.services')
 		//for now we will pretend no aggregation or grouping is given
 		times[index] = jsonPath(actualData[index], userDatasets[index].date.Path);
 		var tmpValues = jsonPath(actualData[index], userDatasets[index].value.Path);		
-		var tmpLocations = jsonPath(actualData[index], userDatasets[index].location.Path);
-
-
-		///
-		/// TODO: aggregation
-		///
-
-
-		//one problem: we do not know what times belong to which locations and values
-		//if we can assume every time entry has an equal amount of value/locations pairs, the problem is solved. --> implemented
-		//else actualData can be used and unnecessary attributes can be deleted --> best option --> would require hack i'd rather not implement
+		if(userDatasets[index].location){
+			var tmpLocations = jsonPath(actualData[index], userDatasets[index].location.Path);
+		} else {
+			var tmpLocations = [];
+		}
 
 		var timesLength = times[index].length;
 		var entriesPerTime = tmpValues.length/timesLength;
@@ -276,6 +272,11 @@ angular.module('dataVisualizationsApp.services')
 		return values[index];
 	}
 
+	//TODO: Implement these methods
+	this.getAggregationType = function(index){
+		return userDatasets[index].aggregation;
+	}
+
 	//return the times: dict will be necessary to convert numbers to real times
 	this.getTimes = function(index){
 		return times[index];
@@ -293,7 +294,6 @@ angular.module('dataVisualizationsApp.services')
 
 	//function returning the timesDict
 	this.getTimesDict = function(index){
-
 		return timesDict[index];	
 	}
 
