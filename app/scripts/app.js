@@ -21,7 +21,8 @@ angular
     'dataVisualizationsApp.directives',
     'dataVisualizationsApp.services',
     'ui.bootstrap',
-    'leaflet-directive'
+    'leaflet-directive',
+    'vr.directives.slider',
   ])
   .config(function ($routeProvider) {
     $routeProvider

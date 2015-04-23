@@ -6,12 +6,12 @@
 			"Columns": [ 
 				{
 					"Name": "Locatie",
-					"Path": "$.data[*][1][*][0]",
+					"Path": "$.data[*][1][*][1]",
 					"Dict": "data/verkeerstijden/routes.json"
 				},
 				{
 					"Name": "Vertraging",
-					"Path": "$.data[*][1][*][1]",
+					"Path": "$.data[*][1][*][0]",
 					"Dict": ""
 				},
 				{
