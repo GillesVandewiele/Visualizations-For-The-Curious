@@ -57,7 +57,7 @@ angular.module('dataVisualizationsApp.controllers')
 
   	// Private function to check if two specified datasets are not unique
   	var datasetTracker = function(dataset){
-  		return dataset.name + dataset.location.Name + dataset.value.Name + dataset.date.Name + dataset.aggregation + dataset.grouping;
+  		return dataset.name + dataset.location + dataset.value + dataset.date + dataset.aggregation + dataset.grouping;
   	};
 
   	var searchInColumns = function(name, columns){
@@ -145,7 +145,10 @@ angular.module('dataVisualizationsApp.controllers')
 				$scope.currentDataset = $localStorage.datasets[indexSelectedDataset];
 				// Ugly hack to update the dropdowns
 				// TODO: try to use $scope.apply();
-				$scope.currentDataset.location = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.location.Name, $scope.currentDataset.columns)];
+				console.log($scope.currentDataset.location)
+				if($scope.currentDataset.location){
+					$scope.currentDataset.location = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.location.Name, $scope.currentDataset.columns)];
+				}
 				$scope.currentDataset.value = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.value.Name, $scope.currentDataset.columns)];
 				$scope.currentDataset.date = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.date.Name, $scope.currentDataset.columns)];
 				$scope.currentDataset.aggregation = $scope.aggregations[0];
@@ -186,7 +189,9 @@ angular.module('dataVisualizationsApp.controllers')
 	$scope.changeDataset = function(obj){
 		$scope.selectedFile = obj.name;
 		$scope.currentDataset = obj;
-		$scope.currentDataset.location = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.location.Name, $scope.currentDataset.columns)];
+		if($scope.currentDataset.location){
+			$scope.currentDataset.location = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.location.Name, $scope.currentDataset.columns)];
+		}
 		$scope.currentDataset.value = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.value.Name, $scope.currentDataset.columns)];
 		$scope.currentDataset.date = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.date.Name, $scope.currentDataset.columns)];
 	}
