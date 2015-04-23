@@ -41,6 +41,7 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.timesDict[0] = dataService.getTimesDict(0);
     $scope.locationsDict[0] = dataService.getLocationsDict(0);
 
+    /*
     $scope.accidentsData = {};//locations
     $scope.incidentsData = {};//values
     if($scope.locations[0]){
@@ -61,10 +62,7 @@ angular.module('dataVisualizationsApp.controllers')
         };
     }
 
-    $scope.firstDate = new Date(2014, 10, 1);
-
-
-
+    $scope.firstDate = new Date(2014, 10, 1);*/
 
 
     /****************** MAP INITIALISATION *********************/
@@ -90,6 +88,22 @@ angular.module('dataVisualizationsApp.controllers')
             }
         }
     };
+
+    if($scope.times[0]){
+        $scope.minTime = 0;
+        $scope.maxTime = $scope.times[0].length-1;
+        $scope.translateTime = function(currentTime){
+            return $scope.timesDict[0][$scope.times[0][currentTime]].name;
+        };
+    } else {
+        $scope.minTime = 0;
+        $scope.maxTime = 10000;
+        $scope.translateTime = function(currentTime){
+            return "no time loaded";
+        };
+    }
+
+    $scope.currentTime= 0;
 
     //check type of locations
     if($scope.locationsDict[0]){
@@ -159,11 +173,10 @@ angular.module('dataVisualizationsApp.controllers')
         //first find the maximal value
         d3Service.then(function(d3){
             var extent = d3.extent($scope.values[index][$scope.currentTime]);
-            
+
             //now that we have min and max, map all values to a color between green and red.
-            for(var k=0;k<$scope.values[index][$scope.currentTime].length;k++){
+            for(var k=0; k<$scope.values[index][$scope.currentTime].length; k++){
                 var temp = Math.floor(($scope.values[index][$scope.currentTime][k]-extent[0])/(extent[1]-extent[0])*(heatMap.length-1));
-        
                 $scope.routes['route_'+$scope.locations[index][$scope.currentTime][k]].color = heatMap[temp];
             }
         });
