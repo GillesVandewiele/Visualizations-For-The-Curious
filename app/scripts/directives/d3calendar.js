@@ -16,7 +16,7 @@ angular.module('dataVisualizationsApp.directives')
         },
         link: function(scope, iElement, iAttrs) {
             d3Service.then(function(d3){
-                calHeatMapService.then(function(calHeatMap){
+                calHeatMapService.then(function(){
                     var config = scope.config || {};
                     var element = iElement[0];
                     var cal = new CalHeatMap();
