@@ -6,3 +6,4 @@ bower_components
 *.md~
 /npm-debug.log
 *.sublime*
+Thumbs.db

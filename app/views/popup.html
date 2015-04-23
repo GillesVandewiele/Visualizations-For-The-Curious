@@ -42,14 +42,14 @@
 					<code>{{currentColumn.data}}</code>		
 				</div>
 			</div>
-			<div class="col-md-6 col-xs-6" id="manageColumns">
+			<div class="col-md-6 col-xs-6" id="manageColumns" ng-controller="PopupCtrl">
 				<div class="row">
-					<h4 class="glyphicon glyphicon-minus-sign" id="toggleJson" style="margin-left:2.5%; cursor:pointer;" onclick="hideJsonCode()">Data</h4>
-				    <pre id="jsonCode" style="width:90%; overflow-y: auto; margin-left:2.5%; height: 390px;">{{modalOptions.jsonData}}</pre>
+					<h4 class="glyphicon" ng-class="{'glyphicon-plus-sign': !jsonCodeVisible, 'glyphicon-minus-sign': jsonCodeVisible}" id="toggleJson" style="margin-left:2.5%; cursor:pointer;" ng-click="toggleJSON()">Data</h4>
+				    <pre id="jsonCode" style="width:90%; overflow-y: auto; margin-left:2.5%; height: 390px;" ng-show="jsonCodeVisible">{{modalOptions.jsonData}}</pre>
 				</div>
 				<div class="row">
-					<h4 class="glyphicon glyphicon-plus-sign" id="toggleExample" onclick="hideExampleCode()" style="margin-left:2.5%; cursor:pointer;">Example</h4>
-					<div id="exampleCode" class="right-column well" style="display: none; width:90%; margin-left:2.5%; overflow-y: auto; height: 390px;">
+					<h4 class="glyphicon"  ng-class="{'glyphicon-plus-sign': jsonCodeVisible, 'glyphicon-minus-sign': !jsonCodeVisible}" id="toggleExample" ng-click="toggleJSON()" style="margin-left:2.5%; cursor:pointer;">Example</h4>
+					<div id="exampleCode" class="right-column well" style="width:90%; margin-left:2.5%; overflow-y: auto; height: 390px;" ng-hide="jsonCodeVisible">
 						<table class="table table-striped">
 							<thead>
 								<tr>
@@ -74,31 +74,31 @@
 						</table>
 						<hr>
 					  	<pre>
-	{ 
-	  "KMI_daily":  [
+{ 
+ "KMI_daily": [
+	{
+	 "Time": "Fri May 16 2014",
+	 "Frequency": "Daily",
+	 "Collections": { 
+	 "Weerinfo": [ 
 		{
-		  "Time": "Fri May 16 2014",
-		  "Frequency": "Daily",
-		  "Collections": { 
-		  "Weerinfo": [ 
-			{
-			  "Station": "Bierset",
-			  "Temperatuur (C)": "13.7",
-			  "Luchtvochtigheid (%)": "57.2",
-			  "Windsnelheid": "13.4"
-			},
-			{
-			  "Station": "Buzenol",
-			  "Temperatuur (C)": "14.0",
-			  "Luchtvochtigheid (%)": "55.9",
-			  "Windsnelheid": "15.6"
-			},
-			  ...
-		  ]
+		 "Station": "Bierset",
+		 "Temperatuur (C)": "13.7",
+		 "Luchtvochtigheid (%)": "57.2",
+		 "Windsnelheid": "13.4"
 		},
-		...
-	  ]
-	}
+		{
+		 "Station": "Buzenol",
+		 "Temperatuur (C)": "14.0",
+		 "Luchtvochtigheid (%)": "55.9",
+		 "Windsnelheid": "15.6"
+		},
+		 ...
+	 ]
+	},
+	...
+ ]
+}
 						</pre>
 					</div>
 				</div>

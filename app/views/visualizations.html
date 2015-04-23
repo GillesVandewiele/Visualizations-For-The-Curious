@@ -2,17 +2,21 @@
 	<div class="layoutrow titlerow">
 		<h3>Visualizations</h3>
 	</div>
-	<div class="layoutrow scroll-y">
-		<dv-bars-demo></dv-bars-demo>
-		<div class="container-fluid">
-			<div class="row" ng-repeat="i in getNumber(amtRows) track by $index">
-				<div class="col-xs-{{12/amtCols}} col-md-{{12/amtCols}}" ng-repeat="j in getNumber(amtCols) track by $index">
-					<d3-belgium></d3-belgium>
+	<div class="layoutrow titlecontent scroll-y">
+		<!-- <dv-bars-demo></dv-bars-demo> -->
+		<!-- <div class="container-fluid"> -->
+		<h4>Accidents</h4>
+		<button class="btn" id="btn-previous">Previous</button><button class="btn" id="btn-next">Next</button>
+		<d3-calendar config="{domain:'month',range:6,data:accidentsData,start:firstDate, highlight: 'now', legend: [30,60,90,120,150],nextSelector: '#btn-next',previousSelector: '#btn-previous'}"></d3-calendar>
 
-				</div>
-			</div>
-		</div>
-		<d3-calendar></d3-calendar>
-		<d3-stacked-bar data='[]'></d3-stacked-bar>
+		<br />
+		<h4>Incidents</h4>
+		<button class="btn" id="btn-previous2">Previous</button><button class="btn" id="btn-next2">Next</button>
+		<d3-calendar config="{domain:'month',range:6,data:incidentsData,start:firstDate, highlight: 'now', legend: [30,60,90,120,150],nextSelector: '#btn-next2',previousSelector: '#btn-previous2'}"></d3-calendar>
+
+		<br />
+		<leaflet center="center" layers="layers" height="300px"></leaflet>
+		
+		<!-- <d3-stacked-bar data='[]'></d3-stacked-bar>-->
 	</div>
 </div>

@@ -46,9 +46,9 @@ class RouteRespository(object):
 		self.routes.append(Route(name, nr, self.routeFromStartSep, self.startFromStopSep))
 		
 	def to_JSON(self):
-		out = list()
+		out = len(self.routes)*[None]
 		for route in self.routes:
-			out.append(route.to_JSON())
+			out[route.nr] = route.to_JSON()
 		return out
 
 INPUT_PATH = None

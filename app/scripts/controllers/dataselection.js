@@ -6,7 +6,7 @@
  * @description Controller of the dataVisualizationsApp. Downloads a JSON-file from the server to populate all dropdowns and validates the user input.
  */
 angular.module('dataVisualizationsApp.controllers')
-  .controller('DataselectionCtrl', ['$scope', '$http', '$localStorage', function ($scope, $http, $localStorage) {
+  .controller('DataselectionCtrl', ['$scope','$location', '$http', '$q', '$localStorage', 'dataService',  function ($scope,$location, $http, $q, $localStorage, dataService) {
 
   	/****************** CONSTANTS ********************/
 
@@ -20,15 +20,26 @@ angular.module('dataVisualizationsApp.controllers')
 	  	$scope.grouping = ["NONE", "WEEKDAY", "WEEKS", "MONTH", "YEAR"];
 
 	  	$scope.selectedFile;
+	  	$scope.downloadingData=false;
 
-	  	$localStorage.datasets; 	// All datasets that were retrieved from the server 
-	  						        // Fields: location, value, aggregation, date, grouping
-		$scope.datasets = $localStorage.datasets;
+	  	$scope.$storage = $localStorage;
+
+
+
+	  	//$localStorage.datasets; 	// All datasets that were retrieved from the server 
+	  	//					        // Fields: location, value, aggregation, date, grouping
+		$scope.datasets = $scope.$storage.datasets;
 
 	  	$scope.userDatasets = []; // The defined datasets by the user
-	  	$scope.currentDataset;
+	  	$scope.currentDataset = null;
 
 	  	$scope.errorMessage = ""; // Used to show all errors
+
+	  	$scope.dataVisible = true;
+	  	$scope.toggleJSON = function() {
+	  		//console.log("executed toggleJSON");
+            $scope.dataVisible = $scope.dataVisible === false ? true: false;
+        };
 
   	/*************************************************/
 
@@ -97,26 +108,26 @@ angular.module('dataVisualizationsApp.controllers')
 	};
 
 	var validateDateColumn = function(column){
-		for(var i = 0; i < 100; i++){
+		/*for(var i = 0; i < 100; i++){
 			console.log(column[i]);
-		}
+		}*/
 	};
 
 	var validateLocationColumn = function(column){
-		for(var i = 0; i < 100; i++){
+		/*for(var i = 0; i < 100; i++){
 			console.log(column[i]);
-		}
+		}*/
 	};
 
   	/************************************************/
 
-  	if($localStorage.datasets == null){
+  	if($scope.$storage.datasets == null){
 	    $http.get('data/files.json').
 		  success(function(data, status, headers, config) {  
 		    // If the JSON-file was downloaded successfully, we populate all the dropdowns (files, columns) on the start screen
-		    $localStorage.datasets=[];
+		    $scope.$storage.datasets=[];
 		    for(var i = 0; i < data.Files.length; i++){
-		    	$localStorage.datasets.push(updateDataset(data.Files, i));
+		    	$scope.$storage.datasets.push(updateDataset(data.Files, i));
 		    }
 		  }).
 		  error(function(data, status, headers, config) {
@@ -126,8 +137,8 @@ angular.module('dataVisualizationsApp.controllers')
 
 	// Based on the selection of dataset, we populate the other dropdowns
 	$scope.$watch('selectedFile', function(){
-    	if($localStorage.datasets != null){
-			var indexSelectedDataset = searchDatasetsByName($localStorage.datasets, $scope.selectedFile);
+    	if($scope.$storage.datasets != null){
+			var indexSelectedDataset = searchDatasetsByName($scope.$storage.datasets, $scope.selectedFile);
 			// If the index is equal to -1, 'Add file..' was selected
 			console.log(indexSelectedDataset);
 			if(indexSelectedDataset != -1){
@@ -182,9 +193,15 @@ angular.module('dataVisualizationsApp.controllers')
 
 	$scope.printData = function(dataset, jsonData){
 		if(jsonData != null){
+
+			setWaitingCursor();
+
 			var dataset_locations = jsonPath(jsonData, dataset.location.Path);
 			var dataset_values = jsonPath(jsonData, dataset.value.Path);
 			var dataset_dates = jsonPath(jsonData, dataset.date.Path);
+
+			setDefaultCursor();
+
 			console.log("is value correct?", validateValueColumn(dataset_values));
 			console.log("is date correct?", validateDateColumn(dataset_dates));
 			console.log("is location correct?", validateLocationColumn(dataset_locations));
@@ -192,62 +209,75 @@ angular.module('dataVisualizationsApp.controllers')
 	}
 
 	$scope.resetLocalStorage = function(dataset, jsonData){
+		$scope.$storage.$reset(); //either of these two works
 		$localStorage.$reset();
 		document.location.reload(true);
 	}
 
+	$scope.afterDataLoaded = function(){
+		setDefaultCursor();
+		$scope.downloadingData=false;
+		console.log("data is loaded");
+
+		window.location.assign("#/visualizations/");
+	}
+
   	// This function is called when the user presses the 'V' button and downloads all datasets from the list.
 	$scope.downloadData = function(){
-		for(var i = 0; i < $scope.userDatasets.length; i++){
-			console.log($scope.userDatasets[i].path)
-			$http.get($scope.userDatasets[i].path, {params: {"dataSetNumber": i}})
-		  		.success(function(data, status, headers, config) { 
-		  			//Extract right columns (and print them for now)
-					$scope.printData($scope.userDatasets[config.params.dataSetNumber], data);
+		setWaitingCursor();
+		$scope.downloadingData=true;
+		/*
+		var allGetPromises=[];
 
-		  			// TODO: validate all columns (wait for right Date format etc)
-		  		})
-		  		.error(function(data, status, headers, config) {
-			    	showErrorMessage("We were unable to download the requested data.");
-				});
+		for(var i = 0; i < $scope.userDatasets.length; i++){
+			console.log($scope.userDatasets[i].path);
+
+			allGetPromises.push($http.get($scope.userDatasets[i].path, {params: {"dataSetNumber": i}}));
+
+
+			// $http.get($scope.userDatasets[i].path, {params: {"dataSetNumber": i}})
+		 //  		.success(function(data, status, headers, config) { 
+		 //  			//Extract right columns (and print them for now)
+			// 		$scope.printData($scope.userDatasets[config.params.dataSetNumber], data);
+
+		 //  			// TODO: validate all columns (wait for right Date format etc)
+		 //  		})
+		 //  		.error(function(data, status, headers, config) {
+			//     	showErrorMessage("We were unable to download the requested data.");
+			// 	});
 		}
+
+		$q.all(allGetPromises).then(function(arrayOfResponses){
+			var index;
+			for (index = 0; index < arrayOfResponses.length; ++index) {
+				var result = arrayOfResponses[index];
+			    $scope.printData($scope.userDatasets[result.config.params.dataSetNumber], result.data);
+			}
+
+			dataService.addMultipleDatasets($scope.userDatasets);
+
+		},function(){
+			showErrorMessage("We were unable to download the requested data.");
+		});*/
+		dataService.addMultipleDatasets($scope.userDatasets, $scope.afterDataLoaded, showErrorMessage.bind(null,"We were unable to download the requested data."));
 	};
   }]);
 
 
 // The two functions below are to show and hide the error message box.
+// TODO: maybe change this to a more angular way of doing things (ng-show, ng-hide)
 var show = function(target) {
     document.getElementById(target).style.display = 'block';
-}
+};
 
 var hide = function(target) {
     document.getElementById(target).style.display = 'none';
-}
+};
 
-var hideJsonCode = function(){
-	if(document.getElementById("toggleJson").className == "glyphicon glyphicon-minus-sign"){
-	    $(document.getElementById("jsonCode")).fadeOut("slow");
-	    document.getElementById("toggleJson").className = "glyphicon glyphicon-plus-sign";
-	    $(document.getElementById("exampleCode")).fadeIn("slow");
-	    document.getElementById("toggleExample").className = "glyphicon glyphicon-minus-sign";
-	} else {
-		$(document.getElementById("jsonCode")).fadeIn("slow");
-	    document.getElementById("toggleJson").className = "glyphicon glyphicon-minus-sign";
-	    $(document.getElementById("exampleCode")).fadeOut("slow");
-	    document.getElementById("toggleExample").className = "glyphicon glyphicon-plus-sign";
-	}
-}
+var setWaitingCursor = function(){
+	jQuery("body").css("cursor","progress");
+};
 
-var hideExampleCode = function(){
-	if(document.getElementById("toggleExample").className == "glyphicon glyphicon-minus-sign"){
-	    $(document.getElementById("exampleCode")).fadeOut("slow");
-	    document.getElementById("toggleExample").className = "glyphicon glyphicon-plus-sign";
-	    $(document.getElementById("jsonCode")).fadeIn("slow");
-	    document.getElementById("toggleJson").className = "glyphicon glyphicon-minus-sign";
-	} else {
-		$(document.getElementById("exampleCode")).fadeIn("slow");
-	    document.getElementById("toggleExample").className = "glyphicon glyphicon-minus-sign";
-	    $(document.getElementById("jsonCode")).fadeOut("slow");
-	    document.getElementById("toggleJson").className = "glyphicon glyphicon-plus-sign";
-	}
-}
+var setDefaultCursor = function(){
+	jQuery("body").css("cursor","default");
+};

@@ -20,7 +20,8 @@ angular
     'dataVisualizationsApp.controllers',
     'dataVisualizationsApp.directives',
     'dataVisualizationsApp.services',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'leaflet-directive'
   ])
   .config(function ($routeProvider) {
     $routeProvider
