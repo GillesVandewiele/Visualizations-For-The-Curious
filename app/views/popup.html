@@ -32,11 +32,14 @@
 						</tbody>
 					</table>
 
+					<h4> Add a column </h4>
+
 					<label style="width: 25%">Column name:</label><input ng-model="currentColumn.name" type="text" style="width:55%;"> <br>
-					<label style="width: 25%">Mapping:</label><input ng-model="currentColumn.mapping" type="text" style="width:55%;">
+					<label style="width: 25%">Mapping:</label><input ng-model="currentColumn.mapping" type="text" ng-blur="updateMapping()" style="width:55%;">
 					<span id="validateColumnSpan" class="glyphicon glyphicon-remove-circle icon-danger"></span>
 					<span id="newColumn" ng-style="addColumnSpan" class="glyphicon glyphicon-plus-sign" ng-click="addColumn()" style="cursor:pointer;"></span> <br>
-					<label style="width: 25%">Dict:</label><input ng-model="currentColumn.dict" type="text" style="width:55%;"><br>
+					<label style="width: 25%">Dict Path:</label><input ng-model="currentColumn.dict" type="text" style="width:55%;"><br>
+					<label style="width: 25%">Dict Mapping:</label><input ng-model="currentColumn.dict_mapping" type="text" style="width:55%;"><br>
 					<code>{{currentColumn.data}}</code>		
 				</div>
 			</div>

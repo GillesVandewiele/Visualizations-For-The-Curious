@@ -19,7 +19,12 @@ angular.module('dataVisualizationsApp.directives')
                 calHeatMapService.then(function(calHeatMap){
                     var config = scope.config || {};
                     var element = iElement[0];
-                    var cal = new CalHeatMap();
+                    var cal;
+                    if(CalHeatMap){
+                        cal = new CalHeatMap();
+                    }else{
+                        cal = calHeatMap;
+                    }
                     var defaults = {
                         itemSelector: element,
                         domain: 'month',
