@@ -33,6 +33,7 @@ $shadowAlpha: 0.6;
 @import "_layout.scss";
 @import "_map.scss";
 @import "_cal-heatmap.scss";
+@import "_angularslider.scss";
 @import "compass/css3/box-shadow";
 
 /* Custom page header */
@@ -70,6 +71,12 @@ $shadowAlpha: 0.6;
 
 #ugentlogo{
   height: $logoHeight;
+}
+
+.color-box{
+  width: 10%;
+  display:inline-block;
+  text-align: center;
 }
 
 .borderless{

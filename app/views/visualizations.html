@@ -16,13 +16,17 @@
 		-->
 		<br />
 
+  	
 
-	  	<slider floor="{{ minTime }}" ceiling="{{ maxTime }}" ng-model="currentTime" translate-fn='translateTime'></slider>
-
+		<leaflet defaults="defaults" center="center" layers="layers" height="600px" paths="routes"></leaflet> 
 		<br/>
-		<leaflet center="center" layers="layers" height="600px" paths="routes"></leaflet>
+		<div class="color-box" ng-repeat="c in heatMap track by $index" style="background-color: {{c}};"> {{heatMapBoundaries[$index]}} - {{heatMapBoundaries[$index+1]}}</div>		
+		<br/>
+		<br/>
+		<slider floor="{{ minTime }}" ceiling="{{ maxTime }}" ng-model="currentTime" translate-fn='translateTime' ng-disabled="mapPlaying"></slider>
+		<br/>
+		<button class="btn" ng-click="mapPlayPause()">{{mapPlayPauseButton}}</button><button class="btn" ng-click="mapStop()">Stop</button>
 
-		
 		<!-- <d3-stacked-bar data='[]'></d3-stacked-bar>-->
 	</div>
 </div>
