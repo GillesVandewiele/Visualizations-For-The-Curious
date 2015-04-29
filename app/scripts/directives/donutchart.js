@@ -7,7 +7,7 @@
  * # donutChart
  */
 angular.module('dataVisualizationsApp.directives')
-  .directive('donutChart', ['d3', function(d3) {
+  .directive('donutChart', [function() {
     return {
       restrict: 'E',
       scope: { data: '=' },

@@ -8,7 +8,7 @@
  * Controller of the dataVisualizationsApp
  */
 angular.module('dataVisualizationsApp.controllers')
-  .controller('VisualizationsCtrl', ['$scope', 'dataService', 'd3Service', '$interval', function ($scope, dataService, d3Service, $interval) {
+  .controller('VisualizationsCtrl', ['$scope', 'dataService', '$interval', function ($scope, dataService, $interval) {
 
     /********************LOAD DATA**********************/
 
@@ -218,21 +218,18 @@ angular.module('dataVisualizationsApp.controllers')
 
     function editRoutes(index){
         //first find the maximal value
-        d3Service.then(function(d3){
-            var extent = d3.extent($scope.values[index][$scope.currentTime]);
+        var extent = d3.extent($scope.values[index][$scope.currentTime]);
 
-            //now that we have min and max, map all values to a color between green and red.
-            for(var k=0; k<$scope.values[index][$scope.currentTime].length; k++){
-                var temp = Math.floor(($scope.values[index][$scope.currentTime][k]-extent[0])/(extent[1]-extent[0])*($scope.heatMap.length-1));
-                $scope.routes['route_'+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
-            }
+        //now that we have min and max, map all values to a color between green and red.
+        for(var k=0; k<$scope.values[index][$scope.currentTime].length; k++){
+            var temp = Math.floor(($scope.values[index][$scope.currentTime][k]-extent[0])/(extent[1]-extent[0])*($scope.heatMap.length-1));
+            $scope.routes['route_'+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
+        }
 
-            //for the legend, the heatmapboudaries must be set.
-            for(var j=0; j<$scope.heatMapBoundaries.length; j++){
-                $scope.heatMapBoundaries[j] = (Math.floor(extent[0] + j*(extent[1]-extent[0])/$scope.heatMapBoundaries.length)).toString();
-            }
-
-        });
+        //for the legend, the heatmapboudaries must be set.
+        for(var j=0; j<$scope.heatMapBoundaries.length; j++){
+            $scope.heatMapBoundaries[j] = (Math.floor(extent[0] + j*(extent[1]-extent[0])/$scope.heatMapBoundaries.length)).toString();
+        }
     }
 
     function mapNextTimestep(){
