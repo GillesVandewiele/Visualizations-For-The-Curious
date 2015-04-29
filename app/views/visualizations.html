@@ -5,6 +5,13 @@
 	<div class="layoutrow titlecontent scroll-y">
 		<!-- <dv-bars-demo></dv-bars-demo> -->
 		<!-- <div class="container-fluid"> -->
+		<div ng-repeat="calInfo in calendarData track by $index">
+			<h4>{{calInfo['title']}}</h4>
+			index: {{$index}}
+			<button class="btn" id="btn-previous{{$index}}">Previous</button><button class="btn" id="btn-next{{$index}}">Next</button>
+		<d3-calendar config="{domain:'month',range:1,data:calInfo['data'],start:firstDate, highlight: 'now', legend: [30,60,90,120,150],nextSelector: '#btn-next{{$index}}',previousSelector: '#btn-previous{{$index}}'}"></d3-calendar>
+			<br />
+		</div>
 		<!--<h4>Accidents</h4>
 		<button class="btn" id="btn-previous">Previous</button><button class="btn" id="btn-next">Next</button>
 		<d3-calendar config="{domain:'month',range:1,data:accidentsData,start:firstDate, highlight: 'now', legend: [30,60,90,120,150],nextSelector: '#btn-next',previousSelector: '#btn-previous'}"></d3-calendar>

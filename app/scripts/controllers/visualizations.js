@@ -28,6 +28,7 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.numDatasets = dataService.getNumDatasets();
 
     $scope.values = [];
+    $scope.valuesTitles = [];
     $scope.times = [];
     $scope.locations = [];
 
@@ -35,35 +36,31 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.timesDict = [];
     $scope.locationsDict = [];
 
-    $scope.values[0] = dataService.getValues(0);
-    $scope.times[0] = dataService.getTimes(0);
-    $scope.locations[0] = dataService.getLocations(0);
-    $scope.valuesDict[0] = dataService.getValuesDict(0);
-    $scope.timesDict[0] = dataService.getTimesDict(0);
-    $scope.locationsDict[0] = dataService.getLocationsDict(0);
+    $scope.calendarData = [];
 
-    /*
-    $scope.accidentsData = {};//locations
-    $scope.incidentsData = {};//values
-    if($scope.locations[0]){
-        for (var calIndex = 0; calIndex < $scope.locations[0].length; calIndex++) {
-            var time = $scope.times[0][calIndex];
-            var stringTime = $scope.timesDict[0][time].name;
+    for(var c=0;c<$scope.numDatasets;c++){
+        $scope.values[c] = dataService.getValues(c);
+        $scope.valuesTitles[c] = dataService.getValuesTitle(c);
+        $scope.times[c] = dataService.getTimes(c);
+        $scope.locations[c] = dataService.getLocations(c);
+        $scope.valuesDict[c] = dataService.getValuesDict(c);
+        $scope.timesDict[c] = dataService.getTimesDict(c);
+        $scope.locationsDict[c] = dataService.getLocationsDict(c);
+
+        var tmp ={};
+        tmp['title'] = $scope.valuesTitles[c];
+        tmp['data'] = {};
+        for(var cnt = 0; cnt < $scope.values[c].length;cnt++){
+            var time = $scope.times[c][cnt];
+            var stringTime = $scope.timesDict[c][time].name;
             var secondsTime = Date.parse(stringTime)/1000;
-            $scope.accidentsData[secondsTime] = $scope.locations[0][calIndex][0];
-        };
+            tmp['data'][secondsTime] = $scope.values[c][cnt][0];
+        }
+
+        $scope.calendarData.push(tmp);
     }
 
-    if($scope.values[0]){
-        for (var calIndex = 0; calIndex < $scope.values[0].length; calIndex++) {
-            var time = $scope.times[0][calIndex];
-            var stringTime = $scope.timesDict[0][time].name;
-            var secondsTime = Date.parse(stringTime)/1000;
-            $scope.incidentsData[secondsTime] = $scope.values[0][calIndex][0];
-        };
-    }
-
-    $scope.firstDate = new Date(2014, 10, 1);*/
+    $scope.firstDate = new Date(2014, 10, 1);
 
 
     /****************** MAP INITIALISATION *********************/
