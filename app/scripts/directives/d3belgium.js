@@ -7,12 +7,11 @@
  * # d3Belgium
  */
 angular.module('dataVisualizationsApp.directives')
-.directive('d3Belgium', ['d3Service','topojsonService', function(d3Service,topojsonService) {
+.directive('d3Belgium', ['topojsonService', function(topojsonService) {
   return {
     restrict: 'EA',
     scope: {},
     link: function(scope, iElement, iAttrs) {
-      d3Service.then(function(d3) {
         topojsonService.then(function(topojson){
 
 
@@ -173,7 +172,6 @@ angular.module('dataVisualizationsApp.directives')
             }//end of if
             
           };//end of render
-        });//end of then
       });//end of then
     }//end of link
   };

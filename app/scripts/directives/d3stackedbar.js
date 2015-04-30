@@ -7,14 +7,13 @@
  * # d3StackedBar
  */
 angular.module('dataVisualizationsApp.directives')
-  .directive('d3StackedBar', ['d3Service', function(d3Service) {
+  .directive('d3StackedBar', [function(d3Service) {
     return {
         restrict: 'EA',
         scope: {
           data: '='
         },
         link: function(scope, iElement, iAttrs) {
-          d3Service.then(function(d3) {
             var svg = d3.select(iElement[0])
                 .append('svg')
                 .attr('width', '100%');
@@ -88,7 +87,6 @@ angular.module('dataVisualizationsApp.directives')
                   .text(function(d){return d[scope.label];});
 
             };//end of render
-          });//end of then
         }//end of link
     };//end of return
   }]);

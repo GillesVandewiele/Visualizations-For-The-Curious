@@ -70,6 +70,8 @@
     </script> 
     -->
 
+
+
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -93,11 +95,15 @@
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
-        <script src="scripts/services/d3Service.js"></script>
+
+        <!-- add d3 without a service -->
+        <script src="scripts/vendor/d3.v3.min.js"></script>
+
+        <!--<script src="scripts/services/d3Service.js"></script> -->
         <script src="scripts/services/topojsonService.js"></script>
 
-        <!-- make sure the d3Service is included before the calHeatMapService -->
-        <script src="scripts/services/calHeatMapService.js"></script>
+        <!-- calheatmap  without service-->
+        <script src="scripts/vendor/cal-heatmap.js"></script>
 
         <!-- script to support json path indexing -->
         <script src="scripts/vendor/jsonpath.js"></script>
@@ -121,7 +127,7 @@
         <script src="scripts/directives/d3stackedbar.js"></script>	
 
         <script src="scripts/services/modalservice.js"></script>
-	<script src="scripts/services/dataservice.js"></script>
+	   <script src="scripts/services/dataservice.js"></script>
 
 
         <!-- endbuild -->

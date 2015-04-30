@@ -18,6 +18,7 @@ angular.module('dataVisualizationsApp.services')
 	var timesDict = [];
 	var locationsDict = [];
 
+	var valuesTitles = [];
 	var values = [];
 	var times = [];
 	var locations = [];
@@ -258,6 +259,8 @@ angular.module('dataVisualizationsApp.services')
 			values[index][i] = tmpValues.slice(i*entriesPerTime,(i+1)*entriesPerTime);
 			locations[index][i] = tmpLocations.slice(i*entriesPerTime,(i+1)*entriesPerTime);
 		}
+
+		valuesTitles[index] = userDatasets[index].value.Name;
 	}
 
 	/***************** GET DATA FROM SERVICE ********************/
@@ -270,6 +273,11 @@ angular.module('dataVisualizationsApp.services')
 	//return the values: in some cases a dict will be necessary to map numbers to text
 	this.getValues = function(index){
 		return values[index];
+	}
+
+	//return the valuesTitle:
+	this.getValuesTitle = function(index){
+		return valuesTitles[index];
 	}
 
 	//TODO: Implement these methods

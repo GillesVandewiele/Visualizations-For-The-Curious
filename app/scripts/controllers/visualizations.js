@@ -8,7 +8,7 @@
  * Controller of the dataVisualizationsApp
  */
 angular.module('dataVisualizationsApp.controllers')
-  .controller('VisualizationsCtrl', ['$scope', 'dataService', 'd3Service', '$interval', function ($scope, dataService, d3Service, $interval) {
+  .controller('VisualizationsCtrl', ['$scope', 'dataService', '$interval', function ($scope, dataService, $interval) {
 
     /********************LOAD DATA**********************/
 
@@ -28,6 +28,7 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.numDatasets = dataService.getNumDatasets();
 
     $scope.values = [];
+    $scope.valuesTitles = [];
     $scope.times = [];
     $scope.locations = [];
 
@@ -35,35 +36,51 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.timesDict = [];
     $scope.locationsDict = [];
 
-    $scope.values[0] = dataService.getValues(0);
-    $scope.times[0] = dataService.getTimes(0);
-    $scope.locations[0] = dataService.getLocations(0);
-    $scope.valuesDict[0] = dataService.getValuesDict(0);
-    $scope.timesDict[0] = dataService.getTimesDict(0);
-    $scope.locationsDict[0] = dataService.getLocationsDict(0);
+    $scope.calendarData = [];
 
-    /*
-    $scope.accidentsData = {};//locations
-    $scope.incidentsData = {};//values
-    if($scope.locations[0]){
-        for (var calIndex = 0; calIndex < $scope.locations[0].length; calIndex++) {
-            var time = $scope.times[0][calIndex];
-            var stringTime = $scope.timesDict[0][time].name;
+    for(var c=0;c<$scope.numDatasets;c++){
+        $scope.values[c] = dataService.getValues(c);
+        $scope.valuesTitles[c] = dataService.getValuesTitle(c);
+        $scope.times[c] = dataService.getTimes(c);
+        $scope.locations[c] = dataService.getLocations(c);
+        $scope.valuesDict[c] = dataService.getValuesDict(c);
+        $scope.timesDict[c] = dataService.getTimesDict(c);
+        $scope.locationsDict[c] = dataService.getLocationsDict(c);
+
+
+        //do some calendar stuff
+        var tmp ={};
+        var aggregatedVals ={};
+        tmp['title'] = $scope.valuesTitles[c];
+        tmp['data'] = {};
+        for(var cnt = 0; cnt < $scope.values[c].length;cnt++){
+            var time = $scope.times[c][cnt];
+            var stringTime = $scope.timesDict[c][time].name;
             var secondsTime = Date.parse(stringTime)/1000;
-            $scope.accidentsData[secondsTime] = $scope.locations[0][calIndex][0];
-        };
+            var val=$scope.values[c][cnt][0];
+
+            // "2014-05-16T06:45:23+00:00"
+            // stringTime.substr(0,10)
+            // "2014-05-16"
+            // aggregate by day
+            var stringDay = stringTime.substr(0,10);
+            var dayMilis =  Date.parse(stringDay);
+            if(aggregatedVals[dayMilis]){
+                aggregatedVals[dayMilis] += val;
+            }
+            else{
+                aggregatedVals[dayMilis] = val;
+            }
+
+            tmp['data'][secondsTime] = val;
+        }
+        var vals = Object.keys(aggregatedVals).map(function(key){ return aggregatedVals[key];});
+
+        tmp['legend'] = getLegend(d3.extent(vals));
+        $scope.calendarData.push(tmp);
     }
 
-    if($scope.values[0]){
-        for (var calIndex = 0; calIndex < $scope.values[0].length; calIndex++) {
-            var time = $scope.times[0][calIndex];
-            var stringTime = $scope.timesDict[0][time].name;
-            var secondsTime = Date.parse(stringTime)/1000;
-            $scope.incidentsData[secondsTime] = $scope.values[0][calIndex][0];
-        };
-    }
-
-    $scope.firstDate = new Date(2014, 10, 1);*/
+    $scope.firstDate = new Date(2014, 10, 1);
 
 
     /****************** MAP INITIALISATION *********************/
@@ -174,7 +191,7 @@ angular.module('dataVisualizationsApp.controllers')
     };
 
 
-    /************* HELPER FUCNTIONS FOR MAP *************/
+    /************* HELPER FUNCTIONS FOR MAP *************/
 
     function drawLocations(index){
         if( locationsType == 0){
@@ -221,25 +238,56 @@ angular.module('dataVisualizationsApp.controllers')
 
     function editRoutes(index){
         //first find the maximal value
-        d3Service.then(function(d3){
-            var extent = d3.extent($scope.values[index][$scope.currentTime]);
+        var extent = d3.extent($scope.values[index][$scope.currentTime]);
 
-            //now that we have min and max, map all values to a color between green and red.
-            for(var k=0; k<$scope.values[index][$scope.currentTime].length; k++){
-                var temp = Math.floor(($scope.values[index][$scope.currentTime][k]-extent[0])/(extent[1]-extent[0])*($scope.heatMap.length-1));
-                $scope.routes['route_'+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
-            }
+        //now that we have min and max, map all values to a color between green and red.
+        for(var k=0; k<$scope.values[index][$scope.currentTime].length; k++){
+            var temp = Math.floor(($scope.values[index][$scope.currentTime][k]-extent[0])/(extent[1]-extent[0])*($scope.heatMap.length-1));
+            $scope.routes['route_'+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
+        }
 
-            //for the legend, the heatmapboudaries must be set.
-            for(var j=0; j<$scope.heatMapBoundaries.length; j++){
-                $scope.heatMapBoundaries[j] = (Math.floor(extent[0] + j*(extent[1]-extent[0])/$scope.heatMapBoundaries.length)).toString();
-            }
-
-        });
+        //for the legend, the heatmapboudaries must be set.
+        for(var j=0; j<$scope.heatMapBoundaries.length; j++){
+            $scope.heatMapBoundaries[j] = (Math.floor(extent[0] + j*(extent[1]-extent[0])/$scope.heatMapBoundaries.length)).toString();
+        }
     }
 
     function mapNextTimestep(){
         $scope.currentTime++;
+    }
+
+
+    /************* HELPER FUNCTIONS FOR CALENDAR *************/
+    function getLegend(extentArray, amountOfThresholds){
+        var amountOfThresholds = amountOfThresholds || 5;
+        var min;
+        var max;
+        var legend=[];
+
+        if(extentArray.length == 2){
+            if(extentArray[0]<extentArray[1]){
+                min = extentArray[0];
+                max = extentArray[1];
+            }else{
+                min = extentArray[1];
+                max = extentArray[0];
+            }
+
+            var range = Math.floor(max-min);
+
+            amountOfThresholds++;
+
+
+            if(range > amountOfThresholds){
+                var intervalSize =  Math.floor(range/amountOfThresholds);
+
+                for(var cnt = 1; cnt<amountOfThresholds;cnt++){
+                    legend.push(min+cnt*intervalSize);
+                }
+            }
+        }
+
+        return legend;
     }
 
   }]);
