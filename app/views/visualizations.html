@@ -5,12 +5,6 @@
 	<div class="layoutrow titlecontent scroll-y">
 		<!-- <dv-bars-demo></dv-bars-demo> -->
 		<!-- <div class="container-fluid"> -->
-		 <div ng-repeat="calInfo in calendarData track by $index">
-			<h4>{{calInfo['title']}}</h4>
-			<button class="btn" id="btn-previous{{$index}}">Previous</button><button class="btn" id="btn-next{{$index}}">Next</button>
-		<d3-calendar config="{domain:'month',range:1,data:calInfo['data'],start:firstDate, highlight: 'now', legend: [30,60,90,120,150]}" nxt="#btn-next{{$index}}" prv="#btn-previous{{$index}}"></d3-calendar>
-			<br />
-		</div>
 
 		<leaflet defaults="defaults" center="center" layers="layers" height="600px" paths="routes"></leaflet> 
 		<br/>
@@ -20,6 +14,14 @@
 		<slider floor="{{ minTime }}" ceiling="{{ maxTime }}" ng-model="currentTime" translate-fn='translateTime' ng-disabled="mapPlaying"></slider>
 		<br/>
 		<button class="btn" ng-click="mapPlayPause()">{{mapPlayPauseButton}}</button><button class="btn" ng-click="mapStop()">Stop</button>
+
+
+		<div ng-repeat="calInfo in calendarData track by $index">
+			<h4>{{calInfo['title']}}</h4>
+			<button class="btn" id="btn-previous{{$index}}">Previous</button><button class="btn" id="btn-next{{$index}}">Next</button>
+			<d3-calendar config="{domain:'month',range:8,data:calInfo['data'],start:firstDate, highlight: 'now', legend: calInfo['legend']}" nxt="#btn-next{{$index}}" prv="#btn-previous{{$index}}"></d3-calendar>
+			<br />
+		</div>
 
 		<!-- <d3-stacked-bar data='[]'></d3-stacked-bar>-->
 	</div>

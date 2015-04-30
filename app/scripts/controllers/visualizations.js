@@ -47,16 +47,36 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.timesDict[c] = dataService.getTimesDict(c);
         $scope.locationsDict[c] = dataService.getLocationsDict(c);
 
+
+        //do some calendar stuff
         var tmp ={};
+        var aggregatedVals ={};
         tmp['title'] = $scope.valuesTitles[c];
         tmp['data'] = {};
         for(var cnt = 0; cnt < $scope.values[c].length;cnt++){
             var time = $scope.times[c][cnt];
             var stringTime = $scope.timesDict[c][time].name;
             var secondsTime = Date.parse(stringTime)/1000;
-            tmp['data'][secondsTime] = $scope.values[c][cnt][0];
-        }
+            var val=$scope.values[c][cnt][0];
 
+            // "2014-05-16T06:45:23+00:00"
+            // stringTime.substr(0,10)
+            // "2014-05-16"
+            // aggregate by day
+            var stringDay = stringTime.substr(0,10);
+            var dayMilis =  Date.parse(stringDay);
+            if(aggregatedVals[dayMilis]){
+                aggregatedVals[dayMilis] += val;
+            }
+            else{
+                aggregatedVals[dayMilis] = val;
+            }
+
+            tmp['data'][secondsTime] = val;
+        }
+        var vals = Object.keys(aggregatedVals).map(function(key){ return aggregatedVals[key];});
+
+        tmp['legend'] = getLegend(d3.extent(vals));
         $scope.calendarData.push(tmp);
     }
 
@@ -171,7 +191,7 @@ angular.module('dataVisualizationsApp.controllers')
     };
 
 
-    /************* HELPER FUCNTIONS FOR MAP *************/
+    /************* HELPER FUNCTIONS FOR MAP *************/
 
     function drawLocations(index){
         if( locationsType == 0){
@@ -234,6 +254,40 @@ angular.module('dataVisualizationsApp.controllers')
 
     function mapNextTimestep(){
         $scope.currentTime++;
+    }
+
+
+    /************* HELPER FUNCTIONS FOR CALENDAR *************/
+    function getLegend(extentArray, amountOfThresholds){
+        var amountOfThresholds = amountOfThresholds || 5;
+        var min;
+        var max;
+        var legend=[];
+
+        if(extentArray.length == 2){
+            if(extentArray[0]<extentArray[1]){
+                min = extentArray[0];
+                max = extentArray[1];
+            }else{
+                min = extentArray[1];
+                max = extentArray[0];
+            }
+
+            var range = Math.floor(max-min);
+
+            amountOfThresholds++;
+
+
+            if(range > amountOfThresholds){
+                var intervalSize =  Math.floor(range/amountOfThresholds);
+
+                for(var cnt = 1; cnt<amountOfThresholds;cnt++){
+                    legend.push(min+cnt*intervalSize);
+                }
+            }
+        }
+
+        return legend;
     }
 
   }]);
