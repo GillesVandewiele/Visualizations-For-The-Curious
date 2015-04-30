@@ -1,0 +1,23 @@
+* Support meerdere datasets 
+--> Pieter
+* Code documenteren
+--> Pieter 
+* Aggregation, grouping
+--> Gilles
+* select_by_day
+--> Karel
+* Calendar functionaliteit uitbreiden (visualisaties laten verschijnen bij klikken op dag, map timeinterval veranderen)
+--> Bruno
+* Stacked Bar Chart
+--> Karel
+* Opkuisen
+--> Bruno
+* Donut Chart
+--> Bruno
+* Epoch Chart
+--> Karel
+* Stream Graph / Line Chart
+--> Gilles
+* Manual schrijven, Nieuwe dataset uitzoeken
+--> Gilles
+
