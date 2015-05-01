@@ -56,7 +56,11 @@ angular.module('dataVisualizationsApp.controllers')
 
   	// Private function to check if two specified datasets are not unique
   	var datasetTracker = function(dataset){
-  		return dataset.name + dataset.location + dataset.value + dataset.date + dataset.aggregation + dataset.grouping;
+		if(dataset.location){
+  			return dataset.name + dataset.location.Name + dataset.value.Name + dataset.date.Name + dataset.aggregation + dataset.grouping;
+  		} else{
+  			return dataset.name  + dataset.value.Name + dataset.date.Name + dataset.aggregation + dataset.grouping;
+  		}
   	};
 
   	var searchInColumns = function(name, columns){
