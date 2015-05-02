@@ -23,7 +23,7 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.heatMapBoundaries = ["","","","","","","","","","",""];  
     $scope.locationsType = 0;
 
-    $scope.paths = {};
+    $scope.mappaths = {};
 
     $scope.numDatasets = dataService.getNumDatasets();
 
@@ -47,7 +47,7 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.timesDict[c] = dataService.getTimesDict(c);
         $scope.locationsDict[c] = dataService.getLocationsDict(c);
 
-        /*//do some calendar stuff
+        //do some calendar stuff
         var tmp ={};
         var aggregatedVals ={};
         tmp['title'] = $scope.valuesTitles[c];
@@ -76,28 +76,29 @@ angular.module('dataVisualizationsApp.controllers')
         var vals = Object.keys(aggregatedVals).map(function(key){ return aggregatedVals[key];});
 
         tmp['legend'] = getLegend(d3.extent(vals));
-        $scope.calendarData.push(tmp);*/
+        $scope.calendarData.push(tmp);
     }
 
-    //$scope.firstDate = new Date(2014, 10, 1);
+    $scope.firstDate = new Date(2014, 12, 1);
 
 
     /****************** MAP INITIALISATION *********************/
 
     //this function initialises the leafletmap by centering the map
-    //and by selecting the right map on mapbox.  
-    $scope.defaults = {
-        maxZoom: 14,
-        minZoom: 8
-    }
+    //and by selecting the right map on mapbox. 
 
-    $scope.center = {
+    $scope.mapdefaults = {
+            maxZoom: 14,
+            minZoom: 8
+    };
+
+    $scope.mapcenter = {
         lat: 50.5,
         lng: 4.303,
         zoom: 8,
     };
 
-    $scope.layers = {
+    $scope.maplayers = {
         baselayers: {
             mapbox_terrain: {
                 name: 'MapboxTerrain',
@@ -110,6 +111,8 @@ angular.module('dataVisualizationsApp.controllers')
             }
         }
     };
+
+    /****************** TIMEBAR INITIALISATION *********************/
 
     //initialisation of the timebar
     //if times are correctly loaded, use times to make the timebar
@@ -209,6 +212,10 @@ angular.module('dataVisualizationsApp.controllers')
 
     };
 
+    function mapNextTimestep(){
+        $scope.currentTime++;
+    }
+
 
     /************* HELPER FUNCTIONS FOR MAP *************/
 
@@ -234,7 +241,7 @@ angular.module('dataVisualizationsApp.controllers')
         for(var i=0; i<$scope.locationsDict[index].length; i++){
             var msg = "<p>"+$scope.locationsDict[index][i].name+"</p>";
 
-            $scope.paths['city'+i] = {
+            $scope.mappaths['city'+i] = {
                     message: msg,
                     weight: 2,
                     color: '#00ff00',
@@ -252,7 +259,7 @@ angular.module('dataVisualizationsApp.controllers')
         //now that we have min and max, map all values to a color between green and red.
         for(var k=0; k<$scope.values[index][$scope.currentTime].length; k++){
             var temp = Math.floor(($scope.values[index][$scope.currentTime][k]-extent[0])/(extent[1]-extent[0])*($scope.heatMap.length-1));
-            $scope.paths['city'+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
+            $scope.mappaths['city'+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
         }
 
         //for the legend, the heatmapboudaries must be set.
@@ -267,7 +274,7 @@ angular.module('dataVisualizationsApp.controllers')
 
             var msg = "<p>"+$scope.locationsDict[index][i].name+"</p>";
 
-            $scope.paths['route_'+i] = {
+            $scope.mappaths['route_'+i] = {
                     weight: 4,
                     opacity: 0.6,
                     color: '#00ff00',
@@ -285,7 +292,7 @@ angular.module('dataVisualizationsApp.controllers')
         //now that we have min and max, map all values to a color between green and red.
         for(var k=0; k<$scope.values[index][$scope.currentTime].length; k++){
             var temp = Math.floor(($scope.values[index][$scope.currentTime][k]-extent[0])/(extent[1]-extent[0])*($scope.heatMap.length-1));
-            $scope.paths['route_'+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
+            $scope.mappaths['route_'+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
         }
 
         //for the legend, the heatmapboudaries must be set.
@@ -293,11 +300,6 @@ angular.module('dataVisualizationsApp.controllers')
             $scope.heatMapBoundaries[j] = ((extent[0] + j*(extent[1]-extent[0])/$scope.heatMapBoundaries.length).toFixed(1)).toString();
         }
     }
-
-    function mapNextTimestep(){
-        $scope.currentTime++;
-    }
-
 
     /************* HELPER FUNCTIONS FOR CALENDAR *************/
     function getLegend(extentArray, amountOfThresholds){

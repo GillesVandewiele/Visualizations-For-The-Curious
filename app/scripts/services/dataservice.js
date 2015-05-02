@@ -189,20 +189,6 @@ angular.module('dataVisualizationsApp.services')
 			}
 		}
 
-		// promiseDataset
-		// 			.then(function(index){
-		// 				loadValuesDict(index);
-		// 				loadTimesDict(index);
-		// 				loadLocationsDict(index);
-						
-		// 				var promiseActualData = loadActualData(index);
-
-		// 				promiseActualData
-		// 					.then(function(index){
-		// 						aggregateData(index);
-		// 					});
-		// 			})
-
 		$q.all(promiseDatasets).then(function(arrayOfResults){
 			var ind;
 			var loadPromises=[];
@@ -264,7 +250,6 @@ angular.module('dataVisualizationsApp.services')
 			return;
 		}
 		for(var i=0; i<times[index].length; i++){
-			console.log(timesDict[index][times[index][i]].name, new Date(timesDict[index][times[index][i]].name));
 			var dictTime = new Date(timesDict[index][times[index][i]].name);
 			if(dictTime.getFullYear() == date.getFullYear() && dictTime.getDate() == date.getDate() && dictTime.getMonth() == date.getMonth()){
 				console.log(dictTime);
@@ -496,15 +481,8 @@ angular.module('dataVisualizationsApp.services')
 				}
 			}
 		}
-		console.log(groupedValues[index]);
-		
-		
-		console.log("Now let's check which values occurred on 5 June 2014...")
-		filterByDay(index, new Date(2014, 5, 5), values[index], false);
-
-		console.log("And again, but now for aggregated values...")
-		filterByDay(index, new Date(2014, 5, 5), aggregatedValuesPerDate[index], true);
-		
+		console.log("grouped values");
+		console.log(groupedValues[index]);		
 	};
 
 	/***************** GET DATA FROM SERVICE ********************/
