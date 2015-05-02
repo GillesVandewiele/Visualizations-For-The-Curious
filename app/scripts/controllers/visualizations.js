@@ -13,7 +13,7 @@ angular.module('dataVisualizationsApp.controllers')
     /********************LOAD DATA**********************/
 
 
-    // if locations are locations = 0 , routes = 1 , no locations = 2
+    // if locations are locations = 2 , routes = 1 , no locations = 0
     /*
     if locations --> cities = points on a map, can be represented with markers
     if locations --> routes = lines on a map, can be represented with polylines
@@ -21,7 +21,7 @@ angular.module('dataVisualizationsApp.controllers')
     */ 
     $scope.heatMap = ['#00ff00', '#66ff33', '#99ff33', '#ccff33', '#ffff00', '#ffcc00','#ff9933','#ff6600', '#ff3300', '#ff0000'];
     $scope.heatMapBoundaries = ["","","","","","","","","","",""];  
-    var locationsType = 0;
+    $scope.locationsType = 0;
 
     $scope.paths = {};
 
@@ -138,15 +138,15 @@ angular.module('dataVisualizationsApp.controllers')
     if($scope.locationsDict[0]){
         //only the coordinates of a village/city are expressed with .long and .lat
         if($scope.locationsDict[0][0].long){
-            locationsType = 0;
+            $scope.locationsType = 2;
         }
         //only routes have .coordinates as property
         else if($scope.locationsDict[0][0].coordinates){
-            locationsType = 1;
+            $scope.locationsType = 1;
         }
         //if there are no locations
         else {
-            locationsType = 2;
+            $scope.locationsType = 0;
         }
     }
 
@@ -213,19 +213,19 @@ angular.module('dataVisualizationsApp.controllers')
     /************* HELPER FUNCTIONS FOR MAP *************/
 
     function drawLocations(index){
-        if(locationsType == 0){
+        if($scope.locationsType == 2){
             //okay, this means we are considering cities!
             drawMarkers(index);
-        } else if(locationsType == 1){
+        } else if($scope.locationsType == 1){
             //okay, this means we are considering routes!
             drawRoutes(index);
         }
     }
 
     function editLocationColors(index){
-        if(locationsType == 0){
+        if($scope.locationsType == 2){
             editMarkers(index);
-        } else if(locationsType == 1){
+        } else if($scope.locationsType == 1){
             editRoutes(index);
         }
     }
@@ -292,8 +292,6 @@ angular.module('dataVisualizationsApp.controllers')
         for(var j=0; j<$scope.heatMapBoundaries.length; j++){
             $scope.heatMapBoundaries[j] = ((extent[0] + j*(extent[1]-extent[0])/$scope.heatMapBoundaries.length).toFixed(1)).toString();
         }
-
-        console.log($scope.values[index]);
     }
 
     function mapNextTimestep(){
