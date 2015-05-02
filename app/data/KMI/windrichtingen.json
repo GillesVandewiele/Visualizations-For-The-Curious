@@ -1,0 +1,72 @@
+{
+ "windrichtingen": [
+  {
+   "name": "OZO",
+   "nr": 0
+  },
+  {
+   "name": "NW",
+   "nr": 1
+  },
+  {
+   "name": "ZO",
+   "nr": 2
+  },
+  {
+   "name": "ZZO",
+   "nr": 3
+  },
+  {
+   "name": "NNW",
+   "nr": 4
+  },
+  {
+   "name": "Z",
+   "nr": 5
+  },
+  {
+   "name": "O",
+   "nr": 6
+  },
+  {
+   "name": "ZZW",
+   "nr": 7
+  },
+  {
+   "name": "W",
+   "nr": 8
+  },
+  {
+   "name": "N",
+   "nr": 9
+  },
+  {
+   "name": "VER",
+   "nr": 10
+  },
+  {
+   "name": "ONO",
+   "nr": 11
+  },
+  {
+   "name": "WNW",
+   "nr": 12
+  },
+  {
+   "name": "NNO",
+   "nr": 13
+  },
+  {
+   "name": "NO",
+   "nr": 14
+  },
+  {
+   "name": "ZW",
+   "nr": 15
+  },
+  {
+   "name": "WZW",
+   "nr": 16
+  }
+ ]
+}
