@@ -36,7 +36,6 @@ angular.module('dataVisualizationsApp.controllers')
 
 	  	$scope.dataVisible = true;
 	  	$scope.toggleJSON = function() {
-	  		//console.log("executed toggleJSON");
             $scope.dataVisible = $scope.dataVisible === false ? true: false;
         };
 
@@ -97,31 +96,6 @@ angular.module('dataVisualizationsApp.controllers')
 		$scope.errorMessage = message;
 	};
 
-	// Private function to check if the value column is correct
-	var validateValueColumn = function(column){
-		for(var i = 0; i < 100; i++){
-			console.log(column[i]);
-		}
-		/*for(var value in column){
-			if(typeof(column[value]) != "string" && isNaN(column[value]) ){
-				return false;
-			}
-		}
-		return true;*/
-	};
-
-	var validateDateColumn = function(column){
-		/*for(var i = 0; i < 100; i++){
-			console.log(column[i]);
-		}*/
-	};
-
-	var validateLocationColumn = function(column){
-		/*for(var i = 0; i < 100; i++){
-			console.log(column[i]);
-		}*/
-	};
-
   	/************************************************/
 
   	$scope.populateFirstDropdown = function(){
@@ -147,12 +121,10 @@ angular.module('dataVisualizationsApp.controllers')
     	if($scope.$storage.datasets != null){
 			var indexSelectedDataset = searchDatasetsByName($scope.$storage.datasets, $scope.selectedFile);
 			// If the index is equal to -1, 'Add file..' was selected
-			console.log(indexSelectedDataset);
 			if(indexSelectedDataset != -1){
 				$scope.currentDataset = $localStorage.datasets[indexSelectedDataset];
 				// Ugly hack to update the dropdowns
 				// TODO: try to use $scope.apply();
-				console.log($scope.currentDataset.location)
 				if($scope.currentDataset.location){
 					$scope.currentDataset.location = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.location.Name, $scope.currentDataset.columns)];
 				}
@@ -203,23 +175,6 @@ angular.module('dataVisualizationsApp.controllers')
 		$scope.currentDataset.date = $scope.currentDataset.columns[searchInColumns($scope.currentDataset.date.Name, $scope.currentDataset.columns)];
 	}
 
-	$scope.printData = function(dataset, jsonData){
-		if(jsonData != null){
-
-			setWaitingCursor();
-
-			var dataset_locations = jsonPath(jsonData, dataset.location.Path);
-			var dataset_values = jsonPath(jsonData, dataset.value.Path);
-			var dataset_dates = jsonPath(jsonData, dataset.date.Path);
-
-			setDefaultCursor();
-
-			console.log("is value correct?", validateValueColumn(dataset_values));
-			console.log("is date correct?", validateDateColumn(dataset_dates));
-			console.log("is location correct?", validateLocationColumn(dataset_locations));
-		}
-	}
-
 	$scope.resetLocalStorage = function(dataset, jsonData){
 		$scope.$storage.$reset(); //either of these two works
 		$localStorage.$reset();
@@ -231,7 +186,6 @@ angular.module('dataVisualizationsApp.controllers')
 	$scope.afterDataLoaded = function(){
 		setDefaultCursor();
 		$scope.downloadingData=false;
-		console.log("data is loaded");
 
 		window.location.assign("#/visualizations/");
 	}
