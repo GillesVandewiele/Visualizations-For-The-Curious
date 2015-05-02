@@ -1,0 +1,671 @@
+[
+ {
+  "long": 4.4536952,
+  "nr": 0,
+  "name": "Antwerpen-Oost",
+  "extraInfo": null,
+  "routes": [
+   0,
+   1,
+   23,
+   26,
+   31,
+   34,
+   38,
+   47,
+   64,
+   76
+  ],
+  "lat": 51.2166911
+ },
+ {
+  "long": 4.9519869,
+  "nr": 1,
+  "name": "Turnhout",
+  "extraInfo": null,
+  "routes": [
+   0,
+   23,
+   24,
+   48
+  ],
+  "lat": 51.2978294
+ },
+ {
+  "long": 4.28974079726371,
+  "nr": 2,
+  "name": "Bergen-op-Zoom",
+  "extraInfo": null,
+  "routes": [
+   1,
+   34,
+   63,
+   69
+  ],
+  "lat": 51.4965864
+ },
+ {
+  "long": 4.4353614,
+  "nr": 3,
+  "name": "Machelen",
+  "extraInfo": null,
+  "routes": [
+   2,
+   11
+  ],
+  "lat": 50.9124219
+ },
+ {
+  "long": 4.4159475,
+  "nr": 4,
+  "name": "Antwerpen-Zuid",
+  "extraInfo": null,
+  "routes": [
+   2,
+   11,
+   16,
+   92
+  ],
+  "lat": 51.1858445
+ },
+ {
+  "long": 2.3772525,
+  "nr": 5,
+  "name": "Duinkerke",
+  "extraInfo": null,
+  "routes": [
+   3,
+   68
+  ],
+  "lat": 51.0347708
+ },
+ {
+  "long": 3.0902953889402,
+  "nr": 6,
+  "name": "Jabbeke",
+  "extraInfo": null,
+  "routes": [
+   3,
+   68
+  ],
+  "lat": 51.1846386
+ },
+ {
+  "long": 4.421096,
+  "nr": 7,
+  "name": "Antwerpen-Noord",
+  "extraInfo": null,
+  "routes": [
+   4,
+   28,
+   46,
+   52,
+   63,
+   69
+  ],
+  "lat": 51.2640889
+ },
+ {
+  "long": 4.75122967848989,
+  "nr": 8,
+  "name": "Breda",
+  "extraInfo": null,
+  "routes": [
+   4,
+   38,
+   52,
+   76
+  ],
+  "lat": 51.5644477
+ },
+ {
+  "long": 3.7022160043217,
+  "nr": 9,
+  "name": "Zwijnaarde",
+  "extraInfo": null,
+  "routes": [
+   5,
+   13,
+   15,
+   42,
+   70,
+   72,
+   81,
+   90
+  ],
+  "lat": 50.99905035
+ },
+ {
+  "long": 3.0706414,
+  "nr": 10,
+  "name": "Rijsel",
+  "extraInfo": null,
+  "routes": [
+   5
+  ],
+  "lat": 50.6305089
+ },
+ {
+  "long": 5.502732,
+  "nr": 11,
+  "name": "Loncin",
+  "extraInfo": null,
+  "routes": [
+   6,
+   74
+  ],
+  "lat": 50.665153
+ },
+ {
+  "long": 3.9435255,
+  "nr": 12,
+  "name": "Bergen",
+  "extraInfo": null,
+  "routes": [
+   6,
+   10,
+   49,
+   74,
+   78,
+   86
+  ],
+  "lat": 50.461449
+ },
+ {
+  "long": 5.5734203,
+  "nr": 13,
+  "name": "Luik",
+  "extraInfo": null,
+  "routes": [
+   7,
+   8,
+   40,
+   41,
+   43,
+   71,
+   83,
+   95
+  ],
+  "lat": 50.6451381
+ },
+ {
+  "long": 5.4332602,
+  "nr": 14,
+  "name": "Neufchâteau",
+  "extraInfo": null,
+  "routes": [
+   7,
+   95
+  ],
+  "lat": 49.840661
+ },
+ {
+  "long": 6.0838618,
+  "nr": 15,
+  "name": "Aken",
+  "extraInfo": null,
+  "routes": [
+   8,
+   43
+  ],
+  "lat": 50.776351
+ },
+ {
+  "long": 4.24942444709701,
+  "nr": 16,
+  "name": "Beveren",
+  "extraInfo": null,
+  "routes": [
+   9,
+   25,
+   33,
+   53,
+   60,
+   88
+  ],
+  "lat": 51.21307425
+ },
+ {
+  "long": 3.8105002,
+  "nr": 17,
+  "name": "Zelzate",
+  "extraInfo": null,
+  "routes": [
+   9,
+   29,
+   53,
+   55
+  ],
+  "lat": 51.2000036
+ },
+ {
+  "long": 4.29647195135907,
+  "nr": 18,
+  "name": "Haut-Ittre",
+  "extraInfo": null,
+  "routes": [
+   10,
+   27,
+   49,
+   57,
+   62,
+   66,
+   79,
+   91
+  ],
+  "lat": 50.6488039
+ },
+ {
+  "long": 4.3998268,
+  "nr": 19,
+  "name": "Reyers",
+  "extraInfo": null,
+  "routes": [
+   12,
+   18,
+   22,
+   40,
+   44,
+   65,
+   83,
+   85
+  ],
+  "lat": 50.8532835
+ },
+ {
+  "long": 4.94642921342942,
+  "nr": 20,
+  "name": "Tienen",
+  "extraInfo": null,
+  "routes": [
+   12,
+   22
+  ],
+  "lat": 50.80843175
+ },
+ {
+  "long": 3.27841539175542,
+  "nr": 21,
+  "name": "Kortrijk",
+  "extraInfo": null,
+  "routes": [
+   13
+  ],
+  "lat": 50.81788085
+ },
+ {
+  "long": 4.3362419,
+  "nr": 22,
+  "name": "Zuid",
+  "extraInfo": "(Kleine Ring Brussel)",
+  "routes": [
+   14,
+   75
+  ],
+  "lat": 50.8356748
+ },
+ {
+  "long": 4.3257084,
+  "nr": 23,
+  "name": "Koekelberg",
+  "extraInfo": "(Kleine Ring Brussel)",
+  "routes": [
+   14,
+   75
+  ],
+  "lat": 50.8622633
+ },
+ {
+  "long": 3.20809951603418,
+  "nr": 24,
+  "name": "Brugge",
+  "extraInfo": null,
+  "routes": [
+   15,
+   45,
+   51,
+   73,
+   77
+  ],
+  "lat": 51.2315785
+ },
+ {
+  "long": 4.3487134,
+  "nr": 25,
+  "name": "Laken",
+  "extraInfo": null,
+  "routes": [
+   16,
+   92
+  ],
+  "lat": 50.883392
+ },
+ {
+  "long": 4.4649854,
+  "nr": 26,
+  "name": "Leonard",
+  "extraInfo": "(Buitenring Brussel)",
+  "routes": [
+   17,
+   27,
+   32,
+   66
+  ],
+  "lat": 50.8010147
+ },
+ {
+  "long": 4.26356683723395,
+  "nr": 27,
+  "name": "Groot-Bijgaarden",
+  "extraInfo": "(Buitenring Brussel)",
+  "routes": [
+   17,
+   32,
+   70,
+   79,
+   81,
+   91
+  ],
+  "lat": 50.8714357
+ },
+ {
+  "long": 5.20255899987306,
+  "nr": 28,
+  "name": "Lummen",
+  "extraInfo": null,
+  "routes": [
+   18,
+   20,
+   26,
+   64,
+   65,
+   80,
+   89,
+   94
+  ],
+  "lat": 51.00313255
+ },
+ {
+  "long": 4.4331389,
+  "nr": 29,
+  "name": "Oudergem",
+  "extraInfo": null,
+  "routes": [
+   19,
+   54
+  ],
+  "lat": 50.8156571
+ },
+ {
+  "long": 4.8769847282413,
+  "nr": 30,
+  "name": "Namen (Daussoulx)",
+  "extraInfo": null,
+  "routes": [
+   19,
+   54
+  ],
+  "lat": 50.51724395
+ },
+ {
+  "long": 5.98279521547417,
+  "nr": 31,
+  "name": "Heerlen",
+  "extraInfo": null,
+  "routes": [
+   20,
+   94
+  ],
+  "lat": 50.87627725
+ },
+ {
+  "long": 5.5846274,
+  "nr": 32,
+  "name": "Vottem",
+  "extraInfo": null,
+  "routes": [
+   21,
+   36
+  ],
+  "lat": 50.672653
+ },
+ {
+  "long": 5.3234358,
+  "nr": 33,
+  "name": "Hasselt-Zuid",
+  "extraInfo": null,
+  "routes": [
+   21,
+   31,
+   36,
+   47
+  ],
+  "lat": 50.9159492
+ },
+ {
+  "long": 4.56375636140093,
+  "nr": 34,
+  "name": "Ranst",
+  "extraInfo": null,
+  "routes": [
+   24,
+   48
+  ],
+  "lat": 51.1961732
+ },
+ {
+  "long": 3.32404831933391,
+  "nr": 35,
+  "name": "Knokke",
+  "extraInfo": null,
+  "routes": [
+   25,
+   60
+  ],
+  "lat": 51.34819975
+ },
+ {
+  "long": 4.3515464,
+  "nr": 36,
+  "name": "Antwerpen-West",
+  "extraInfo": "(Ring Antwerpen - richting NL)",
+  "routes": [
+   28,
+   46
+  ],
+  "lat": 51.2183926
+ },
+ {
+  "long": 4.3742707,
+  "nr": 37,
+  "name": "Kennedytunnel",
+  "extraInfo": null,
+  "routes": [
+   29,
+   42,
+   55,
+   90
+  ],
+  "lat": 51.2027875
+ },
+ {
+  "long": 6.129799,
+  "nr": 38,
+  "name": "Luxemburg",
+  "extraInfo": null,
+  "routes": [
+   30,
+   37,
+   50,
+   87
+  ],
+  "lat": 49.6112768
+ },
+ {
+  "long": 4.36720169448285,
+  "nr": 39,
+  "name": "Brussel",
+  "extraInfo": null,
+  "routes": [
+   30,
+   39,
+   58,
+   67,
+   84,
+   87
+  ],
+  "lat": 50.84404145
+ },
+ {
+  "long": 4.37031201604402,
+  "nr": 40,
+  "name": "Stabroek",
+  "extraInfo": "(Ring Antwerpen)",
+  "routes": [
+   33,
+   88
+  ],
+  "lat": 51.33518735
+ },
+ {
+  "long": 4.21992381462057,
+  "nr": 41,
+  "name": "Halle",
+  "extraInfo": null,
+  "routes": [
+   35,
+   56
+  ],
+  "lat": 50.736253
+ },
+ {
+  "long": 3.3878259,
+  "nr": 42,
+  "name": "Doornik",
+  "extraInfo": null,
+  "routes": [
+   35,
+   45,
+   51,
+   56,
+   61,
+   82
+  ],
+  "lat": 50.60566
+ },
+ {
+  "long": 4.89166445054899,
+  "nr": 43,
+  "name": "Bouge",
+  "extraInfo": null,
+  "routes": [
+   37,
+   50
+  ],
+  "lat": 50.47887385
+ },
+ {
+  "long": 3.5266657,
+  "nr": 44,
+  "name": "Valenciennes",
+  "extraInfo": null,
+  "routes": [
+   39,
+   58
+  ],
+  "lat": 50.3594889
+ },
+ {
+  "long": 6.4249003,
+  "nr": 45,
+  "name": "Prüm",
+  "extraInfo": null,
+  "routes": [
+   41,
+   71
+  ],
+  "lat": 50.2069481
+ },
+ {
+  "long": 4.69418278098918,
+  "nr": 46,
+  "name": "Leuven",
+  "extraInfo": null,
+  "routes": [
+   44,
+   85
+  ],
+  "lat": 50.88121295
+ },
+ {
+  "long": 4.43067846239252,
+  "nr": 47,
+  "name": "Charleroi Thiméon",
+  "extraInfo": null,
+  "routes": [
+   57,
+   59,
+   62,
+   93
+  ],
+  "lat": 50.4842821
+ },
+ {
+  "long": 4.3123401,
+  "nr": 48,
+  "name": "Anderlecht",
+  "extraInfo": null,
+  "routes": [
+   59,
+   61,
+   78,
+   82,
+   86,
+   93
+  ],
+  "lat": 50.8381411
+ },
+ {
+  "long": 2.89157691882307,
+  "nr": 49,
+  "name": "Oostende",
+  "extraInfo": null,
+  "routes": [
+   67,
+   84
+  ],
+  "lat": 51.2148712
+ },
+ {
+  "long": 3.2661256,
+  "nr": 50,
+  "name": "Kortrijk-Zuid",
+  "extraInfo": null,
+  "routes": [
+   72
+  ],
+  "lat": 50.8109604
+ },
+ {
+  "long": 3.2082431,
+  "nr": 51,
+  "name": "Zeebrugge",
+  "extraInfo": null,
+  "routes": [
+   73,
+   77
+  ],
+  "lat": 51.3316389
+ },
+ {
+  "long": 4.67791042729876,
+  "nr": 52,
+  "name": "Heverlee",
+  "extraInfo": null,
+  "routes": [
+   80,
+   89
+  ],
+  "lat": 50.85269645
+ }
+]
