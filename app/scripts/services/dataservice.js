@@ -18,6 +18,10 @@ angular.module('dataVisualizationsApp.services')
 	var timesDict = [];
 	var locationsDict = [];
 
+	var aggregatedValuesPerDate = [];
+
+	var groupedValues = [];
+
 	var valuesTitles = [];
 	var values = [];
 	var times = [];
@@ -239,16 +243,23 @@ angular.module('dataVisualizationsApp.services')
 
 	/***************** AGGREGATION FUNCTIONS *********************/
 
+	Date.prototype.getWeekNumber = function(){
+	    var d = new Date(+this);
+	    d.setHours(0,0,0);
+	    d.setDate(d.getDate()+4-(d.getDay()||7));
+	    return Math.ceil((((d-new Date(d.getFullYear(),0,1))/8.64e7)+1)/7);
+	};
+
 	function aggregateData(index){
 		//for now we will pretend no aggregation or grouping is given
 		times[index] = jsonPath(actualData[index], userDatasets[index].date.Path);
-		var tmpValues = jsonPath(actualData[index], userDatasets[index].value.Path);		
+		var tmpValues = jsonPath(actualData[index], userDatasets[index].value.Path);
+		console.log(userDatasets[index].location);		
 		if(userDatasets[index].location){
 			var tmpLocations = jsonPath(actualData[index], userDatasets[index].location.Path);
 		} else {
 			var tmpLocations = [];
 		}
-
 		var timesLength = times[index].length;
 		var entriesPerTime = tmpValues.length/timesLength;
 
@@ -257,13 +268,202 @@ angular.module('dataVisualizationsApp.services')
 
 		for(var i=0; i<timesLength; i++){
 			values[index][i] = tmpValues.slice(i*entriesPerTime,(i+1)*entriesPerTime);
-			locations[index][i] = tmpLocations.slice(i*entriesPerTime,(i+1)*entriesPerTime);
+			if(tmpLocations.length > 0) {
+				locations[index][i] = tmpLocations.slice(i*entriesPerTime,(i+1)*entriesPerTime);
+			}
 		}
 
 		valuesTitles[index] = userDatasets[index].value.Name;
+
+		/*for(var i=0; i<timesLength; i++){
+			if(valuesDict[index].length == 0){
+				console.log(values[index][i], " occured on ")
+			} else {
+				console.log(values[index][i], " (= ", valuesDict[index][values[index][i]],") occured on")
+			}
+			if(timesDict[index].length == 0){
+				console.log(times[index][i], " on location ")
+			} else {
+				console.log(times[index][i], " (= ", timesDict[index][times[index][i]],") on location ")
+			}
+			if(locations.length == 0){
+				console.log("N.A.")
+			}else {
+				if(locationsDict[index].length == 0){
+					console.log(locations[index][i])
+				} else {
+					console.log(locations[index][i], " (= ", locationsDict[index][locations[index][i]],")")
+				}
+			}
+			console.log("----------------------------------")
+		}*/
+		// Aggregate the values based on location and date, and store them in aggregatedValuesPerDate
+		// Had some troubles, AGAIN, with switches in javascript (<-- shitty language)
+		aggregatedValuesPerDate[index] = [];
+		if(userDatasets[index].aggregation == 'MEAN'){
+			for(var i=0; i<timesLength; i++){		
+				var sum = 0;
+				var count = 0;
+				for(var j = 0; j < values[index][i].length; j++){
+					sum += values[index][i][j];
+					count++;
+				}
+				aggregatedValuesPerDate[index][i] = sum/count;
+			}
+		} else if(userDatasets[index].aggregation == 'SUM'){
+			for(var i=0; i<timesLength; i++){					
+				var sum = 0;
+				for(var j = 0; j < values[index][i].length; j++){
+					sum += values[index][i][j];
+				}
+				aggregatedValuesPerDate[index][i] = sum;
+			}
+		} else if(userDatasets[index].aggregation == 'MAX'){
+			console.log("Calculate max");
+			for(var i=0; i<timesLength; i++){	
+				aggregatedValuesPerDate[index][i] = Math.max.apply(null, values[index][i]);
+			}
+		} else if(userDatasets[index].aggregation == 'MIN'){
+			console.log("Calculate min");
+			for(var i=0; i<timesLength; i++){	
+				aggregatedValuesPerDate[index][i] = Math.min.apply(null, values[index][i]);
+			}
+		}
+		else if(userDatasets[index].aggregation == 'COUNT'){
+			// In case of COUNT, the values are stored in dictionnaries. But no worries, we can use the compressed value to count.
+			for(var i=0; i<timesLength; i++){
+				var counts = {};
+				for(var j=0; j<values[index][i].length; j++){
+					// If there is no entry of this value in the counts, we create one, else we increment this entry
+					counts[values[index][i][j]] = counts[values[index][i][j]] ? counts[values[index][i][j]]+1 : 1;
+				}
+				aggregatedValuesPerDate[index][i] = counts;
+			}
+		}
+
+		// We now group the values based on their dates. For this, we need to take a peak in the dictionaries.
+		groupedValues[index] = {};
+		console.log(userDatasets[index].grouping);
+		if(userDatasets[index].grouping =='WEEKDAY'){
+			console.log("Grouping on weekday...");
+			for(var i = 0; i < timesLength; i++){
+				// We check if the dates are compressed using a dict
+				if(timesDict[index])
+					var parsed = new Date(timesDict[index][times[index][i]].name);
+				else
+					var parsed = new Date(times[index][i]);
+
+				// Get the weekday from the parsed date and initialize an object or array on that index if needed
+				var weekday = parsed.getDay(); // Sunday = 0
+				if(!groupedValues[index][weekday])
+					if(locations[index][i])
+						groupedValues[index][weekday]= {};
+					else
+						groupedValues[index][weekday]= [];
+
+				// If locations are given, we store the values per location. Else, we just store a list per weekday
+				if(locations[index][i]){
+					for(var j=0; j < locations[index][i].length; j++){
+						if(!groupedValues[index][weekday][locations[index][i][j]])
+							groupedValues[index][weekday][locations[index][i][j]] = []
+						groupedValues[index][weekday][locations[index][i][j]].push(values[index][i][j]);
+					}
+				} else{
+					groupedValues[index][weekday].push(values[index][i][j]);
+				}
+			}
+			console.log(groupedValues[index]);
+		} else if(userDatasets[index].grouping == 'WEEKS'){
+			console.log("Grouping on week...");
+			for(var i = 0; i < timesLength; i++){
+				if(timesDict[index])
+					var parsed = new Date(timesDict[index][times[index][i]].name);
+				else
+					var parsed = new Date(times[index][i]);
+
+				var week = parsed.getWeekNumber(); // Sunday = 0
+				if(!groupedValues[index][week])
+					if(locations[index][i])
+						groupedValues[index][week]= {};
+					else
+						groupedValues[index][week]= [];
+
+				if(locations[index][i]){
+					for(var j=0; j < locations[index][i].length; j++){
+						if(!groupedValues[index][week][locations[index][i][j]])
+							groupedValues[index][week][locations[index][i][j]] = []
+						groupedValues[index][week][locations[index][i][j]].push(values[index][i][j]);
+					}
+				} else{
+					groupedValues[index][week].push(values[index][i][j]);
+				}
+			}
+			console.log(groupedValues[index]);
+		} else if(userDatasets[index].grouping == 'MONTH'){
+			console.log("Grouping on month...");
+			for(var i = 0; i < timesLength; i++){
+				if(timesDict[index])
+					var parsed = new Date(timesDict[index][times[index][i]].name);
+				else
+					var parsed = new Date(times[index][i]);
+
+				var month = parsed.getMonth(); // Sunday = 0
+				if(!groupedValues[index][month])
+					if(locations[index][i])
+						groupedValues[index][month]= {};
+					else
+						groupedValues[index][month]= [];
+
+				if(locations[index][i]){
+					for(var j=0; j < locations[index][i].length; j++){
+						if(!groupedValues[index][month][locations[index][i][j]])
+							groupedValues[index][month][locations[index][i][j]] = []
+						groupedValues[index][month][locations[index][i][j]].push(values[index][i][j]);
+					}
+				} else{
+					groupedValues[index][month].push(values[index][i][j]);
+				}
+			}
+			console.log(groupedValues[index]);
+		} else if(userDatasets[index].grouping == 'YEAR'){
+			console.log("Grouping on year...");
+			for(var i = 0; i < timesLength; i++){
+				if(timesDict[index])
+					var parsed = new Date(timesDict[index][times[index][i]].name);
+				else
+					var parsed = new Date(times[index][i]);
+
+				var year = parsed.getFullYear(); // Sunday = 0
+				if(!groupedValues[index][year])
+					if(locations[index][i])
+						groupedValues[index][year]= {};
+					else
+						groupedValues[index][year]= [];
+
+				if(locations[index][i]){
+					for(var j=0; j < locations[index][i].length; j++){
+						if(!groupedValues[index][year][locations[index][i][j]])
+							groupedValues[index][year][locations[index][i][j]] = []
+						groupedValues[index][year][locations[index][i][j]].push(values[index][i][j]);
+					}
+				} else{
+					groupedValues[index][year].push(values[index][i][j]);
+				}
+			}
+			console.log(groupedValues[index]);
+		}
 	}
 
 	/***************** GET DATA FROM SERVICE ********************/
+
+	// This function will filter all the values on a certain date
+	this.filterByDay = function(index, day){
+
+	}
+
+	this.getGroupedValues = function(index){
+		return groupedValues[index];
+	}
 
 	//function returning the number of datasets in the service
 	this.getNumDatasets = function(){
@@ -280,9 +480,14 @@ angular.module('dataVisualizationsApp.services')
 		return valuesTitles[index];
 	}
 
-	//TODO: Implement these methods
+	//return the aggregation parameter selected by the user
 	this.getAggregationType = function(index){
 		return userDatasets[index].aggregation;
+	}
+
+	//a getter for the aggregated values per date
+	this.getAggregatedValuesPerDate = function(index){
+		return aggregatedValuesPerDate[index];
 	}
 
 	//return the times: dict will be necessary to convert numbers to real times

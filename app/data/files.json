@@ -81,7 +81,7 @@
 					"Name": "Tijdstip",
 					"Path": "$.data[*][0]",
 					"Dict": "data/KMI/times.json",
-					"Dict_mapping": "$.stations[*]"
+					"Dict_mapping": "$.[*]"
 				}
 			]
 		},
