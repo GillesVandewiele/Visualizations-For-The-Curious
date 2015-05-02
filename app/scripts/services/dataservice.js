@@ -116,8 +116,8 @@ angular.module('dataVisualizationsApp.services')
 
 			promiseValuesDict
 				.then(function(data){
-					locationsDict[index] = jsonPath(data.data, "$.data[*]");
-					deferredValuesDict.resolve(locationsDict[index]);
+					valuesDict[index] = jsonPath(data.data, userDatasets[index].value.Dict_mapping);
+					deferredValuesDict.resolve(valuesDict[index]);
 					deferred.resolve(index);
 					return deferred.promise;
 				});
@@ -253,13 +253,18 @@ angular.module('dataVisualizationsApp.services')
 	// This function will filter all the values on a certain date, aggregated is a boolean telling if data is aggregated or not
 	// IMPORTANT: data must be the same length as times.
 	function filterByDay(index, date, data, aggregated){
-		var results = {};
+		if(aggregated || locations[index].length == 0){
+			var results = [];
+		}else {
+			var results = {};
+		}
 		var counter = 0;
 		if(data.length != times[index].length){
 			console.log("ERROR: times and data are not same length");
 			return;
 		}
 		for(var i=0; i<times[index].length; i++){
+			console.log(timesDict[index][times[index][i]].name, new Date(timesDict[index][times[index][i]].name));
 			var dictTime = new Date(timesDict[index][times[index][i]].name);
 			if(dictTime.getFullYear() == date.getFullYear() && dictTime.getDate() == date.getDate() && dictTime.getMonth() == date.getMonth()){
 				console.log(dictTime);
@@ -281,17 +286,19 @@ angular.module('dataVisualizationsApp.services')
 				}
 			}
 			// We know the dates are sorted, so as soon as we see a date that exceeds the searched date, we stop looking
-			if(dictTime.getFullYear() > date.getFullYear()){
+			/*if(dictTime.getFullYear() > date.getFullYear()){
 				return results;
 			}
 			if(dictTime.getFullYear() == date.getFullYear() && dictTime.getMonth() > date.getMonth()){
+				console.log(results);
 				return results;
 			}
 			if(dictTime.getFullYear() == date.getFullYear() && dictTime.getMonth() == date.getMonth() && dictTime.getDate() > date.getDate()){
 				console.log(results);
 				return results;
-			}
+			}*/
 		}
+		console.log(results);
 		return results;
 	};
 
@@ -491,12 +498,13 @@ angular.module('dataVisualizationsApp.services')
 		}
 		console.log(groupedValues[index]);
 		
+		
 		console.log("Now let's check which values occurred on 5 June 2014...")
 		filterByDay(index, new Date(2014, 5, 5), values[index], false);
 
 		console.log("And again, but now for aggregated values...")
 		filterByDay(index, new Date(2014, 5, 5), aggregatedValuesPerDate[index], true);
-
+		
 	};
 
 	/***************** GET DATA FROM SERVICE ********************/

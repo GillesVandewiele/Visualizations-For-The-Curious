@@ -13,17 +13,17 @@ angular.module('dataVisualizationsApp.controllers')
     /********************LOAD DATA**********************/
 
 
-    // if locations are locations = 0 are routes = 1
+    // if locations are locations = 0 , routes = 1 , no locations = 2
     /*
     if locations --> cities = points on a map, can be represented with markers
     if locations --> routes = lines on a map, can be represented with polylines
+    if locations --> none = hide map
     */ 
     $scope.heatMap = ['#00ff00', '#66ff33', '#99ff33', '#ccff33', '#ffff00', '#ffcc00','#ff9933','#ff6600', '#ff3300', '#ff0000'];
     $scope.heatMapBoundaries = ["","","","","","","","","","",""];  
     var locationsType = 0;
 
-    $scope.cities = {};
-    $scope.routes = {};
+    $scope.paths = {};
 
     $scope.numDatasets = dataService.getNumDatasets();
 
@@ -47,8 +47,7 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.timesDict[c] = dataService.getTimesDict(c);
         $scope.locationsDict[c] = dataService.getLocationsDict(c);
 
-
-        //do some calendar stuff
+        /*//do some calendar stuff
         var tmp ={};
         var aggregatedVals ={};
         tmp['title'] = $scope.valuesTitles[c];
@@ -77,10 +76,10 @@ angular.module('dataVisualizationsApp.controllers')
         var vals = Object.keys(aggregatedVals).map(function(key){ return aggregatedVals[key];});
 
         tmp['legend'] = getLegend(d3.extent(vals));
-        $scope.calendarData.push(tmp);
+        $scope.calendarData.push(tmp);*/
     }
 
-    $scope.firstDate = new Date(2014, 10, 1);
+    //$scope.firstDate = new Date(2014, 10, 1);
 
 
     /****************** MAP INITIALISATION *********************/
@@ -112,39 +111,59 @@ angular.module('dataVisualizationsApp.controllers')
         }
     };
 
+    //initialisation of the timebar
+    //if times are correctly loaded, use times to make the timebar
     if($scope.times[0]){
-        $scope.minTime = 0;
-        $scope.maxTime = $scope.times[0].length-1;
+        $scope.minTime = 0; //set the min index of the timebar
+        $scope.maxTime = $scope.times[0].length-1; //set the max index of the timebar
+        //make a function that translates an index to a string containing the time
         $scope.translateTime = function(currentTime){
             return $scope.timesDict[0][$scope.times[0][currentTime]].name;
         };
-    } else {
-        $scope.minTime = 0;
-        $scope.maxTime = 10000;
+    }
+    //if times are not correctly loaded use standard values.
+    else {
+        $scope.minTime = 0; //set the min index of the timebar
+        $scope.maxTime = 10000; //set the max index of the timebar
+        //inform the user no times have been loaded.
         $scope.translateTime = function(currentTime){
-            return "no time loaded";
+            return "no time loaded"; 
         };
     }
 
+    //always start with currentTime at zero
     $scope.currentTime= 0;
 
     //check type of locations
     if($scope.locationsDict[0]){
-        if($scope.locationsDict[0][0].start){
+        //only the coordinates of a village/city are expressed with .long and .lat
+        if($scope.locationsDict[0][0].long){
+            locationsType = 0;
+        }
+        //only routes have .coordinates as property
+        else if($scope.locationsDict[0][0].coordinates){
             locationsType = 1;
+        }
+        //if there are no locations
+        else {
+            locationsType = 2;
         }
     }
 
     //loading the routes or the locations
-    drawLocations(0);
-    editLocationColors(0);
+    if($scope.locationsDict[0]){
+        drawLocations(0);
+        editLocationColors(0);
+    }
 
     //if data has been loaded, visualise (use a watch function)
     //wait untill all data has been loaded. but how? => callbacks and $q.all()
     
     //watch for editing the map
     $scope.$watch('currentTime', function(){
-        editLocationColors(0);  
+        if($scope.locationsDict[0]){
+            editLocationColors(0); 
+        } 
     });
 
     /************* BUTTON CLICKS *************/
@@ -194,9 +213,9 @@ angular.module('dataVisualizationsApp.controllers')
     /************* HELPER FUNCTIONS FOR MAP *************/
 
     function drawLocations(index){
-        if( locationsType == 0){
+        if(locationsType == 0){
             //okay, this means we are considering cities!
-            drawMarkers();
+            drawMarkers(index);
         } else if(locationsType == 1){
             //okay, this means we are considering routes!
             drawRoutes(index);
@@ -204,19 +223,42 @@ angular.module('dataVisualizationsApp.controllers')
     }
 
     function editLocationColors(index){
-        if( locationsType == 0){
+        if(locationsType == 0){
             editMarkers(index);
         } else if(locationsType == 1){
             editRoutes(index);
         }
     }
 
-    function drawMarkers(){
+    function drawMarkers(index){
+        for(var i=0; i<$scope.locationsDict[index].length; i++){
+            var msg = "<p>"+$scope.locationsDict[index][i].name+"</p>";
 
+            $scope.paths['city'+i] = {
+                    message: msg,
+                    weight: 2,
+                    color: '#00ff00',
+                    latlngs: [$scope.locationsDict[index][i].lat, $scope.locationsDict[index][i].long],
+                    radius: 20000,
+                    type: 'circle'
+                };
+        }
     }
 
-    function editMarkers(){
+    function editMarkers(index){
+        //first find the maximal value
+        var extent = d3.extent($scope.values[index][$scope.currentTime]);
 
+        //now that we have min and max, map all values to a color between green and red.
+        for(var k=0; k<$scope.values[index][$scope.currentTime].length; k++){
+            var temp = Math.floor(($scope.values[index][$scope.currentTime][k]-extent[0])/(extent[1]-extent[0])*($scope.heatMap.length-1));
+            $scope.paths['city'+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
+        }
+
+        //for the legend, the heatmapboudaries must be set.
+        for(var j=0; j<$scope.heatMapBoundaries.length; j++){
+            $scope.heatMapBoundaries[j] = ((extent[0] + j*(extent[1]-extent[0])/$scope.heatMapBoundaries.length).toFixed(1)).toString();
+        }
     }
 
     function drawRoutes(index){
@@ -225,8 +267,8 @@ angular.module('dataVisualizationsApp.controllers')
 
             var msg = "<p>"+$scope.locationsDict[index][i].name+"</p>";
 
-            $scope.routes['route_'+i] = {
-                    weight: 3,
+            $scope.paths['route_'+i] = {
+                    weight: 4,
                     opacity: 0.6,
                     color: '#00ff00',
                     latlngs: decoded,
@@ -243,13 +285,15 @@ angular.module('dataVisualizationsApp.controllers')
         //now that we have min and max, map all values to a color between green and red.
         for(var k=0; k<$scope.values[index][$scope.currentTime].length; k++){
             var temp = Math.floor(($scope.values[index][$scope.currentTime][k]-extent[0])/(extent[1]-extent[0])*($scope.heatMap.length-1));
-            $scope.routes['route_'+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
+            $scope.paths['route_'+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
         }
 
         //for the legend, the heatmapboudaries must be set.
         for(var j=0; j<$scope.heatMapBoundaries.length; j++){
-            $scope.heatMapBoundaries[j] = (Math.floor(extent[0] + j*(extent[1]-extent[0])/$scope.heatMapBoundaries.length)).toString();
+            $scope.heatMapBoundaries[j] = ((extent[0] + j*(extent[1]-extent[0])/$scope.heatMapBoundaries.length).toFixed(1)).toString();
         }
+
+        console.log($scope.values[index]);
     }
 
     function mapNextTimestep(){

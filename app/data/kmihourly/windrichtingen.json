@@ -1,0 +1,70 @@
+[
+ {
+  "name": "Z",
+  "nr": 0
+ },
+ {
+  "name": "NNO",
+  "nr": 1
+ },
+ {
+  "name": "NO",
+  "nr": 2
+ },
+ {
+  "name": "ZO",
+  "nr": 3
+ },
+ {
+  "name": "ONO",
+  "nr": 4
+ },
+ {
+  "name": "O",
+  "nr": 5
+ },
+ {
+  "name": "N",
+  "nr": 6
+ },
+ {
+  "name": "ZZW",
+  "nr": 7
+ },
+ {
+  "name": "W",
+  "nr": 8
+ },
+ {
+  "name": "ZZO",
+  "nr": 9
+ },
+ {
+  "name": "WZW",
+  "nr": 10
+ },
+ {
+  "name": "NNW",
+  "nr": 11
+ },
+ {
+  "name": "WNW",
+  "nr": 12
+ },
+ {
+  "name": "NW",
+  "nr": 13
+ },
+ {
+  "name": "ZW",
+  "nr": 14
+ },
+ {
+  "name": "VER",
+  "nr": 15
+ },
+ {
+  "name": "OZO",
+  "nr": 16
+ }
+]

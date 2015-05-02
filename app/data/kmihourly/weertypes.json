@@ -1,0 +1,130 @@
+[
+ {
+  "nr": 0,
+  "name": "regen/sneeuw"
+ },
+ {
+  "nr": 1,
+  "name": "lichte sneeuw"
+ },
+ {
+  "nr": 2,
+  "name": "helder"
+ },
+ {
+  "nr": 3,
+  "name": "mist"
+ },
+ {
+  "nr": 4,
+  "name": "motsneeuw"
+ },
+ {
+  "nr": 5,
+  "name": "mistbanken"
+ },
+ {
+  "nr": 6,
+  "name": "dichte motregen"
+ },
+ {
+  "nr": 7,
+  "name": "mist en rijp"
+ },
+ {
+  "nr": 8,
+  "name": "halfbewolkt"
+ },
+ {
+  "nr": 9,
+  "name": "regen met onweer"
+ },
+ {
+  "nr": 10,
+  "name": "regen/ijzel"
+ },
+ {
+  "nr": 11,
+  "name": "zwaarbewolkt"
+ },
+ {
+  "nr": 12,
+  "name": "regen en motregen"
+ },
+ {
+  "nr": 13,
+  "name": "lichte buien"
+ },
+ {
+  "nr": 14,
+  "name": "nevel"
+ },
+ {
+  "nr": 15,
+  "name": "motregen"
+ },
+ {
+  "nr": 16,
+  "name": "lichte regen"
+ },
+ {
+  "nr": 17,
+  "name": "sneeuw"
+ },
+ {
+  "nr": 18,
+  "name": "licht bewolkt"
+ },
+ {
+  "nr": 19,
+  "name": "buien van regen en sneeuw"
+ },
+ {
+  "nr": 20,
+  "name": "hevige sneeuw"
+ },
+ {
+  "nr": 21,
+  "name": "dichte mist"
+ },
+ {
+  "nr": 22,
+  "name": "onweer"
+ },
+ {
+  "nr": 23,
+  "name": "buien"
+ },
+ {
+  "nr": 24,
+  "name": "hagelbuien"
+ },
+ {
+  "nr": 25,
+  "name": "stofhagel"
+ },
+ {
+  "nr": 26,
+  "name": "-"
+ },
+ {
+  "nr": 27,
+  "name": "grondmist"
+ },
+ {
+  "nr": 28,
+  "name": "betrokken"
+ },
+ {
+  "nr": 29,
+  "name": "hevige regen"
+ },
+ {
+  "nr": 30,
+  "name": "sneeuwbuien"
+ },
+ {
+  "nr": 31,
+  "name": "matige regen"
+ }
+]
