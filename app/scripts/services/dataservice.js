@@ -112,8 +112,8 @@ angular.module('dataVisualizationsApp.services')
 
 			promiseValuesDict
 				.then(function(data){
-					locationsDict[index] = jsonPath(data.data, "$.data[*]");
-					deferredValuesDict.resolve(locationsDict[index]);
+					valuesDict[index] = jsonPath(data.data, userDatasets[index].value.Dict_mapping);
+					deferredValuesDict.resolve(valuesDict[index]);
 					deferred.resolve(index);
 					return deferred.promise;
 				});

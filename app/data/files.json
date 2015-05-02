@@ -6,14 +6,14 @@
 			"Columns": [ 
 				{
 					"Name": "Locatie",
-					"Path": "$.data[*][1][*][1]",
+					"Path": "$.data[*][1][*][0]",
 					"Dict": "data/verkeerstijden/routes.json",
-					"Dict_mapping": "$.routes[*]"
+					"Dict_mapping": "$[*]"
 
 				},
 				{
 					"Name": "Vertraging",
-					"Path": "$.data[*][1][*][0]",
+					"Path": "$.data[*][1][*][1]",
 					"Dict": "",
 					"Dict_mapping": ""
 				},
@@ -21,19 +21,19 @@
 					"Name": "Tijdstip",
 					"Path": "$.data[*][0]",
 					"Dict": "data/verkeerstijden/times.json",
-					"Dict_mapping": "$.times[*]"
+					"Dict_mapping": "$[*]"
 				}
 			]
 		},
 		{
 			"Name": "weerdata",
-			"Path": "data/KMI/data.json",
+			"Path": "data/kmihourly/data.json",
 			"Columns": [ 
 				{
 					"Name": "Locatie",
 					"Path": "$.data[*][2][*][0]",
-					"Dict": "data/KMI/stations.json",
-					"Dict_mapping": "$.stations[*]"
+					"Dict": "data/kmihourly/stations.json",
+					"Dict_mapping": "$[*]"
 				},
 				{
 					"Name": "Temperatuur",
@@ -62,8 +62,8 @@
 				{
 					"Name": "Windrichting",
 					"Path": "$.data[*][2][*][4]",
-					"Dict": "data/KMI/windrichting.json",
-					"Dict_mapping": "$.windrichtingen[*]"
+					"Dict": "data/kmihourly/windrichting.json",
+					"Dict_mapping": "$[*]"
 				},
 				{
 					"Name": "Windsnelheid",
@@ -74,14 +74,14 @@
 				{
 					"Name": "Weertype",
 					"Path": "$.data[*][2][*][6]",
-					"Dict": "data/KMI/weertype.json",
-					"Dict_mapping": "$.weertypes[*]"
+					"Dict": "data/kmihourly/weertype.json",
+					"Dict_mapping": "$[*]"
 				},
 				{
 					"Name": "Tijdstip",
 					"Path": "$.data[*][0]",
-					"Dict": "data/KMI/times.json",
-					"Dict_mapping": "$.stations[*]"
+					"Dict": "data/kmihourly/times.json",
+					"Dict_mapping": "$[*]"
 				}
 			]
 		},
@@ -117,7 +117,7 @@
 					"Name": "Tijdstip",
 					"Path": "$.data[*][0]",
 					"Dict": "data/acc_inc_fli_wer/times.json",
-					"Dict_mapping": "$.times[*]"
+					"Dict_mapping": "$[*]"
 				}
 			]
 		}
