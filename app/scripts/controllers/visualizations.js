@@ -87,9 +87,9 @@ angular.module('dataVisualizationsApp.controllers')
     //this function initialises the leafletmap by centering the map
     //and by selecting the right map on mapbox.  
     $scope.defaults = {
-        maxZoom: 14,
-        minZoom: 8
-    }
+            maxZoom: 14,
+            minZoom: 8
+    };
 
     $scope.center = {
         lat: 50.5,
