@@ -5,7 +5,7 @@
 	<div class="layoutrow titlecontent scroll-y">
 		<!-- <dv-bars-demo></dv-bars-demo> -->
 		<!-- <div class="container-fluid"> -->
-		<leaflet ng-show="locationsType" defaults="defaults" center="center" layers="layers" paths="paths" height="600px"></leaflet>
+		<leaflet ng-show="locationsType" defaults="mapdefaults" center="mapcenter" layers="maplayers" paths="mappaths" height="600px"></leaflet>
       	<br/>
 		<div ng-show="locationsType" class="color-box" ng-repeat="c in heatMap track by $index" style="background-color: {{c}};"> {{heatMapBoundaries[$index]}} to {{heatMapBoundaries[$index+1]}}</div>
 		<br/>
