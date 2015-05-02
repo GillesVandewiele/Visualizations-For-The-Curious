@@ -5,10 +5,7 @@
 	<div class="layoutrow titlecontent scroll-y">
 		<!-- <dv-bars-demo></dv-bars-demo> -->
 		<!-- <div class="container-fluid"> -->
-
-		<leaflet ng-show="locationsType" defaults="defaults" center="center" layers="layers" height="600px" paths="paths"></leaflet> 
-		<br/>
-		<div ng-show="locationsType" class="color-box" ng-repeat="c in heatMap track by $index" style="background-color: {{c}};"> {{heatMapBoundaries[$index]}} to {{heatMapBoundaries[$index+1]}}</div>		
+		<map></map>
 		<br/>
 		<br/>
 		<slider floor="{{ minTime }}" ceiling="{{ maxTime }}" ng-model="currentTime" translate-fn='translateTime' ng-disabled="mapPlaying"></slider>

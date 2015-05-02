@@ -47,7 +47,7 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.timesDict[c] = dataService.getTimesDict(c);
         $scope.locationsDict[c] = dataService.getLocationsDict(c);
 
-        /*//do some calendar stuff
+        //do some calendar stuff
         var tmp ={};
         var aggregatedVals ={};
         tmp['title'] = $scope.valuesTitles[c];
@@ -76,10 +76,10 @@ angular.module('dataVisualizationsApp.controllers')
         var vals = Object.keys(aggregatedVals).map(function(key){ return aggregatedVals[key];});
 
         tmp['legend'] = getLegend(d3.extent(vals));
-        $scope.calendarData.push(tmp);*/
+        $scope.calendarData.push(tmp);
     }
 
-    //$scope.firstDate = new Date(2014, 10, 1);
+    $scope.firstDate = new Date(2014, 12, 1);
 
 
     /****************** MAP INITIALISATION *********************/
@@ -209,6 +209,10 @@ angular.module('dataVisualizationsApp.controllers')
 
     };
 
+    function mapNextTimestep(){
+        $scope.currentTime++;
+    }
+
 
     /************* HELPER FUNCTIONS FOR MAP *************/
 
@@ -247,7 +251,7 @@ angular.module('dataVisualizationsApp.controllers')
 
     function editMarkers(index){
         //first find the maximal value
-        var extent = d3.extent($scope.values[index]);
+        var extent = d3.extent($scope.values[index][$scope.currentTime]);
 
         //now that we have min and max, map all values to a color between green and red.
         for(var k=0; k<$scope.values[index][$scope.currentTime].length; k++){
@@ -293,11 +297,6 @@ angular.module('dataVisualizationsApp.controllers')
             $scope.heatMapBoundaries[j] = ((extent[0] + j*(extent[1]-extent[0])/$scope.heatMapBoundaries.length).toFixed(1)).toString();
         }
     }
-
-    function mapNextTimestep(){
-        $scope.currentTime++;
-    }
-
 
     /************* HELPER FUNCTIONS FOR CALENDAR *************/
     function getLegend(extentArray, amountOfThresholds){
