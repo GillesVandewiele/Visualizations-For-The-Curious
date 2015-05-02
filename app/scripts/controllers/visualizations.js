@@ -247,7 +247,7 @@ angular.module('dataVisualizationsApp.controllers')
 
     function editMarkers(index){
         //first find the maximal value
-        var extent = d3.extent($scope.values[index][$scope.currentTime]);
+        var extent = d3.extent($scope.values[index]);
 
         //now that we have min and max, map all values to a color between green and red.
         for(var k=0; k<$scope.values[index][$scope.currentTime].length; k++){
