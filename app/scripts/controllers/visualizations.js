@@ -36,7 +36,7 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.times = [];
     $scope.locations = [];
     $scope.aggregatedValues = [];
-    $scope.groupedValues = [];
+    $scope.groupedAndAggregatedValues = [];
 
     $scope.valuesDict = [];
     $scope.timesDict = [];
@@ -44,6 +44,7 @@ angular.module('dataVisualizationsApp.controllers')
 
     $scope.calendarData = [];
     $scope.lineChartData = [];
+    $scope.stackedBarData = [];
 
     for(var c=0;c<$scope.numDatasets;c++){
         $scope.values[c] = dataService.getValues(c);
@@ -54,7 +55,7 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.timesDict[c] = dataService.getTimesDict(c);
         $scope.locationsDict[c] = dataService.getLocationsDict(c);
         $scope.aggregatedValues[c] = dataService.getAggregatedValuesPerDate(c);
-        $scope.groupedValues[c] = dataService.getGroupedValues(c);
+        $scope.groupedAndAggregatedValues[c] = dataService.getGroupedAndAggregatedValues(c);
 
         //do some calendar stuff
         var tmp ={};
@@ -92,7 +93,7 @@ angular.module('dataVisualizationsApp.controllers')
     if($scope.aggregatedValues.length > 0)
         $scope.lineChartData = dataService.filterByDay(0, new Date(2015, 0, 30), $scope.aggregatedValues[0], true);
 
-    $scope.firstDate = new Date(2014, 12, 1);
+    //$scope.firstDate = new Date(2014, 12, 1);
 
 
     //check type of locations
@@ -118,8 +119,9 @@ angular.module('dataVisualizationsApp.controllers')
     }
 
     //make a stackbar of aggregated values
-    if($scope.aggregatedValues[0]){
-        $scope.stackedBarData = $scope.aggregatedValues[0];
+    if($scope.groupedAndAggregatedValues[0]){
+        //$scope.stackedBarData = $scope.groupedAndAggregatedValues[0];
+        //$scope.stackedBarDict = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
     }
 
     //if data has been loaded, visualise (use a watch function)

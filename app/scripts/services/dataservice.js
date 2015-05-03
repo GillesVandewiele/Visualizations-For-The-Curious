@@ -21,6 +21,7 @@ angular.module('dataVisualizationsApp.services')
 	var aggregatedValuesPerDate = [];
 
 	var groupedValues = [];
+	var groupedAndAggregatedValues = [];
 
 	var valuesTitles = [];
 	var values = [];
@@ -486,12 +487,56 @@ angular.module('dataVisualizationsApp.services')
 				}
 			}
 		}
-		console.log("grouped values");
-		console.log(groupedValues[index]);		
-		//filterByDay(index, new Date(2015, 0, 30), aggregatedValuesPerDate[index], true);
+
+		//groupedValues will now be aggregated
+		groupedAndAggregatedValues[index] = {};
+		if((userDatasets[index].aggregation !== 'NONE') && (userDatasets[index].grouping !== 'NONE')){
+			for(var k in groupedValues[index]){ //iterate over grouping level
+				groupedAndAggregatedValues[index][k] = {};
+
+				for(var l in groupedValues[index][k]){ //take mean over aggregated time data
+					if(userDatasets[index].aggregation == 'MEAN'){
+						var sum = 0, count = 0;
+						for(var i=0; i<groupedValues[index][k][l].length; i++){
+							sum += groupedValues[index][k][l][i];
+							count++;
+						}
+						groupedAndAggregatedValues[index][k][l] = sum/count;
+
+					} else if(userDatasets[index].aggregation == 'SUM'){
+						var sum = 0;
+						for(var i=0; i<groupedValues[index][k][l].length; i++){
+							sum += groupedValues[index][k][l][i];
+						}
+						groupedAndAggregatedValues[index][k][l] = sum;
+
+					} else if(userDatasets[index].aggregation == 'MAX'){
+						groupedAndAggregatedValues[index][k][l] = d3.max(groupedValues[index][k][l]);
+
+					} else if(userDatasets[index].aggregation == 'MIN'){
+						groupedAndAggregatedValues[index][k][l] = d3.min(groupedValues[index][k][l]);
+
+					} else if(userDatasets[index].aggregation == 'COUNT'){
+						var counts = {};
+						for(var j=0; j<groupedValues[index][k][l].length; j++){
+							// If there is no entry of this value in the counts, we create one, else we increment this entry
+							counts[groupedValues[index][k][l][j]] = counts[groupedValues[index][k][l][j]] ? counts[groupedValues[index][k][l][j]]+1 : 1;
+						}
+						groupedAndAggregatedValues[index][k][l] = counts;	
+					}
+				}
+			}			
+		}
+		
+		console.log("grouped and aggregated values");
+		console.log(groupedAndAggregatedValues[index]);		
 	};
 
 	/***************** GET DATA FROM SERVICE ********************/
+
+	this.getGroupedAndAggregatedValues = function(index){
+		return groupedAndAggregatedValues[index];
+	};
 
 	this.getGroupedValues = function(index){
 		return groupedValues[index];
