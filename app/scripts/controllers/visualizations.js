@@ -86,7 +86,7 @@ angular.module('dataVisualizationsApp.controllers')
 
     // Hardcoded date (needs to be replaced by the data when a user clicks the calendar)
     $scope.lineChartData = dataService.filterByDay(0, new Date(2015, 0, 30), $scope.aggregatedValues[0], true);
-    console.log("lineChartData = ", $scope.lineChartData);
+
     $scope.firstDate = new Date(2014, 12, 1);
 
 
