@@ -24,7 +24,7 @@
 
 		<!-- axisTitle is hardcoded at this moment as well, should be replaced... -->
 		<d3-line-chart config="{data: lineChartData, axisTitle: valuesTitles[0]}"></d3-line-chart>
-		<!-- This shit has to be moved to a stylesheet ofcourse.. -->
+		<!-- This is shit and has to be moved to a stylesheet of course.. -->
 		<style>
 			.axis path,
 			.axis line {
@@ -38,6 +38,17 @@
 			  stroke: steelblue;
 			  stroke-width: 1.5px;
 			}
+
+			.overlay {
+			  fill: none;
+			  pointer-events: all;
+			}
+
+			.focus circle {
+			  fill: none;
+			  stroke: steelblue;
+			}
+
 		</style>
 
 		<br />
