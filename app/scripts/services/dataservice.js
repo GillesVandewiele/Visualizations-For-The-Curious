@@ -238,40 +238,44 @@ angular.module('dataVisualizationsApp.services')
 
 	// This function will filter all the values on a certain date, aggregated is a boolean telling if data is aggregated or not
 	// IMPORTANT: data must be the same length as times.
-	function filterByDay(index, date, data, aggregated){
+	// Output is either an array with the number of elements equal to the number of locations or an array with the number of elements
+	// equal to the number of data entries on that day.
+	this.filterByDay = function(index, date, data, aggregated){
+		console.log("Filtering the data on ", date.toString())
+		if(!data){
+			console.log("ERROR: wrong data (undefined) given");
+			return;
+		}
+		if(data.length != times[index].length){
+			console.log("ERROR: times and data are not same length");
+			return;
+		}
 		if(aggregated || locations[index].length == 0){
 			var results = [];
 		}else {
 			var results = {};
 		}
-		var counter = 0;
-		if(data.length != times[index].length){
-			console.log("ERROR: times and data are not same length");
-			return;
-		}
 		for(var i=0; i<times[index].length; i++){
+			// Decompress the date
 			var dictTime = new Date(timesDict[index][times[index][i]].name);
 			if(dictTime.getFullYear() == date.getFullYear() && dictTime.getDate() == date.getDate() && dictTime.getMonth() == date.getMonth()){
-				console.log(dictTime);
 				if(aggregated || locations[index].length == 0){
-					// If the values are aggregated, we lost the location information, which is unretrievable from here
-					for(var j = 0; j < data.length; j++){
-						results.push(data[j]);
-					}
+					// If there are no locations, or we have aggregated values, we just push them to our results array.
+					results.push({"date": timesDict[index][times[index][i]].name, "data": data[i]});
 				}else {
 					// If the values are not aggregated (or if no locations are specified), we store them per location
 					for(var j=0;j<locations[index][i].length; j++){
 						if(!results[locations[index][i][j]]){
 							results[locations[index][i][j]] = [];
-							counter++;
-							console.log("The counter is at this moment ", counter);
 						}
-						results[locations[index][i][j]].push(values[index][i][j]);
+						results[locations[index][i][j]].push({"date": timesDict[index][times[index][i]].name, "data": data[i][j]});
 					}
 				}
 			}
+
 			// We know the dates are sorted, so as soon as we see a date that exceeds the searched date, we stop looking
-			/*if(dictTime.getFullYear() > date.getFullYear()){
+			if(dictTime.getFullYear() > date.getFullYear()){
+				console.log(results);
 				return results;
 			}
 			if(dictTime.getFullYear() == date.getFullYear() && dictTime.getMonth() > date.getMonth()){
@@ -281,7 +285,7 @@ angular.module('dataVisualizationsApp.services')
 			if(dictTime.getFullYear() == date.getFullYear() && dictTime.getMonth() == date.getMonth() && dictTime.getDate() > date.getDate()){
 				console.log(results);
 				return results;
-			}*/
+			}
 		}
 		console.log(results);
 		return results;
@@ -334,6 +338,7 @@ angular.module('dataVisualizationsApp.services')
 			}
 			console.log("----------------------------------")
 		}*/
+
 		// Aggregate the values based on location and date, and store them in aggregatedValuesPerDate
 		// Had some troubles, AGAIN, with switches in javascript (<-- shitty language)
 		aggregatedValuesPerDate[index] = [];
@@ -483,6 +488,7 @@ angular.module('dataVisualizationsApp.services')
 		}
 		console.log("grouped values");
 		console.log(groupedValues[index]);		
+		//filterByDay(index, new Date(2015, 0, 30), aggregatedValuesPerDate[index], true);
 	};
 
 	/***************** GET DATA FROM SERVICE ********************/

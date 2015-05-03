@@ -31,12 +31,15 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.valuesTitles = [];
     $scope.times = [];
     $scope.locations = [];
+    $scope.aggregatedValues = [];
+    $scope.groupedValues = [];
 
     $scope.valuesDict = [];
     $scope.timesDict = [];
     $scope.locationsDict = [];
 
     $scope.calendarData = [];
+    $scope.lineChartData = [];
 
     for(var c=0;c<$scope.numDatasets;c++){
         $scope.values[c] = dataService.getValues(c);
@@ -46,6 +49,8 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.valuesDict[c] = dataService.getValuesDict(c);
         $scope.timesDict[c] = dataService.getTimesDict(c);
         $scope.locationsDict[c] = dataService.getLocationsDict(c);
+        $scope.aggregatedValues[c] = dataService.getAggregatedValuesPerDate(c);
+        $scope.groupedValues[c] = dataService.getGroupedValues(c);
 
         //do some calendar stuff
         var tmp ={};
@@ -79,6 +84,9 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.calendarData.push(tmp);
     }
 
+    // Hardcoded date (needs to be replaced by the data when a user clicks the calendar)
+    $scope.lineChartData = dataService.filterByDay(0, new Date(2015, 0, 30), $scope.aggregatedValues[0], true);
+    console.log("lineChartData = ", $scope.lineChartData);
     $scope.firstDate = new Date(2014, 12, 1);
 
 
