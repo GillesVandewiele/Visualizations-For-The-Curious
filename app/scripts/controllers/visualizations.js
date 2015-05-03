@@ -19,9 +19,13 @@ angular.module('dataVisualizationsApp.controllers')
     if locations --> routes = lines on a map, can be represented with polylines
     if locations --> none = hide map
     */ 
+    $scope.locationsType = 0;
+
+    //always start with currentTime at zero
+    $scope.currentTime = 0;
+
     $scope.heatMap = ['#00ff00', '#66ff33', '#99ff33', '#ccff33', '#ffff00', '#ffcc00','#ff9933','#ff6600', '#ff3300', '#ff0000'];
     $scope.heatMapBoundaries = ["","","","","","","","","","",""];  
-    $scope.locationsType = 0;
 
     $scope.mappaths = {};
 
@@ -112,8 +116,9 @@ angular.module('dataVisualizationsApp.controllers')
         editLocationColors(0);
     }
 
+    //make a stackbar of aggregated values
     if($scope.aggregatedValues[0]){
-        console.log(aggregatedValues[0]);
+        $scope.stackedBarData = $scope.aggregatedValues[0];
     }
 
     //if data has been loaded, visualise (use a watch function)
@@ -182,10 +187,6 @@ angular.module('dataVisualizationsApp.controllers')
             return "no time loaded"; 
         };
     }
-
-    //always start with currentTime at zero
-    $scope.currentTime= 0;
-
 
     /************* TIMEBAR BUTTON CLICKS *************/
     $scope.mapPlayPauseButton = "Play";
@@ -272,6 +273,7 @@ angular.module('dataVisualizationsApp.controllers')
 
     function editMarkers(index){
         //first find the maximal value
+        console.log($scope.values[index])
         var extent = d3.extent($scope.values[index][$scope.currentTime]);
 
         //now that we have min and max, map all values to a color between green and red.

@@ -9,6 +9,7 @@
 angular.module('dataVisualizationsApp.directives')
   .directive('d3StackedBar', [function(d3Service) {
     return {
+        template: '<d3-bars data="data"></d3-bars><div>Vuile kut baren.</div>',
         restrict: 'EA',
         scope: {
           data: '='
@@ -40,8 +41,9 @@ angular.module('dataVisualizationsApp.directives')
               //assume data = [{"firstAttr":"firstVal_1","secondAttr":"secondVal_1", "thirdAttr": "thirdVal_1"},
               //               {"firstAttr":"firstVal_2","secondAttr":"secondVal_2", "thirdAttr": "thirdVal_2"}];
               
-
-
+              
+              console.log("got data:")
+              console.log(data);
 
               // remove all previous items before render
               svg.selectAll('*').remove();
