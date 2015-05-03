@@ -90,7 +90,46 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.firstDate = new Date(2014, 12, 1);
 
 
+    //check type of locations
+    if($scope.locationsDict[0]){
+        //only the coordinates of a village/city are expressed with .long and .lat
+        if($scope.locationsDict[0][0].long){
+            $scope.locationsType = 2;
+        }
+        //only routes have .coordinates as property
+        else if($scope.locationsDict[0][0].coordinates){
+            $scope.locationsType = 1;
+        }
+        //if there are no locations
+        else {
+            $scope.locationsType = 0;
+        }
+    }
+
+    //loading the routes or the locations
+    if($scope.locationsDict[0]){
+        drawLocations(0);
+        editLocationColors(0);
+    }
+
+    if($scope.aggregatedValues[0]){
+        console.log(aggregatedValues[0]);
+    }
+
+    //if data has been loaded, visualise (use a watch function)
+    //wait untill all data has been loaded. but how? => callbacks and $q.all()
+    
+    //watch for editing the map
+    $scope.$watch('currentTime', function(){
+        if($scope.locationsDict[0]){
+            editLocationColors(0); 
+        } 
+    });
+
+
     /****************** MAP INITIALISATION *********************/
+
+    //--> should be done in directive
 
     //this function initialises the leafletmap by centering the map
     //and by selecting the right map on mapbox. 
@@ -122,6 +161,8 @@ angular.module('dataVisualizationsApp.controllers')
 
     /****************** TIMEBAR INITIALISATION *********************/
 
+    //--> should be done in directive
+
     //initialisation of the timebar
     //if times are correctly loaded, use times to make the timebar
     if($scope.times[0]){
@@ -145,39 +186,8 @@ angular.module('dataVisualizationsApp.controllers')
     //always start with currentTime at zero
     $scope.currentTime= 0;
 
-    //check type of locations
-    if($scope.locationsDict[0]){
-        //only the coordinates of a village/city are expressed with .long and .lat
-        if($scope.locationsDict[0][0].long){
-            $scope.locationsType = 2;
-        }
-        //only routes have .coordinates as property
-        else if($scope.locationsDict[0][0].coordinates){
-            $scope.locationsType = 1;
-        }
-        //if there are no locations
-        else {
-            $scope.locationsType = 0;
-        }
-    }
 
-    //loading the routes or the locations
-    if($scope.locationsDict[0]){
-        drawLocations(0);
-        editLocationColors(0);
-    }
-
-    //if data has been loaded, visualise (use a watch function)
-    //wait untill all data has been loaded. but how? => callbacks and $q.all()
-    
-    //watch for editing the map
-    $scope.$watch('currentTime', function(){
-        if($scope.locationsDict[0]){
-            editLocationColors(0); 
-        } 
-    });
-
-    /************* BUTTON CLICKS *************/
+    /************* TIMEBAR BUTTON CLICKS *************/
     $scope.mapPlayPauseButton = "Play";
     $scope.mapPlaying = false;
     var mapPlayPromise;
@@ -341,5 +351,11 @@ angular.module('dataVisualizationsApp.controllers')
 
         return legend;
     }
+
+
+    /************* HELPER FUNCTIONS FOR STACKED BAR *************/
+    //stacked bar can be used visualized in two ways: 
+    /* one of the aggregated data (if there is an aggregation specified)
+    /* one of the grouped data (if a grouping is specified)*/
 
   }]);
