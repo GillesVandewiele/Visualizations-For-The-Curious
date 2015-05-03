@@ -22,7 +22,23 @@
 			<br />
 		</div>
 
-		<d3-line-chart config="{data: lineChartData}"></d3-line-chart>
+		<!-- axisTitle is hardcoded at this moment as well, should be replaced... -->
+		<d3-line-chart config="{data: lineChartData, axisTitle: valuesTitles[0]}"></d3-line-chart>
+		<!-- This shit has to be moved to a stylesheet ofcourse.. -->
+		<style>
+			.axis path,
+			.axis line {
+			  fill: none;
+			  stroke: #000;
+			  shape-rendering: crispEdges;
+			}
+
+			.line {
+			  fill: none;
+			  stroke: steelblue;
+			  stroke-width: 1.5px;
+			}
+		</style>
 
 		<!-- <d3-stacked-bar data='[]'></d3-stacked-bar>-->
 	</div>

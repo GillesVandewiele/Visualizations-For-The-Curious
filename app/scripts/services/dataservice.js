@@ -261,14 +261,14 @@ angular.module('dataVisualizationsApp.services')
 			if(dictTime.getFullYear() == date.getFullYear() && dictTime.getDate() == date.getDate() && dictTime.getMonth() == date.getMonth()){
 				if(aggregated || locations[index].length == 0){
 					// If there are no locations, or we have aggregated values, we just push them to our results array.
-					results.push({"date": timesDict[index][times[index][i]].name, "data": data[i]});
+					results.push({"date": dictTime, "data": data[i]});
 				}else {
 					// If the values are not aggregated (or if no locations are specified), we store them per location
 					for(var j=0;j<locations[index][i].length; j++){
 						if(!results[locations[index][i][j]]){
 							results[locations[index][i][j]] = [];
 						}
-						results[locations[index][i][j]].push({"date": timesDict[index][times[index][i]].name, "data": data[i][j]});
+						results[locations[index][i][j]].push({"date": dictTime, "data": data[i][j]});
 					}
 				}
 			}
