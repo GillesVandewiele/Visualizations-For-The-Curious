@@ -17,7 +17,7 @@ angular.module('dataVisualizationsApp')
       link: function postLink(scope, element, attrs) {
         scope.$evalAsync(function() {
             var config = scope.config || {};
-            if(config.data){
+            if(config.data.length > 0){
 	            console.log("we're in the linechart directive atm!", config.data);
 
 	            // Declaring the margins
