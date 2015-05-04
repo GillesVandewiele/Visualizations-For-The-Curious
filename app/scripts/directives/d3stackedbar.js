@@ -7,14 +7,15 @@
  * # d3StackedBar
  */
 angular.module('dataVisualizationsApp.directives')
-  .directive('d3StackedBar', 'Chart.js', [function(d3Service) {
+  .directive('d3StackedBar', [function(d3Service) {
     return {
-        restrict: 'EA',
+        template: '<canvas id="bar" class="chart chart-bar" data="barData" labels="barDict" legend="barLegend" series="barSeries"></canvas>', 
+        restrict: 'E',
         scope: {
           config: '='
         },
         link: function(scope, iElement, iAttrs) {
-          scope.$evalAsync(function() {
+          /*scope.$evalAsync(function() {
               var config = scope.config || {};
               scope.data = config.data;
               scope.dict = config.dict;
@@ -99,7 +100,7 @@ angular.module('dataVisualizationsApp.directives')
                       .text(function(d, i){return scope.dict[i];});
                   }
                 };//end of render
-              });//end of async eval
+              });//end of async eval*/
         }//end of link
     };//end of return
   }]);

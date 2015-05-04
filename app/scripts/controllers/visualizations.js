@@ -50,6 +50,8 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.lineChartData = [];
     $scope.barData = [];
     $scope.barDict = [];
+    $scope.barSeries= [];
+    $scope.barLegend = false;
 
     for(var c=0;c<$scope.numDatasets;c++){
         $scope.values[c] = dataService.getValues(c);
@@ -420,6 +422,13 @@ angular.module('dataVisualizationsApp.controllers')
         //one problem remains, ordering of the days is dependent on the first date that is loaded.
         //if first day of a dataset is a Tuesday --> tuesday first... --> fixed by initialising groupedValues correctly
         $scope.barData[$scope.lastAddedLocation2Visualize] = tempBarData;
+
+        //add legend to chart --> apparently leaflet-directive and angular-chart.js conflict when legend is involved...
+        //had to disable all legend functionality of angular-leaflet-directive by commenting out
+        $scope.barSeries[$scope.lastAddedLocation2Visualize] = $scope.mappaths[$scope.locations2Visualize[$scope.lastAddedLocation2Visualize]].name;
+        $scope.barLegend = true;
+
+        console.log($scope.barSeries);
     }
 
   }]);
