@@ -408,7 +408,8 @@ angular.module('dataVisualizationsApp.controllers')
         for(var v in $scope.groupedAndAggregatedValues[index]){
             tempBarData[i] = [];
             if($scope.groupedAndAggregatedValues[index][v][$scope.locations2Visualize[$scope.lastAddedLocation2Visualize]])
-                tempBarData[i] = $scope.groupedAndAggregatedValues[index][v][$scope.locations2Visualize[$scope.lastAddedLocation2Visualize]];
+                //rounding to one digit
+                tempBarData[i] = $scope.groupedAndAggregatedValues[index][v][$scope.locations2Visualize[$scope.lastAddedLocation2Visualize]].toFixed(1);
             else
                 tempBarData[i] = 0;
             i++;
@@ -444,7 +445,8 @@ angular.module('dataVisualizationsApp.controllers')
         for(var v in $scope.groupedAndAggregatedValues[index]){
             tempBarData[i] = [];
             if($scope.groupedAndAggregatedValues[index][v])
-                tempBarData[i] = $scope.groupedAndAggregatedValues[index][v];
+                //rouding to one digit
+                tempBarData[i] = $scope.groupedAndAggregatedValues[index][v].toFixed(1);
             else
                 tempBarData[i] = 0;
             i++;
