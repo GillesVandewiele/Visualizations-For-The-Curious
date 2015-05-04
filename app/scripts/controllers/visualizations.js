@@ -402,7 +402,10 @@ angular.module('dataVisualizationsApp.controllers')
         var i = 0;
         for(var v in $scope.groupedAndAggregatedValues[index]){
             tempBarData[i] = [];
-            tempBarData[i] = $scope.groupedAndAggregatedValues[index][v][$scope.locations2Visualize[$scope.lastAddedLocation2Visualize]];
+            if($scope.groupedAndAggregatedValues[index][v][$scope.locations2Visualize[$scope.lastAddedLocation2Visualize]])
+                tempBarData[i] = $scope.groupedAndAggregatedValues[index][v][$scope.locations2Visualize[$scope.lastAddedLocation2Visualize]];
+            else
+                tempBarData[i] = 0;
             i++;
         }
 
@@ -415,7 +418,7 @@ angular.module('dataVisualizationsApp.controllers')
         }
 
         //one problem remains, ordering of the days is dependent on the first date that is loaded.
-        //if first day of a dataset is a Tuesday --> tuesday first...
+        //if first day of a dataset is a Tuesday --> tuesday first... --> fixed by initialising groupedValues correctly
         $scope.barData[$scope.lastAddedLocation2Visualize] = tempBarData;
     }
 
