@@ -39,8 +39,8 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.groupedAndAggregatedValues = [];
 
     $scope.locations2Visualize = {};
-    $scope.lastAddedLocation2Visualize = 1;
-    var maxLocations2Visualize = 2;
+    var maxLocations2Visualize = 5; // value from 1->7
+    $scope.lastAddedLocation2Visualize = maxLocations2Visualize-1;
 
     $scope.valuesDict = [];
     $scope.timesDict = [];
