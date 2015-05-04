@@ -9,7 +9,7 @@
 angular.module('dataVisualizationsApp.directives')
   .directive('d3StackedBar', [function(d3Service) {
     return {
-        template: '<canvas id="bar" class="chart chart-bar" data="barData" labels="barDict" legend="barLegend" series="barSeries"></canvas>', 
+        template: '<canvas id="bar" class="chart chart-bar" data="barData" labels="barDict" legend="barLegend" series="barSeries"></canvas>',  
         restrict: 'E',
         scope: {
           config: '='

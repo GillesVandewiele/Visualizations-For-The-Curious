@@ -397,17 +397,16 @@ angular.module('dataVisualizationsApp.services')
 		console.log("Grouping on ", userDatasets[index].grouping);
 		if(userDatasets[index].grouping =='WEEKDAY'){
 			for(var i = 1; i < groupingTitlesWeekday.length; i++){
-				if(locations[index][i])
+				if(locations[index].length > 0)
 					groupedValues[index][groupingTitlesWeekday[i]]= {};
 				else
 					groupedValues[index][groupingTitlesWeekday[i]]= [];
 			}
 			//to get sunday at the end
-			if(locations[index][0])
+			if(locations[index].length > 0)
 				groupedValues[index][groupingTitlesWeekday[0]]= {};
 			else
 				groupedValues[index][groupingTitlesWeekday[0]]= [];
-
 
 			for(var i = 0; i < timesLength; i++){
 				// We check if the dates are compressed using a dict
@@ -420,19 +419,19 @@ angular.module('dataVisualizationsApp.services')
 				var weekday = parsed.getDay(); // Sunday = 0
 
 				// If locations are given, we store the values per location. Else, we just store a list per weekday
-				if(locations[index][i]){
+				if(locations[index].length > 0){
 					for(var j=0; j < locations[index][i].length; j++){
 						if(!groupedValues[index][groupingTitlesWeekday[weekday]][locations[index][i][j]])
 							groupedValues[index][groupingTitlesWeekday[weekday]][locations[index][i][j]] = [];
 						groupedValues[index][groupingTitlesWeekday[weekday]][locations[index][i][j]].push(values[index][i][j]);
 					}
 				} else{
-					groupedValues[index][groupingTitlesWeekday[weekday]].push(values[index][i][j]);
+					groupedValues[index][groupingTitlesWeekday[weekday]].push(values[index][i]);
 				}
 			}
 		} else if(userDatasets[index].grouping == 'WEEKS'){
 			for(var i = 0; i < groupingTitlesWeeks.length; i++){
-				if(locations[index][i])
+				if(locations[index].length > 0)
 					groupedValues[index][groupingTitlesWeeks[i]]= {};
 				else
 					groupedValues[index][groupingTitlesWeeks[i]]= [];
@@ -447,19 +446,19 @@ angular.module('dataVisualizationsApp.services')
 
 				var week = parsed.getWeekNumber();
 
-				if(locations[index][i]){
+				if(locations[index].length > 0){
 					for(var j=0; j < locations[index][i].length; j++){
 						if(!groupedValues[index][groupingTitlesWeeks[week-1]][locations[index][i][j]])
 							groupedValues[index][groupingTitlesWeeks[week-1]][locations[index][i][j]] = [];
 						groupedValues[index][groupingTitlesWeeks[week-1]][locations[index][i][j]].push(values[index][i][j]);
 					}
 				} else{
-					groupedValues[index][groupingTitlesWeeks[week-1]].push(values[index][i][j]);
+					groupedValues[index][groupingTitlesWeeks[week-1]].push(values[index][i]);
 				}
 			}
 		} else if(userDatasets[index].grouping == 'MONTH'){
 			for(var i = 0; i < groupingTitlesMonth.length; i++){
-				if(locations[index][i])
+				if(locations[index].length > 0)
 					groupedValues[index][groupingTitlesMonth[i]]= {};
 				else
 					groupedValues[index][groupingTitlesMonth[i]]= [];
@@ -473,14 +472,14 @@ angular.module('dataVisualizationsApp.services')
 
 				var month = parsed.getMonth();
 
-				if(locations[index][i]){
+				if(locations[index].length > 0){
 					for(var j=0; j < locations[index][i].length; j++){
 						if(!groupedValues[index][groupingTitlesMonth[month]][locations[index][i][j]])
 							groupedValues[index][groupingTitlesMonth[month]][locations[index][i][j]] = [];
 						groupedValues[index][groupingTitlesMonth[month]][locations[index][i][j]].push(values[index][i][j]);
 					}
 				} else{
-					groupedValues[index][groupingTitlesMonth[month]].push(values[index][i][j]);
+					groupedValues[index][groupingTitlesMonth[month]].push(values[index][i]);
 				}
 			}
 		} else if(userDatasets[index].grouping == 'YEAR'){
@@ -492,58 +491,106 @@ angular.module('dataVisualizationsApp.services')
 
 				var year = parsed.getFullYear(); // Sunday = 0
 				if(!groupedValues[index][year])
-					if(locations[index][i])
+					if(locations[index].length > 0)
 						groupedValues[index][year]= {};
 					else
 						groupedValues[index][year]= [];
 
-				if(locations[index][i]){
+				if(locations[index].length > 0){
 					for(var j=0; j < locations[index][i].length; j++){
 						if(!groupedValues[index][year][locations[index][i][j]])
 							groupedValues[index][year][locations[index][i][j]] = [];
 						groupedValues[index][year][locations[index][i][j]].push(values[index][i][j]);
 					}
 				} else{
-					groupedValues[index][year].push(values[index][i][j]);
+					groupedValues[index][year].push(values[index][i]);
 				}
 			}
 		}
 
+		console.log(groupedValues[index]);
+
 		//groupedValues will now be aggregated
+		//sometimes there will be no locations data!
 		groupedAndAggregatedValues[index] = {};
 		if((userDatasets[index].aggregation !== 'NONE') && (userDatasets[index].grouping !== 'NONE')){
 			for(var k in groupedValues[index]){ //iterate over grouping level
-				groupedAndAggregatedValues[index][k] = {};
+				//if data contains locations
+				if(locations[index].length > 0){
+					groupedAndAggregatedValues[index][k] = {};
+					for(var l in groupedValues[index][k]){ //take mean over aggregated time data
+						if(userDatasets[index].aggregation == 'MEAN'){
+							var sum = 0, count = 0;
+							for(var i=0; i<groupedValues[index][k][l].length; i++){
+								sum += groupedValues[index][k][l][i];
+								count++;
+							}
+							groupedAndAggregatedValues[index][k][l] = sum/count;
 
-				for(var l in groupedValues[index][k]){ //take mean over aggregated time data
+						} else if(userDatasets[index].aggregation == 'SUM'){
+							var sum = 0;
+							for(var i=0; i<groupedValues[index][k][l].length; i++){
+								sum += groupedValues[index][k][l][i];
+							}
+							groupedAndAggregatedValues[index][k][l] = sum;
+
+						} else if(userDatasets[index].aggregation == 'MAX'){
+							groupedAndAggregatedValues[index][k][l] = d3.max(groupedValues[index][k][l]);
+
+						} else if(userDatasets[index].aggregation == 'MIN'){
+							groupedAndAggregatedValues[index][k][l] = d3.min(groupedValues[index][k][l]);
+
+						} else if(userDatasets[index].aggregation == 'COUNT'){
+							var counts = {};
+							for(var j=0; j<groupedValues[index][k][l].length; j++){
+								// If there is no entry of this value in the counts, we create one, else we increment this entry
+								counts[groupedValues[index][k][l][j]] = counts[groupedValues[index][k][l][j]] ? counts[groupedValues[index][k][l][j]]+1 : 1;
+							}
+							groupedAndAggregatedValues[index][k][l] = counts;	
+						}
+					}
+				//if data contains no locations
+				} else {
 					if(userDatasets[index].aggregation == 'MEAN'){
 						var sum = 0, count = 0;
-						for(var i=0; i<groupedValues[index][k][l].length; i++){
-							sum += groupedValues[index][k][l][i];
-							count++;
+						for(var i=0; i<groupedValues[index][k].length; i++){
+							// console.log(groupedValues[index][k][i]); --> Array[1] !!
+							for(var j=0; j<groupedValues[index][k][i].length; j++){
+								sum += groupedValues[index][k][i][j];
+								count++;
+							}
 						}
-						groupedAndAggregatedValues[index][k][l] = sum/count;
+
+						console.log('sum', sum);
+
+						groupedAndAggregatedValues[index][k] = sum/count;
 
 					} else if(userDatasets[index].aggregation == 'SUM'){
 						var sum = 0;
-						for(var i=0; i<groupedValues[index][k][l].length; i++){
-							sum += groupedValues[index][k][l][i];
+						for(var i=0; i<groupedValues[index][k].length; i++){
+							for(var j=0; j<groupedValues[index][k][i].length; j++){
+								sum += groupedValues[index][k][i][j];
+							}
 						}
-						groupedAndAggregatedValues[index][k][l] = sum;
+						groupedAndAggregatedValues[index][k] = sum;
 
 					} else if(userDatasets[index].aggregation == 'MAX'){
-						groupedAndAggregatedValues[index][k][l] = d3.max(groupedValues[index][k][l]);
+						groupedAndAggregatedValues[index][k] = d3.max(groupedValues[index][k], function(d){
+							return d3.max(d);
+						});
 
 					} else if(userDatasets[index].aggregation == 'MIN'){
-						groupedAndAggregatedValues[index][k][l] = d3.min(groupedValues[index][k][l]);
+						groupedAndAggregatedValues[index][k] = d3.min(groupedValues[index][k], function(d){
+							return d3.min(d);
+						});
 
 					} else if(userDatasets[index].aggregation == 'COUNT'){
 						var counts = {};
-						for(var j=0; j<groupedValues[index][k][l].length; j++){
+						for(var j=0; j<groupedValues[index][k].length; j++){
 							// If there is no entry of this value in the counts, we create one, else we increment this entry
-							counts[groupedValues[index][k][l][j]] = counts[groupedValues[index][k][l][j]] ? counts[groupedValues[index][k][l][j]]+1 : 1;
+							counts[groupedValues[index][k][j]] = counts[groupedValues[index][k][j]] ? counts[groupedValues[index][k][j]]+1 : 1;
 						}
-						groupedAndAggregatedValues[index][k][l] = counts;	
+						groupedAndAggregatedValues[index][k]= counts;	
 					}
 				}
 			}			

@@ -161,9 +161,11 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.$watch('lastAddedLocation2Visualize', function(){
         if($scope.groupedAndAggregatedValues[0]){
             if($scope.locations2Visualize[0]){
-                editBarData(0);
+                editBarDataWithLocations(0);
+            } else if($scope.locations[0].length == 0){
+                editBarDataWithoutLocations(0);
             }
-        }
+        } 
     });
 
 
@@ -396,11 +398,12 @@ angular.module('dataVisualizationsApp.controllers')
     //stacked bar can be used visualized in two ways: 
     /* one of the aggregated data (if there is an aggregation specified)
     /* one of the grouped data (if a grouping is specified)*/
-    function editBarData(index){ 
+    function editBarDataWithLocations(index){ 
         //last edited location must be chanded in barchart
         console.log($scope.groupedAndAggregatedValues[index]);
 
         var tempBarData = [];
+        
         var i = 0;
         for(var v in $scope.groupedAndAggregatedValues[index]){
             tempBarData[i] = [];
@@ -426,6 +429,40 @@ angular.module('dataVisualizationsApp.controllers')
         //add legend to chart --> apparently leaflet-directive and angular-chart.js conflict when legend is involved...
         //had to disable all legend functionality of angular-leaflet-directive by commenting out
         $scope.barSeries[$scope.lastAddedLocation2Visualize] = $scope.mappaths[$scope.locations2Visualize[$scope.lastAddedLocation2Visualize]].name;
+        $scope.barLegend = true;
+
+        console.log($scope.barSeries);
+    }
+
+    function editBarDataWithoutLocations(index){
+        //grouped and aggregated values
+        console.log($scope.groupedAndAggregatedValues[index]);
+
+        var tempBarData = [];
+        
+        var i = 0;
+        for(var v in $scope.groupedAndAggregatedValues[index]){
+            tempBarData[i] = [];
+            if($scope.groupedAndAggregatedValues[index][v])
+                tempBarData[i] = $scope.groupedAndAggregatedValues[index][v];
+            else
+                tempBarData[i] = 0;
+            i++;
+        }
+
+        if($scope.barDict.length < 1){
+            var tempBarDict = [];
+            for(var v in $scope.groupedAndAggregatedValues[index]){
+                tempBarDict.push(v);
+            }
+            $scope.barDict = tempBarDict;
+        }
+
+        //always only 1 series --> index = 0
+        $scope.barData[0] = tempBarData;
+
+        //always only 1 series --> index = 0
+        $scope.barSeries[0] = $scope.valuesTitles[index];
         $scope.barLegend = true;
 
         console.log($scope.barSeries);
