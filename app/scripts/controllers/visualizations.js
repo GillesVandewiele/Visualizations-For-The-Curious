@@ -48,8 +48,8 @@ angular.module('dataVisualizationsApp.controllers')
 
     $scope.calendarData = [];
     $scope.lineChartData = [];
-    $scope.stackedBarData = [];
-    $scope.stackedBarDict = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    $scope.barData = [];
+    $scope.barDict = [];
 
     for(var c=0;c<$scope.numDatasets;c++){
         $scope.values[c] = dataService.getValues(c);
@@ -159,7 +159,7 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.$watch('lastAddedLocation2Visualize', function(){
         if($scope.groupedAndAggregatedValues[0]){
             if($scope.locations2Visualize[0]){
-                editStackedBarData(0);
+                editBarData(0);
             }
         }
     });
@@ -394,19 +394,29 @@ angular.module('dataVisualizationsApp.controllers')
     //stacked bar can be used visualized in two ways: 
     /* one of the aggregated data (if there is an aggregation specified)
     /* one of the grouped data (if a grouping is specified)*/
-    function editStackedBarData(index){ 
-        //last edited location must be changed
-        var tempStackedBarData = []
+    function editBarData(index){ 
+        //last edited location must be chanded in barchart
+        console.log($scope.groupedAndAggregatedValues[index]);
+
+        var tempBarData = [];
+        var i = 0;
         for(var v in $scope.groupedAndAggregatedValues[index]){
-            tempStackedBarData[v] = $scope.groupedAndAggregatedValues[index][v][$scope.locations2Visualize[$scope.lastAddedLocation2Visualize]];
+            tempBarData[i] = [];
+            tempBarData[i] = $scope.groupedAndAggregatedValues[index][v][$scope.locations2Visualize[$scope.lastAddedLocation2Visualize]];
+            i++;
         }
 
-        console.log(tempStackedBarData);
+        if($scope.barDict.length < 1){
+            var tempBarDict = [];
+            for(var v in $scope.groupedAndAggregatedValues[index]){
+                tempBarDict.push(v);
+            }
+            $scope.barDict = tempBarDict;
+        }
 
-        $scope.stackedBarData[$scope.lastAddedLocation2Visualize] = tempStackedBarData;
-
-        console.log($scope.stackedBarData[$scope.lastAddedLocation2Visualize]);
-
+        //one problem remains, ordering of the days is dependent on the first date that is loaded.
+        //if first day of a dataset is a Tuesday --> tuesday first...
+        $scope.barData[$scope.lastAddedLocation2Visualize] = tempBarData;
     }
 
   }]);

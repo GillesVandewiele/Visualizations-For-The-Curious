@@ -16,12 +16,20 @@ angular.module('dataVisualizationsApp.services')
 
 	var valuesDict = [];
 	var timesDict = [];
-	var locationsDict = [];
+	var locationsDict = []
 
 	var aggregatedValuesPerDate = [];
 
 	var groupedValues = [];
 	var groupedAndAggregatedValues = [];
+
+	var groupingTitlesWeekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+	var groupingTitlesWeeks = {};
+	for(var i=1; i<53; i++){
+		groupingTitlesWeeks[i] = "Week " + i;
+	}
+	var groupingTitlesMonth = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+	//not necessary for years: 2014 is a proper grouping title.
 
 	var valuesTitles = [];
 	var values = [];
@@ -397,21 +405,21 @@ angular.module('dataVisualizationsApp.services')
 
 				// Get the weekday from the parsed date and initialize an object or array on that index if needed
 				var weekday = parsed.getDay(); // Sunday = 0
-				if(!groupedValues[index][weekday])
+				if(!groupedValues[index][groupingTitlesWeekday[weekday]])
 					if(locations[index][i])
-						groupedValues[index][weekday]= {};
+						groupedValues[index][groupingTitlesWeekday[weekday]]= {};
 					else
-						groupedValues[index][weekday]= [];
+						groupedValues[index][groupingTitlesWeekday[weekday]]= [];
 
 				// If locations are given, we store the values per location. Else, we just store a list per weekday
 				if(locations[index][i]){
 					for(var j=0; j < locations[index][i].length; j++){
-						if(!groupedValues[index][weekday][locations[index][i][j]])
-							groupedValues[index][weekday][locations[index][i][j]] = [];
-						groupedValues[index][weekday][locations[index][i][j]].push(values[index][i][j]);
+						if(!groupedValues[index][groupingTitlesWeekday[weekday]][locations[index][i][j]])
+							groupedValues[index][groupingTitlesWeekday[weekday]][locations[index][i][j]] = [];
+						groupedValues[index][groupingTitlesWeekday[weekday]][locations[index][i][j]].push(values[index][i][j]);
 					}
 				} else{
-					groupedValues[index][weekday].push(values[index][i][j]);
+					groupedValues[index][groupingTitlesWeekday[weekday]].push(values[index][i][j]);
 				}
 			}
 		} else if(userDatasets[index].grouping == 'WEEKS'){
@@ -421,21 +429,23 @@ angular.module('dataVisualizationsApp.services')
 				else
 					var parsed = new Date(times[index][i]);
 
-				var week = parsed.getWeekNumber(); // Sunday = 0
-				if(!groupedValues[index][week])
+				var week = parsed.getWeekNumber();
+				console.log(parsed);
+				console.log(week);
+				if(!groupedValues[index][groupingTitlesWeeks[week]])
 					if(locations[index][i])
-						groupedValues[index][week]= {};
+						groupedValues[index][groupingTitlesWeeks[week]]= {};
 					else
-						groupedValues[index][week]= [];
+						groupedValues[index][groupingTitlesWeeks[week]]= [];
 
 				if(locations[index][i]){
 					for(var j=0; j < locations[index][i].length; j++){
-						if(!groupedValues[index][week][locations[index][i][j]])
-							groupedValues[index][week][locations[index][i][j]] = [];
-						groupedValues[index][week][locations[index][i][j]].push(values[index][i][j]);
+						if(!groupedValues[index][groupingTitlesWeeks[week]][locations[index][i][j]])
+							groupedValues[index][groupingTitlesWeeks[week]][locations[index][i][j]] = [];
+						groupedValues[index][groupingTitlesWeeks[week]][locations[index][i][j]].push(values[index][i][j]);
 					}
 				} else{
-					groupedValues[index][week].push(values[index][i][j]);
+					groupedValues[index][groupingTitlesWeeks[week]].push(values[index][i][j]);
 				}
 			}
 		} else if(userDatasets[index].grouping == 'MONTH'){
@@ -445,21 +455,21 @@ angular.module('dataVisualizationsApp.services')
 				else
 					var parsed = new Date(times[index][i]);
 
-				var month = parsed.getMonth(); // Sunday = 0
-				if(!groupedValues[index][month])
+				var month = parsed.getMonth();
+				if(!groupedValues[index][groupingTitlesMonth[month]])
 					if(locations[index][i])
-						groupedValues[index][month]= {};
+						groupedValues[index][groupingTitlesMonth[month]]= {};
 					else
-						groupedValues[index][month]= [];
+						groupedValues[index][groupingTitlesMonth[month]]= [];
 
 				if(locations[index][i]){
 					for(var j=0; j < locations[index][i].length; j++){
-						if(!groupedValues[index][month][locations[index][i][j]])
-							groupedValues[index][month][locations[index][i][j]] = [];
-						groupedValues[index][month][locations[index][i][j]].push(values[index][i][j]);
+						if(!groupedValues[index][groupingTitlesMonth[month]][locations[index][i][j]])
+							groupedValues[index][groupingTitlesMonth[month]][locations[index][i][j]] = [];
+						groupedValues[index][groupingTitlesMonth[month]][locations[index][i][j]].push(values[index][i][j]);
 					}
 				} else{
-					groupedValues[index][month].push(values[index][i][j]);
+					groupedValues[index][groupingTitlesMonth[month]].push(values[index][i][j]);
 				}
 			}
 		} else if(userDatasets[index].grouping == 'YEAR'){
@@ -591,6 +601,5 @@ angular.module('dataVisualizationsApp.services')
 	this.getLocationsDict = function(index){
 		return locationsDict[index];
 	};
-
 
   }]);
