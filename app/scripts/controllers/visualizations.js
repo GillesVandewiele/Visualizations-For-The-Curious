@@ -38,13 +38,20 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.aggregatedValues = [];
     $scope.groupedAndAggregatedValues = [];
 
+    $scope.locations2Visualize = {};
+    var maxLocations2Visualize = 5; // value from 1->7
+    $scope.lastAddedLocation2Visualize = maxLocations2Visualize-1;
+
     $scope.valuesDict = [];
     $scope.timesDict = [];
     $scope.locationsDict = [];
 
     $scope.calendarData = [];
     $scope.lineChartData = [];
-    $scope.stackedBarData = [];
+    $scope.barData = [];
+    $scope.barDict = [];
+    $scope.barSeries= [];
+    $scope.barLegend = false;
 
     for(var c=0;c<$scope.numDatasets;c++){
         $scope.values[c] = dataService.getValues(c);
@@ -89,13 +96,18 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.calendarData.push(tmp);
     }
 
+    $scope.firstDate = new Date(2014, 12, 1);
+
     // Hardcoded date (needs to be replaced by the data when a user clicks the calendar)
     if($scope.aggregatedValues.length > 0)
         $scope.lineChartData = dataService.filterByDay(0, new Date(2015, 0, 30), $scope.aggregatedValues[0], true);
     console.log(dataService.filterByDay(0, new Date(2015, 0, 31), $scope.values[0], false));
 
+<<<<<<< HEAD
     $scope.firstDate = new Date(2014, 12, 1);
 
+=======
+>>>>>>> 55b8951fc7c94e01324576038f978182b9a8fdb3
 
     //check type of locations
     if($scope.locationsDict[0]){
@@ -119,19 +131,45 @@ angular.module('dataVisualizationsApp.controllers')
         editLocationColors(0);
     }
 
-    //make a stackbar of aggregated values
-    if($scope.groupedAndAggregatedValues[0]){
-        //$scope.stackedBarData = $scope.groupedAndAggregatedValues[0];
-        //$scope.stackedBarDict = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
-    }
+    //when a location is clicked, we catch this to select the two locations we want to visualize
+    //possibility to edit locations2Visualize should also exist in dropdown?
+    $scope.$on('leafletDirectivePath.click', function(event,args) {
+        //console.log(args.modelName);
+        var newLocation = true;
 
-    //if data has been loaded, visualise (use a watch function)
-    //wait untill all data has been loaded. but how? => callbacks and $q.all()
-    
+        for(var v in $scope.locations2Visualize){
+            if($scope.locations2Visualize[v] == args.modelName){
+                newLocation = false;
+            }
+        }
+
+        if(newLocation){
+            if($scope.lastAddedLocation2Visualize < (maxLocations2Visualize - 1)){
+                $scope.locations2Visualize[$scope.lastAddedLocation2Visualize+1] = args.modelName;
+                $scope.lastAddedLocation2Visualize ++;
+            } else {
+                $scope.locations2Visualize[0] = args.modelName;
+                $scope.lastAddedLocation2Visualize = 0;
+            }
+        }
+    });
+
+   
     //watch for editing the map
     $scope.$watch('currentTime', function(){
         if($scope.locationsDict[0]){
             editLocationColors(0); 
+        } 
+    });
+
+    //watch for editing the stackbardata
+    $scope.$watch('lastAddedLocation2Visualize', function(){
+        if($scope.groupedAndAggregatedValues[0]){
+            if($scope.locations2Visualize[0]){
+                editBarDataWithLocations(0);
+            } else if($scope.locations[0].length == 0){
+                editBarDataWithoutLocations(0);
+            }
         } 
     });
 
@@ -264,13 +302,14 @@ angular.module('dataVisualizationsApp.controllers')
         for(var i=0; i<$scope.locationsDict[index].length; i++){
             var msg = "<p>"+$scope.locationsDict[index][i].name+"</p>";
 
-            $scope.mappaths['city'+i] = {
+            $scope.mappaths[''+i] = {
                     message: msg,
                     weight: 2,
                     color: '#00ff00',
                     latlngs: [$scope.locationsDict[index][i].lat, $scope.locationsDict[index][i].long],
                     radius: 20000,
-                    type: 'circle'
+                    type: 'circle',
+                    clickable: true
                 };
         }
     }
@@ -283,7 +322,7 @@ angular.module('dataVisualizationsApp.controllers')
         //now that we have min and max, map all values to a color between green and red.
         for(var k=0; k<$scope.values[index][$scope.currentTime].length; k++){
             var temp = Math.floor(($scope.values[index][$scope.currentTime][k]-extent[0])/(extent[1]-extent[0])*($scope.heatMap.length-1));
-            $scope.mappaths['city'+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
+            $scope.mappaths[''+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
         }
 
         //for the legend, the heatmapboudaries must be set.
@@ -298,13 +337,14 @@ angular.module('dataVisualizationsApp.controllers')
 
             var msg = "<p>"+$scope.locationsDict[index][i].name+"</p>";
 
-            $scope.mappaths['route_'+i] = {
+            $scope.mappaths[''+i] = {
                     weight: 4,
                     opacity: 0.6,
                     color: '#00ff00',
                     latlngs: decoded,
                     message: msg,
-                    name: $scope.locationsDict[index][i].name
+                    name: $scope.locationsDict[index][i].name,
+                    clickable: true,  
             };
         }
     }
@@ -316,7 +356,7 @@ angular.module('dataVisualizationsApp.controllers')
         //now that we have min and max, map all values to a color between green and red.
         for(var k=0; k<$scope.values[index][$scope.currentTime].length; k++){
             var temp = Math.floor(($scope.values[index][$scope.currentTime][k]-extent[0])/(extent[1]-extent[0])*($scope.heatMap.length-1));
-            $scope.mappaths['route_'+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
+            $scope.mappaths[''+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
         }
 
         //for the legend, the heatmapboudaries must be set.
@@ -363,5 +403,76 @@ angular.module('dataVisualizationsApp.controllers')
     //stacked bar can be used visualized in two ways: 
     /* one of the aggregated data (if there is an aggregation specified)
     /* one of the grouped data (if a grouping is specified)*/
+    function editBarDataWithLocations(index){ 
+        //last edited location must be chanded in barchart
+        console.log($scope.groupedAndAggregatedValues[index]);
+
+        var tempBarData = [];
+        
+        var i = 0;
+        for(var v in $scope.groupedAndAggregatedValues[index]){
+            tempBarData[i] = [];
+            if($scope.groupedAndAggregatedValues[index][v][$scope.locations2Visualize[$scope.lastAddedLocation2Visualize]])
+                //rounding to one digit
+                tempBarData[i] = $scope.groupedAndAggregatedValues[index][v][$scope.locations2Visualize[$scope.lastAddedLocation2Visualize]].toFixed(1);
+            else
+                tempBarData[i] = 0;
+            i++;
+        }
+
+        if($scope.barDict.length < 1){
+            var tempBarDict = [];
+            for(var v in $scope.groupedAndAggregatedValues[index]){
+                tempBarDict.push(v);
+            }
+            $scope.barDict = tempBarDict;
+        }
+
+        //one problem remains, ordering of the days is dependent on the first date that is loaded.
+        //if first day of a dataset is a Tuesday --> tuesday first... --> fixed by initialising groupedValues correctly
+        $scope.barData[$scope.lastAddedLocation2Visualize] = tempBarData;
+
+        //add legend to chart --> apparently leaflet-directive and angular-chart.js conflict when legend is involved...
+        //had to disable all legend functionality of angular-leaflet-directive by commenting out
+        $scope.barSeries[$scope.lastAddedLocation2Visualize] = $scope.mappaths[$scope.locations2Visualize[$scope.lastAddedLocation2Visualize]].name;
+        $scope.barLegend = true;
+
+        console.log($scope.barSeries);
+    }
+
+    function editBarDataWithoutLocations(index){
+        //grouped and aggregated values
+        console.log($scope.groupedAndAggregatedValues[index]);
+
+        var tempBarData = [];
+        
+        var i = 0;
+        for(var v in $scope.groupedAndAggregatedValues[index]){
+            tempBarData[i] = [];
+            if($scope.groupedAndAggregatedValues[index][v])
+                //rouding to one digit
+                tempBarData[i] = $scope.groupedAndAggregatedValues[index][v].toFixed(1);
+            else
+                tempBarData[i] = 0;
+            i++;
+        }
+
+        if($scope.barDict.length < 1){
+            var tempBarDict = [];
+            for(var v in $scope.groupedAndAggregatedValues[index]){
+                tempBarDict.push(v);
+            }
+            $scope.barDict = tempBarDict;
+        }
+
+        //always only 1 series --> index = 0
+        $scope.barData[0] = tempBarData;
+
+        //always only 1 series --> index = 0
+        $scope.barSeries[0] = $scope.valuesTitles[index];
+        $scope.barLegend = true;
+
+        console.log($scope.barSeries);
+    }
 
   }]);

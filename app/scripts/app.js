@@ -23,6 +23,7 @@ angular
     'ui.bootstrap',
     'leaflet-directive',
     'vr.directives.slider',
+    'chart.js',
   ])
   .config(function ($routeProvider) {
     $routeProvider
