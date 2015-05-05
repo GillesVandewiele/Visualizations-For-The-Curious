@@ -42,6 +42,11 @@ def clean_boei(input, output, locations):
 		outdata[time]['data'].append(row_dict)
 
 	# Convert the outdata to an array
+	times = list(outdata.keys())
+	for time in times:
+		if not (len(outdata[time]['data'])==3):
+			del outdata[time]
+			
 	outdata = list(outdata.values())
 
 	with open(output, 'w') as outfile:
@@ -53,7 +58,7 @@ def clean_boei(input, output, locations):
 def execute(command):
 	command = "python " + command;
 	subprocess.call(command, shell=True)
-'''
+
 clean_boei('BellMullet A.json', 'BellMullet_A_clean.json', 'stations.json')
 subprocess.call("gzip stations.json -9", shell=True)
 execute("extract_attribute.py --in BellMullet_A_clean.json --out time_list.json --attr_name time")
@@ -61,6 +66,5 @@ execute("create_enumeration_dictionary.py --in time_list.json --out time_dict.js
 execute("swap_enumeration_dictionary.py --in time_dict.json --out times.json")
 subprocess.call("gzip times.json -9", shell=True)
 execute("update_attribute.py --to_update BellMullet_A_clean.json --updated BellMullet_A_short.json --dict time_dict.json --attr_name time")
-'''
 execute("compress_data.py --in BellMullet_A_short.json --out data.json --prime_order ['time'] --second_order ['station','PeakPeriod','PeakDirection','UpcrossPeriod','SignificantWaveHeight','SeaTemperature']")
 subprocess.call("gzip data.json -9", shell=True)
