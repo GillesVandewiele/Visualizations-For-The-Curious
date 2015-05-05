@@ -120,6 +120,30 @@
 					"Dict_mapping": "$[*]"
 				}
 			]
+		},
+		{
+			"Name": "boeien",
+			"Path": "data/boei/data.json",
+			"Columns": [ 
+				{
+					"Name": "Locatie",
+					"Path": "$.data[*][*][*][0]",
+					"Dict": "data/boei/stations.json",
+					"Dict_mapping": "$[*]"
+				},
+				{
+					"Name": "Hoogte",
+					"Path": "$.data[*][*][*][1]",
+					"Dict": "",
+					"Dict_mapping": ""
+				},
+				{
+					"Name": "Tijdstip",
+					"Path": "$.data[*][0]",
+					"Dict": "data/boei/times.json",
+					"Dict_mapping": "$[*]"
+				}
+			]
 		}
 	]
 }

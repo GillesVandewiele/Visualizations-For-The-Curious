@@ -103,11 +103,7 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.lineChartData = dataService.filterByDay(0, new Date(2015, 0, 30), $scope.aggregatedValues[0], true);
     console.log(dataService.filterByDay(0, new Date(2015, 0, 31), $scope.values[0], false));
 
-<<<<<<< HEAD
     $scope.firstDate = new Date(2014, 12, 1);
-
-=======
->>>>>>> 55b8951fc7c94e01324576038f978182b9a8fdb3
 
     //check type of locations
     if($scope.locationsDict[0]){
