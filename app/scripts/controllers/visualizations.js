@@ -344,6 +344,7 @@ angular.module('dataVisualizationsApp.controllers')
                     radius: 20000,
                     type: 'circle',
                     clickable: true
+                    name: $scope.locationsDict[index][i].name
                 };
         }
     }
