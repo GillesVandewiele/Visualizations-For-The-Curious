@@ -434,21 +434,9 @@ angular.module('dataVisualizationsApp.controllers')
     }
 
     function clickOnDay(date, nb){
-<<<<<<< HEAD
         if($scope.aggregatedValues[0].length > 0) $scope.valuesTodayAggregated[0] = dataService.filterByDay(0, date, $scope.aggregatedValues[0], true);
         if($scope.values[0].length > 0) $scope.valuesToday[0] = dataService.filterByDay(0, date, $scope.values[0], true);
         $scope.$apply();
-=======
-        console.log("date = ", date);
-        //check if data is loaded
-        if($scope.aggregatedValues[0].length > 0 && $scope.values[0].length > 0){
-            $scope.valuesTodayAggregated[0] = dataService.filterByDay(0, date, $scope.aggregatedValues[0], true);
-            $scope.valuesToday[0] = dataService.filterByDay(0, date, $scope.values[0], true);
-            
-            //ensure everything is updating when a new day is clicked
-            $scope.$apply();
-        }
->>>>>>> eb488acfb7f7b78fc7407717c119f702405295cd
     }
 
 
