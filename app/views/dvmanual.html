@@ -1,26 +1,23 @@
-<div class="layoutrow titlerow">
-	<h3>Manual</h3>
+<div class="layoutrow titlerow" style="overflow-y: hidden;">
+	<h1>Manual</h1>
 </div>
 <div class="layoutrow titlecontent scroll-y">
-	<ul>
-		<li> <a href="#selectData">Selecting data to visualize</a>
-		<li> <a href="#editData">Edit or remove a dataset</a>
-		<li> <a href="#uploadData">Uploading own data to visualize</a>
-		<li> <a href="#finishData">Visualize the datasets</a>
-	</ul>
-	<h3 id="selectData">Selecting data to visualize</h3>
+	<h3>Selecting data to visualize</h3>
 	<p>
 		Three datasets are already provided by us (measurements taken with a frequency of 15 minutes over a period of 1 year): one with traffic delays in belgium, one with the weather data in belgium and a final one with the number of incidents and accidents. <br> 
-		For each dataset, (location, value, date) tuples are required. For the correct format, see the help buttons next to the corresponding titles. Select the data you want to visualize. Optionally, the values can be aggregated and the dates grouped (e.g. in a barchart, the aggregated values can be visualized for each day of the week). <br>
+		For each dataset, (location, value, date) tuples are required, where location is an optional parameter. For the correct format, see the help buttons next to the corresponding titles. Select the data you want to visualize. Optionally, the values can be aggregated and the dates grouped (e.g. in a barchart, the aggregated values can be visualized for each day of the week). <br>
 		When all values are selected, click on the "+" button to add the dataset to the list.
 	<p>
-	<h3 id="editData">Edit or remove a dataset</h3>
+	<h3>Edit or remove a dataset</h3>
 	<p>
 		When you want to change certain parameters of a dataset, or remove it, double click on the item in the list (make sure it has a blue background). The dropdowns in the left of the screen will be updated with the parameters of that dataset and can be changed. If you want to remove a dataset, just double click the dataset you want to remove and click the "-" button.
 	</p>
-	<h3 id="uploadData">Uploading own data to visualize</h3>
-	<h3 id="finishData">Visualize the datasets</h3>
+	<h3>Uploading own data to visualize</h3>
 	<p>
-		Pretty straightforward, just press the green "V" button
+	First of all, make sure the dataset is in the right format. Run it through our python scripts (which can be found in our git with an extended manual). Then, in the dataset combobox, select "Add file.." and fill in all parameters: the name and path of the dataset, for each column the name and mapping (which is in JSONPath; an example is provided in the pop-up and in beneath the text fields, the filtered data is displayed when focus is lost) and optionally, if the column is compressed, a dict with path and mapping (again in JSONPath). At least 2 columns (date and location) need to be provided. When all columns are added, click on the "Add file" button and you're done!
+	</p>
+	<h3>Visualize the datasets</h3>
+	<p>
+		Pretty straightforward, just press the green "V" button. We support the visualization for up to three datasets.
 	</p>
 </div>

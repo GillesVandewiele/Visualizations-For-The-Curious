@@ -14,7 +14,7 @@ angular.module('dataVisualizationsApp')
 	  scope: {
 	    config: '='
 	  },
-      link: function postLink(scope, element, attrs) {
+      link: function(scope, element, attrs) {
         scope.$evalAsync(function() {
             var config = scope.config || {};
             if(config.data.length > 0){
