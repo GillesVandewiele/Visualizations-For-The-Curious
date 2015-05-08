@@ -343,7 +343,7 @@ angular.module('dataVisualizationsApp.controllers')
                     latlngs: [$scope.locationsDict[index][i].lat, $scope.locationsDict[index][i].long],
                     radius: 20000,
                     type: 'circle',
-                    clickable: true
+                    clickable: true,
                     name: $scope.locationsDict[index][i].name
                 };
         }
