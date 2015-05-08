@@ -1,4 +1,4 @@
-<div class="layoutcol fullContent">
+<div class="layoutcol fullContent" onload="linkCalendarDays()">
 	<div class="layoutrow titlerow">
 		<h3>Visualizations</h3>
 	</div>
@@ -18,7 +18,7 @@
 		<div ng-repeat="calInfo in calendarData track by $index">
 			<h4>{{calInfo['title']}}</h4>
 			<button class="btn" id="btn-previous{{$index}}">Previous</button><button class="btn" id="btn-next{{$index}}">Next</button>
-			<d3-calendar config="{domain:'month',range:8,data:calInfo['data'],start:firstDate, highlight: 'now', legend: calInfo['legend']}" nxt="#btn-next{{$index}}" prv="#btn-previous{{$index}}"></d3-calendar>
+			<d3-calendar config="{domain:'month',range:8,data:calInfo['data'],start:firstDate, highlight: 'now', legend: calInfo['legend'], click: calInfo['click']}" nxt="#btn-next{{$index}}" prv="#btn-previous{{$index}}"></d3-calendar>
 			<br />
 		</div>
 

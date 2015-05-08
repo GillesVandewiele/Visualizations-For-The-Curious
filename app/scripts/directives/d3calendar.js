@@ -18,11 +18,14 @@ angular.module('dataVisualizationsApp.directives')
             //$evalAsync makes sure that the templating engine has finished the batch of DOM manipulations for this element
             //f.e. element id: id="theElementId{{$index}}" is parsed to id="theElementId0" and id="theElementId1" in an ng-repeat
             //Took me a while to figure out why the events weren't binding to the buttons
+
             scope.$evalAsync(function() {
                 var config = scope.config || {};
                 var nxt = iAttrs.nxt || false;
                 var prv = iAttrs.prv || false;
                 var element = iElement[0];
+                // clickOnDay is a callback to a method that triggers when the user clicks on a day
+                var clickOnDay = scope.config.click;
                 var cal = new CalHeatMap();
                 var defaults = {
                     itemSelector: element,
@@ -37,7 +40,8 @@ angular.module('dataVisualizationsApp.directives')
                     legend: [2, 4, 6, 8, 10],
                     itemName: 'item',
                     nextSelector: nxt,
-                    previousSelector: prv
+                    previousSelector: prv,
+                    onClick: clickOnDay
                 };
                 angular.extend(defaults, config);
                 cal.init(defaults);

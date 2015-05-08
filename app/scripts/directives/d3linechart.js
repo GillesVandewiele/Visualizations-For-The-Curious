@@ -19,7 +19,7 @@ angular.module('dataVisualizationsApp')
             var config = scope.config || {};
             if(config.data.length > 0){
 	            console.log("we're in the linechart directive atm!", config.data);
-
+	            config.data.sort(function(a, b){return a.date - b.date;});
 	            // Declaring the margins
 	            var margin = {top: 20, right: 20, bottom: 30, left: 50}, width = 960 - margin.left - margin.right, 
 	            	height = 500 - margin.top - margin.bottom;

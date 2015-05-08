@@ -192,9 +192,13 @@ angular.module('dataVisualizationsApp.controllers')
 
   	// This function is called when the user presses the 'V' button and downloads all datasets from the list.
 	$scope.downloadData = function(){
-		setWaitingCursor();
-		$scope.downloadingData=true;
-		dataService.addMultipleDatasets($scope.userDatasets, $scope.afterDataLoaded, showErrorMessage.bind(null,"We were unable to download the requested data."));
+		if($scope.userDatasets.length > 0){
+			setWaitingCursor();
+			$scope.downloadingData=true;
+			dataService.addMultipleDatasets($scope.userDatasets, $scope.afterDataLoaded, showErrorMessage.bind(null,"We were unable to download the requested data."));
+		} else{
+			showErrorMessage("Please select a dataset that you want to visualize.");
+		}
 	};
   }]);
 

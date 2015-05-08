@@ -93,17 +93,15 @@ angular.module('dataVisualizationsApp.controllers')
         var vals = Object.keys(aggregatedVals).map(function(key){ return aggregatedVals[key];});
 
         tmp['legend'] = getLegend(d3.extent(vals));
+        tmp['click'] = clickOnDay;
         $scope.calendarData.push(tmp);
     }
 
     $scope.firstDate = new Date(2014, 12, 1);
 
     // Hardcoded date (needs to be replaced by the data when a user clicks the calendar)
-    if($scope.aggregatedValues.length > 0)
-        $scope.lineChartData = dataService.filterByDay(0, new Date(2015, 0, 30), $scope.aggregatedValues[0], true);
-    console.log(dataService.filterByDay(0, new Date(2015, 0, 31), $scope.values[0], false));
-
-    $scope.firstDate = new Date(2014, 12, 1);
+    //if($scope.aggregatedValues.length > 0)
+    //    $scope.lineChartData = dataService.filterByDay(0, new Date(2015, 0, 30), $scope.aggregatedValues[0], true);
 
     //check type of locations
     if($scope.locationsDict[0]){
@@ -394,6 +392,12 @@ angular.module('dataVisualizationsApp.controllers')
         return legend;
     }
 
+    function clickOnDay(date, nb){
+        console.log("date = ", date);
+        if($scope.aggregatedValues[0].length > 0)
+            $scope.lineChartData = dataService.filterByDay(0, date, $scope.aggregatedValues[0], true);
+    }
+
 
     /************* HELPER FUNCTIONS FOR STACKED BAR *************/
     //stacked bar can be used visualized in two ways: 
@@ -472,3 +476,4 @@ angular.module('dataVisualizationsApp.controllers')
     }
 
   }]);
+
