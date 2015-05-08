@@ -133,8 +133,8 @@ angular.module('dataVisualizationsApp.controllers')
         //console.log(args.modelName);
         //var newLocation = true;
 
-        //console.log("Clicked on the map!");
-        if($scope.locations2Visualize.indexOf(args.modelName) > -1){
+        console.log("Clicked on the map!");
+        if($scope.locations2Visualize.indexOf(args.modelName) == -1){
         //for(var v in $scope.locations2Visualize){
         //    if($scope.locations2Visualize[v] == args.modelName){
         //        newLocation = false;
