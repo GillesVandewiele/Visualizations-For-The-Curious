@@ -310,6 +310,8 @@ angular.module('dataVisualizationsApp.services')
 			var tmpLocations = [];
 		}
 
+		// We go to the parent object of the time property. From there, we check where the location and value are located and check their lengths
+		// This way, we can support dynamic lengths (a dynamic number of values (and or locations) can be linked to a date)
 		var parentPath = userDatasets[index].date.Path.slice(0, userDatasets[index].date.Path.length-3);
 		var parentData = jsonPath(actualData[index], parentPath);
 		var timesLength = times[index].length;
@@ -319,13 +321,22 @@ angular.module('dataVisualizationsApp.services')
 			var flag = false;
 			while(!flag){
 				if(parentData[j][0] == times[index][i]){
-					entriesPerTime[i] = parentData[j][1].length;
+					var locationLength = 0;
+					if(userDatasets[index].location){
+						var locationPath = parentData[j][userDatasets[index].location.Path.slice(parentPath.length+1, parentPath.length+2)];
+						if(locationPath.constructor == Array) var locationLength = locationPath.length;
+						else var locationLength = 1;
+					}
+					var valuePath = parentData[j][userDatasets[index].value.Path.slice(parentPath.length+1, parentPath.length+2)];
+					if(valuePath.constructor == Array) var valueLength = valuePath.length;
+					else var valueLength = 1;
+					entriesPerTime[i] = Math.max(valueLength, locationLength);
 					flag = true;
 				}
 				j=(j+1)%times[index].length;
 			}
 		}
-
+		console.log("entriesPerTime = ", entriesPerTime);
 		values[index] = [];
 		locations[index] = [];
 
