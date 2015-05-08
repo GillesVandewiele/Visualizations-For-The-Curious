@@ -304,22 +304,43 @@ angular.module('dataVisualizationsApp.services')
 		//for now we will pretend no aggregation or grouping is given
 		times[index] = jsonPath(actualData[index], userDatasets[index].date.Path);
 		var tmpValues = jsonPath(actualData[index], userDatasets[index].value.Path);
-		console.log(userDatasets[index].location);		
 		if(userDatasets[index].location){
 			var tmpLocations = jsonPath(actualData[index], userDatasets[index].location.Path);
 		} else {
 			var tmpLocations = [];
 		}
-		var timesLength = times[index].length;
-		var entriesPerTime = tmpValues.length/timesLength;
 
+		// We go to the parent object of the time property. From there, we check where the lengths of all fields and take the max.
+		// This way, we can support dynamic lengths (a dynamic number of values (and or locations) can be linked to a date)
+		var parentPath = userDatasets[index].date.Path.slice(0, userDatasets[index].date.Path.length-3);
+		var parentData = jsonPath(actualData[index], parentPath);
+		var timesLength = times[index].length;
+		var entriesPerTime = [];
+		for(var i = 0; i < timesLength; i++){
+			var j = i;
+			var flag = false;
+			while(!flag){
+				if(parentData[j][0] == times[index][i]){
+					var maxLength = 1;
+					for(var k = 0; k < parentData[j].length; k++){
+						if(parentData[j][k].constructor == Array){
+							if(parentData[j][k].length > maxLength) maxLength = parentData[j][k].length;
+						}
+					}
+					entriesPerTime[i] = maxLength;
+					flag = true;
+				}
+				j=(j+1)%times[index].length;
+			}
+		}
+		console.log("entriesPerTime = ", entriesPerTime);
 		values[index] = [];
 		locations[index] = [];
 
 		for(var i=0; i<timesLength; i++){
-			values[index][i] = tmpValues.slice(i*entriesPerTime,(i+1)*entriesPerTime);
+			values[index][i] = tmpValues.slice(i*entriesPerTime[i],(i+1)*entriesPerTime[i]);
 			if(tmpLocations.length > 0) {
-				locations[index][i] = tmpLocations.slice(i*entriesPerTime,(i+1)*entriesPerTime);
+				locations[index][i] = tmpLocations.slice(i*entriesPerTime[i],(i+1)*entriesPerTime[i]);
 			}
 		}
 

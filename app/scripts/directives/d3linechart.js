@@ -14,11 +14,11 @@ angular.module('dataVisualizationsApp.directives')
 	  scope: {
 	    config: '=',
 	  },
-      link: function (scope, element, attrs) {
+      link: function(scope, element, attrs) {
         scope.$evalAsync(function() {
             var config = scope.config || {};
 
-            var svg = d3.select(element[0]).append("svg")
+            var svg = d3.select(element[0]).append("svg");
 
           	scope.$watch('config.data', function(newVals, oldVals) {
                 return scope.render(newVals);
@@ -31,7 +31,9 @@ angular.module('dataVisualizationsApp.directives')
                   	// remove all previous items before render
                   	svg.selectAll('*').remove();
 
+                  	// Sort the data on date
 		            data.sort(function(a, b){return a.date - b.date;});
+
 		            // Declaring the margins
 		            var margin = {top: 20, right: 20, bottom: 30, left: 50}, width = 960 - margin.left - margin.right, 
 		            	height = 500 - margin.top - margin.bottom;
@@ -51,7 +53,7 @@ angular.module('dataVisualizationsApp.directives')
 					    .tickFormat(function(d) { return getTimeFormat(d); })
 					    .orient("bottom");
 					var yAxis = d3.svg.axis()
-					    .scale(y)
+					    .scale(y)    
 					    .orient("left");
 
 					// Declaring a svg element to put our visualization in					
@@ -93,9 +95,10 @@ angular.module('dataVisualizationsApp.directives')
 				    // Our title (the day)
 				    svg.append("text")
 				        .attr("x", (width / 2))             
-				        .attr("y", 0 - (margin.top / 4))
+				        .attr("y", margin.top)
 				        .attr("text-anchor", "middle")  
 				        .style("font-size", "16px") 
+				        .style("color", "black")
 				        .text(getDateFormat(data[0].date));
 
 	 				// Drawing our line
