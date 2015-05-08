@@ -346,7 +346,6 @@ angular.module('dataVisualizationsApp.controllers')
         for(var k=0; k<$scope.valuesToday[index][$scope.currentTime].data.length; k++){
             var temp = Math.floor(($scope.valuesToday[index][$scope.currentTime].data[k]-$scope.mapExtent[0])/($scope.mapExtent[1]-$scope.mapExtent[0])*($scope.heatMap.length-1));
             $scope.mappaths[''+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
-            $scope.mappaths[''+$scope.locations[index][$scope.currentTime][k]].opacity = 0.2 + $scope.heatMap[temp]/$scope.heatMap.length*0.8;
         }
     }
 
@@ -369,7 +368,7 @@ angular.module('dataVisualizationsApp.controllers')
         for(var k=0; k<$scope.valuesToday[index][$scope.currentTime].data.length; k++){
             var temp = Math.floor(($scope.valuesToday[index][$scope.currentTime].data[k]-$scope.mapExtent[0])/($scope.mapExtent[1]-$scope.mapExtent[0])*($scope.heatMap.length-1));
             $scope.mappaths[''+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
-            $scope.mappaths[''+$scope.locations[index][$scope.currentTime][k]].opacity = 0.1 + $scope.heatMap[temp]/($scope.heatMap.length-1)*0.8;
+            $scope.mappaths[''+$scope.locations[index][$scope.currentTime][k]].opacity = 0.1 + $scope.heatMap[temp]/($scope.heatMap.length-1)*0.9;
         }
     }
 
