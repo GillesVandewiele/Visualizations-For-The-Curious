@@ -68,10 +68,12 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.aggregatedValues[c] = dataService.getAggregatedValuesPerDate(c);
         $scope.groupedAndAggregatedValues[c] = dataService.getGroupedAndAggregatedValues(c);
 
-        $scope.valuesTodayAggregated[c] = [];
-        $scope.valuesToday[c] = [];
 
-        //do some calendar stuff
+        //initialise these on the first date in the timesDict   
+        $scope.valuesTodayAggregated[c] = dataService.filterByDay(c, new Date($scope.timesDict[c][$scope.times[c][0]].name), $scope.aggregatedValues[c], true);
+        $scope.valuesToday[c] = dataService.filterByDay(c, new Date($scope.timesDict[c][$scope.times[c][0]].name), $scope.values[c], true);
+
+        //do some calendar stuff --> must be refactored to use dataService aggregation
         var tmp ={};
         var aggregatedVals ={};
         tmp['title'] = $scope.valuesTitles[c];
@@ -104,7 +106,12 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.calendarData.push(tmp);
     }
 
-    $scope.firstDate = new Date(2014, 12, 1);
+    //if data is loaded, set first date of the calender equal the first date in data
+    if($scope.timesDict.length > 0){
+        $scope.firstDate = new Date($scope.timesDict[0][$scope.times[0][0]].name);
+    } else {
+        $scope.firstDate = new Date(2015, 0, 30);
+    }
 
     //check type of locations
     if($scope.locationsDict[0]){
@@ -152,8 +159,7 @@ angular.module('dataVisualizationsApp.controllers')
         }
     });
 
-
-    /************************ ROLEX *************************/
+    /************************ WATCHES *************************/
 
     //watch for checking changes in the selected day and updating the linechart accordingly
     $scope.$watch('valuesTodayAggregated', function(){
@@ -162,6 +168,7 @@ angular.module('dataVisualizationsApp.controllers')
                 $scope.lineChartData = $scope.valuesTodayAggregated[0];
 
                 console.log("Updating timebar");
+                $scope.mapStop();
                 initTimeBar();
             }
         }
@@ -338,7 +345,8 @@ angular.module('dataVisualizationsApp.controllers')
                     latlngs: [$scope.locationsDict[index][i].lat, $scope.locationsDict[index][i].long],
                     radius: 20000,
                     type: 'circle',
-                    clickable: true
+                    clickable: true,
+                    name: $scope.locationsDict[index][i].name
                 };
         }
     }
@@ -370,6 +378,7 @@ angular.module('dataVisualizationsApp.controllers')
         for(var k=0; k<$scope.valuesToday[index][$scope.currentTime].data.length; k++){
             var temp = Math.floor(($scope.valuesToday[index][$scope.currentTime].data[k]-$scope.mapExtent[0])/($scope.mapExtent[1]-$scope.mapExtent[0])*($scope.heatMap.length-1));
             $scope.mappaths[''+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
+            $scope.mappaths[''+$scope.locations[index][$scope.currentTime][k]].opacity = 0.1 + $scope.heatMap[temp]/($scope.heatMap.length-1)*0.9;
         }
     }
 
@@ -425,9 +434,21 @@ angular.module('dataVisualizationsApp.controllers')
     }
 
     function clickOnDay(date, nb){
+<<<<<<< HEAD
         if($scope.aggregatedValues[0].length > 0) $scope.valuesTodayAggregated[0] = dataService.filterByDay(0, date, $scope.aggregatedValues[0], true);
         if($scope.values[0].length > 0) $scope.valuesToday[0] = dataService.filterByDay(0, date, $scope.values[0], true);
         $scope.$apply();
+=======
+        console.log("date = ", date);
+        //check if data is loaded
+        if($scope.aggregatedValues[0].length > 0 && $scope.values[0].length > 0){
+            $scope.valuesTodayAggregated[0] = dataService.filterByDay(0, date, $scope.aggregatedValues[0], true);
+            $scope.valuesToday[0] = dataService.filterByDay(0, date, $scope.values[0], true);
+            
+            //ensure everything is updating when a new day is clicked
+            $scope.$apply();
+        }
+>>>>>>> eb488acfb7f7b78fc7407717c119f702405295cd
     }
 
 
