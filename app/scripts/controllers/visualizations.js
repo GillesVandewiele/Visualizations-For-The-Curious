@@ -44,7 +44,7 @@ angular.module('dataVisualizationsApp.controllers')
 
     $scope.locations2Visualize = {};
     var maxLocations2Visualize = 5; // value from 1->7
-    $scope.lastAddedLocation2Visualize = maxLocations2Visualize-1;
+    $scope.lastAddedLocation2Visualize = 0;
 
     $scope.valuesDict = [];
     $scope.timesDict = [];
@@ -131,22 +131,24 @@ angular.module('dataVisualizationsApp.controllers')
     //possibility to edit locations2Visualize should also exist in dropdown?
     $scope.$on('leafletDirectivePath.click', function(event,args) {
         //console.log(args.modelName);
-        var newLocation = true;
+        //var newLocation = true;
 
-        for(var v in $scope.locations2Visualize){
-            if($scope.locations2Visualize[v] == args.modelName){
-                newLocation = false;
-            }
-        }
+        //console.log("Clicked on the map!");
+        if($scope.locations2Visualize.indexOf(args.modelName) > -1){
+        //for(var v in $scope.locations2Visualize){
+        //    if($scope.locations2Visualize[v] == args.modelName){
+        //        newLocation = false;
+        //    }
+        //}
 
-        if(newLocation){
-            if($scope.lastAddedLocation2Visualize < (maxLocations2Visualize - 1)){
-                $scope.locations2Visualize[$scope.lastAddedLocation2Visualize+1] = args.modelName;
-                $scope.lastAddedLocation2Visualize ++;
-            } else {
-                $scope.locations2Visualize[0] = args.modelName;
-                $scope.lastAddedLocation2Visualize = 0;
-            }
+        //if(newLocation){
+            //if($scope.lastAddedLocation2Visualize < (maxLocations2Visualize - 1)){
+            $scope.locations2Visualize[($scope.lastAddedLocation2Visualize++)%maxLocations2Visualize] = args.modelName;
+            //    $scope.lastAddedLocation2Visualize ++;
+            //} else {
+            //    $scope.locations2Visualize[0] = args.modelName;
+            //    $scope.lastAddedLocation2Visualize = 0;
+            //}
         }
     });
 
@@ -423,12 +425,9 @@ angular.module('dataVisualizationsApp.controllers')
     }
 
     function clickOnDay(date, nb){
-        console.log("date = ", date);
-        if($scope.aggregatedValues[0].length > 0 && $scope.values[0].length > 0){
-            $scope.valuesTodayAggregated[0] = dataService.filterByDay(0, date, $scope.aggregatedValues[0], true);
-            $scope.valuesToday[0] = dataService.filterByDay(0, date, $scope.values[0], true);
-            $scope.$apply();
-        }
+        if($scope.aggregatedValues[0].length > 0) $scope.valuesTodayAggregated[0] = dataService.filterByDay(0, date, $scope.aggregatedValues[0], true);
+        if($scope.values[0].length > 0) $scope.valuesToday[0] = dataService.filterByDay(0, date, $scope.values[0], true);
+        $scope.$apply();
     }
 
 

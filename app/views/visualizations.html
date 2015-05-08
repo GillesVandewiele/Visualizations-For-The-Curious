@@ -26,8 +26,10 @@
 		<br />
 		<br />
 
-		<!-- axisTitle is hardcoded at this moment as well, should be replaced... -->
+		<!-- Now, only index 0 is been passed along, this should be dynamic.. -->
 		<d3-line-chart config="{data: lineChartData, axisTitle: valuesTitles[0]}"></d3-line-chart>
+
+		<d3-multi-line-chart config="{data: multiLineChartData, axisTitle: valuesTitles[0]}"></d3-multi-line-chart>
 		<!-- This is shit and has to be moved to a stylesheet of course.. -->
 		<style>
 			.axis path,
