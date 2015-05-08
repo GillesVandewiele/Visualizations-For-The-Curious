@@ -100,8 +100,8 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.firstDate = new Date(2014, 12, 1);
 
     // Hardcoded date (needs to be replaced by the data when a user clicks the calendar)
-    //if($scope.aggregatedValues.length > 0)
-    //    $scope.lineChartData = dataService.filterByDay(0, new Date(2015, 0, 30), $scope.aggregatedValues[0], true);
+    if($scope.aggregatedValues.length > 0)
+        $scope.lineChartData = dataService.filterByDay(0, new Date(2015, 0, 30), $scope.aggregatedValues[0], true);
 
     //check type of locations
     if($scope.locationsDict[0]){
@@ -396,7 +396,11 @@ angular.module('dataVisualizationsApp.controllers')
         console.log("date = ", date);
         if($scope.aggregatedValues[0].length > 0){
             $scope.lineChartData = dataService.filterByDay(0, date, $scope.aggregatedValues[0], true);
+<<<<<<< HEAD
         }
+=======
+        console.log($scope.lineChartData)
+>>>>>>> c35e0629ca4a53d12dbf0d9c60a240b974c64460
     }
 
 
