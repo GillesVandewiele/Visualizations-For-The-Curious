@@ -19,11 +19,14 @@ angular.module('dataVisualizationsApp.directives')
             var config = scope.config || {};
             scope.data = config.data;
 
-            var svg = d3.select(element[0]).append("svg")
+            var svg = d3.select(element[0]).append("svg");
 
           	scope.$watch('config', function(newVals, oldVals) {                
                 console.log('data has changed', scope.config);
-                return scope.render(newVals.data);
+                console.log("newVals = ", newVals);
+                console.log("oldVals = ", oldVals);
+                scope.render(newVals.data);
+                jQuery(window).trigger('resize');
           	}, true);
 
             scope.render = function(data){
@@ -96,9 +99,10 @@ angular.module('dataVisualizationsApp.directives')
 				    // Our title (the day)
 				    svg.append("text")
 				        .attr("x", (width / 2))             
-				        .attr("y", 0 - (margin.top / 4))
+				        .attr("y", margin.top)
 				        .attr("text-anchor", "middle")  
 				        .style("font-size", "16px") 
+				        .style("color", "black")
 				        .text(getDateFormat(data[0].date));
 
 	 				// Drawing our line
