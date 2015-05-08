@@ -37,7 +37,7 @@ angular.module('dataVisualizationsApp.directives')
                     cellSize: 25,
                     range: 3,
                     domainGutter: 10,
-                    legend: [2, 4, 6, 8, 10],
+                    legend: "%B %Y",
                     itemName: 'item',
                     nextSelector: nxt,
                     previousSelector: prv,

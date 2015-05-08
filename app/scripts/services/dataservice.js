@@ -314,11 +314,6 @@ angular.module('dataVisualizationsApp.services')
 		// This way, we can support dynamic lengths (a dynamic number of values (and or locations) can be linked to a date)
 		var parentPath = userDatasets[index].date.Path.slice(0, userDatasets[index].date.Path.length-3);
 		var parentData = jsonPath(actualData[index], parentPath);
-		console.log("parentData = ", parentData);
-		console.log("parentPath = ", parentPath);
-		console.log("timesPath = ", userDatasets[index].date.Path)
-		console.log("valuePath = ", userDatasets[index].value.Path);
-		console.log("locationPath = ", userDatasets[index].location.Path);
 		var timesLength = times[index].length;
 		var entriesPerTime = [];
 		for(var i = 0; i < timesLength; i++){

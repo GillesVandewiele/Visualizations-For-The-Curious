@@ -53,7 +53,7 @@ angular.module('dataVisualizationsApp.directives')
 					    .tickFormat(function(d) { return getTimeFormat(d); })
 					    .orient("bottom");
 					var yAxis = d3.svg.axis()
-					    .scale(y)
+					    .scale(y)    
 					    .orient("left");
 
 					// Declaring a svg element to put our visualization in					
