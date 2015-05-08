@@ -250,7 +250,7 @@ angular.module('dataVisualizationsApp.services')
 	// Output is either an array with the number of elements equal to the number of locations or an array with the number of elements
 	// equal to the number of data entries on that day.
 	this.filterByDay = function(index, date, data, aggregated){
-		console.log("Filtering the data on ", date.toString())
+		console.log("Filtering the data on ", date)
 		if(!data){
 			console.log("ERROR: wrong data (undefined) given");
 			return;
