@@ -28,10 +28,14 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.heatMapBoundaries = ["","","","","","","","","","",""];  
 
     $scope.mappaths = {};
+    $scope.mapExtent = [];
 
     $scope.numDatasets = dataService.getNumDatasets();
 
     $scope.values = [];
+    $scope.valuesToday = [];
+    $scope.valuesTodayAggregated = [];
+
     $scope.valuesTitles = [];
     $scope.times = [];
     $scope.locations = [];
@@ -63,6 +67,9 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.locationsDict[c] = dataService.getLocationsDict(c);
         $scope.aggregatedValues[c] = dataService.getAggregatedValuesPerDate(c);
         $scope.groupedAndAggregatedValues[c] = dataService.getGroupedAndAggregatedValues(c);
+
+        $scope.valuesTodayAggregated[c] = [];
+        $scope.valuesToday[c] = [];
 
         //do some calendar stuff
         var tmp ={};
@@ -118,7 +125,6 @@ angular.module('dataVisualizationsApp.controllers')
     //loading the routes or the locations
     if($scope.locationsDict[0]){
         drawLocations(0);
-        editLocationColors(0);
     }
 
     //when a location is clicked, we catch this to select the two locations we want to visualize
@@ -144,13 +150,43 @@ angular.module('dataVisualizationsApp.controllers')
         }
     });
 
+
+    /************************ ROLEX *************************/
+
+    //watch for checking changes in the selected day and updating the linechart accordingly
+    $scope.$watch('valuesTodayAggregated', function(){
+         if($scope.valuesTodayAggregated.length > 0){
+            if($scope.valuesTodayAggregated[0].length > 0){
+                $scope.lineChartData = $scope.valuesTodayAggregated[0];
+
+                console.log("Updating timebar");
+                initTimeBar();
+            }
+        }
+    }, true); //dirty watch!
    
-    //watch for editing the map
+    //watch for editing the map when the timebar has changed
     $scope.$watch('currentTime', function(){
-        if($scope.locationsDict[0]){
-            editLocationColors(0); 
-        } 
+        if($scope.valuesToday.length > 0){   
+            if($scope.valuesToday[0].length > 0){
+                if($scope.locationsDict[0]){
+                    editLocationColors(0); 
+                } 
+            }
+        }
     });
+
+    //watch for editing the map when a new day has been selected
+    $scope.$watch('valuesToday', function(){
+        if($scope.valuesToday.length > 0){   
+            if($scope.valuesToday[0].length > 0){
+                if($scope.locationsDict[0]){
+                    initLegend(0);
+                    editLocationColors(0); 
+                } 
+            }
+        }
+    }, true); //dirty watch!
 
     //watch for editing the stackbardata
     $scope.$watch('lastAddedLocation2Visualize', function(){
@@ -202,22 +238,25 @@ angular.module('dataVisualizationsApp.controllers')
 
     //initialisation of the timebar
     //if times are correctly loaded, use times to make the timebar
-    if($scope.times[0]){
-        $scope.minTime = 0; //set the min index of the timebar
-        $scope.maxTime = $scope.times[0].length-1; //set the max index of the timebar
-        //make a function that translates an index to a string containing the time
-        $scope.translateTime = function(currentTime){
-            return $scope.timesDict[0][$scope.times[0][currentTime]].name;
-        };
-    }
-    //if times are not correctly loaded use standard values.
-    else {
-        $scope.minTime = 0; //set the min index of the timebar
-        $scope.maxTime = 10000; //set the max index of the timebar
-        //inform the user no times have been loaded.
-        $scope.translateTime = function(currentTime){
-            return "no time loaded"; 
-        };
+    function initTimeBar(){
+        if($scope.times[0]){
+            $scope.currentTime = 0;
+            $scope.minTime = 0; //set the min index of the timebar
+            $scope.maxTime = $scope.valuesTodayAggregated[0].length-1; //set the max index of the timebar
+            //make a function that translates an index to a string containing the time
+            $scope.translateTime = function(currentTime){
+                return $scope.valuesTodayAggregated[0][currentTime].date.toString();
+            };
+        }
+        //if times are not correctly loaded use standard values.
+        else {
+            $scope.minTime = 0; //set the min index of the timebar
+            $scope.maxTime = 10000; //set the max index of the timebar
+            //inform the user no times have been loaded.
+            $scope.translateTime = function(currentTime){
+                return "no time loaded"; 
+            };
+        }
     }
 
     /************* TIMEBAR BUTTON CLICKS *************/
@@ -240,7 +279,7 @@ angular.module('dataVisualizationsApp.controllers')
                 $scope.mapPlaying = true;
                 //start playing
                 
-                mapPlayPromise = $interval(mapNextTimestep, 10, $scope.maxTime-$scope.currentTime);
+                mapPlayPromise = $interval(mapNextTimestep, 500, $scope.maxTime-$scope.currentTime);
                 mapPlayPromise.then(function(){
                     $scope.mapPlayPauseButton = "Play";
                     $scope.mapPlaying = false;
@@ -290,10 +329,8 @@ angular.module('dataVisualizationsApp.controllers')
 
     function drawMarkers(index){
         for(var i=0; i<$scope.locationsDict[index].length; i++){
-            var msg = "<p>"+$scope.locationsDict[index][i].name+"</p>";
 
             $scope.mappaths[''+i] = {
-                    message: msg,
                     weight: 2,
                     color: '#00ff00',
                     latlngs: [$scope.locationsDict[index][i].lat, $scope.locationsDict[index][i].long],
@@ -305,19 +342,10 @@ angular.module('dataVisualizationsApp.controllers')
     }
 
     function editMarkers(index){
-        //first find the maximal value
-        console.log($scope.values[index])
-        var extent = d3.extent($scope.values[index][$scope.currentTime]);
-
         //now that we have min and max, map all values to a color between green and red.
-        for(var k=0; k<$scope.values[index][$scope.currentTime].length; k++){
-            var temp = Math.floor(($scope.values[index][$scope.currentTime][k]-extent[0])/(extent[1]-extent[0])*($scope.heatMap.length-1));
+        for(var k=0; k<$scope.valuesToday[index][$scope.currentTime].data.length; k++){
+            var temp = Math.floor(($scope.valuesToday[index][$scope.currentTime].data[k]-$scope.mapExtent[0])/($scope.mapExtent[1]-$scope.mapExtent[0])*($scope.heatMap.length-1));
             $scope.mappaths[''+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
-        }
-
-        //for the legend, the heatmapboudaries must be set.
-        for(var j=0; j<$scope.heatMapBoundaries.length; j++){
-            $scope.heatMapBoundaries[j] = ((extent[0] + j*(extent[1]-extent[0])/$scope.heatMapBoundaries.length).toFixed(1)).toString();
         }
     }
 
@@ -325,14 +353,11 @@ angular.module('dataVisualizationsApp.controllers')
         for(var i=0; i<$scope.locationsDict[index].length; i++){
             var decoded = polyline.decode($scope.locationsDict[index][i].coordinates);
 
-            var msg = "<p>"+$scope.locationsDict[index][i].name+"</p>";
-
             $scope.mappaths[''+i] = {
                     weight: 4,
                     opacity: 0.6,
                     color: '#00ff00',
                     latlngs: decoded,
-                    message: msg,
                     name: $scope.locationsDict[index][i].name,
                     clickable: true,  
             };
@@ -340,18 +365,27 @@ angular.module('dataVisualizationsApp.controllers')
     }
 
     function editRoutes(index){
-        //first find the maximal value
-        var extent = d3.extent($scope.values[index][$scope.currentTime]);
-
-        //now that we have min and max, map all values to a color between green and red.
-        for(var k=0; k<$scope.values[index][$scope.currentTime].length; k++){
-            var temp = Math.floor(($scope.values[index][$scope.currentTime][k]-extent[0])/(extent[1]-extent[0])*($scope.heatMap.length-1));
+        for(var k=0; k<$scope.valuesToday[index][$scope.currentTime].data.length; k++){
+            var temp = Math.floor(($scope.valuesToday[index][$scope.currentTime].data[k]-$scope.mapExtent[0])/($scope.mapExtent[1]-$scope.mapExtent[0])*($scope.heatMap.length-1));
             $scope.mappaths[''+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
         }
+    }
+
+    function initLegend(index){
+        //first find the maximal value
+        $scope.mapExtent[1] = d3.max($scope.valuesToday[index], function(d){
+            return d3.max(d.data);
+        });
+        //second the minimal value
+        $scope.mapExtent[0] = d3.min($scope.valuesToday[index], function(d){
+            return d3.min(d.data);
+        });
+
+        console.log($scope.mapExtent);
 
         //for the legend, the heatmapboudaries must be set.
         for(var j=0; j<$scope.heatMapBoundaries.length; j++){
-            $scope.heatMapBoundaries[j] = ((extent[0] + j*(extent[1]-extent[0])/$scope.heatMapBoundaries.length).toFixed(1)).toString();
+            $scope.heatMapBoundaries[j] = (($scope.mapExtent[0] + j*($scope.mapExtent[1]-$scope.mapExtent[0])/$scope.heatMapBoundaries.length).toFixed(1)).toString();
         }
     }
 
@@ -390,9 +424,9 @@ angular.module('dataVisualizationsApp.controllers')
 
     function clickOnDay(date, nb){
         console.log("date = ", date);
-        var tempLineChartData;
-        if($scope.aggregatedValues[0].length > 0){
-            $scope.lineChartData = dataService.filterByDay(0, date, $scope.aggregatedValues[0], true);
+        if($scope.aggregatedValues[0].length > 0 && $scope.values[0].length > 0){
+            $scope.valuesTodayAggregated[0] = dataService.filterByDay(0, date, $scope.aggregatedValues[0], true);
+            $scope.valuesToday[0] = dataService.filterByDay(0, date, $scope.values[0], true);
             $scope.$apply();
         }
     }

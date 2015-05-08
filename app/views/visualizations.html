@@ -5,15 +5,16 @@
 	<div class="layoutrow titlecontent scroll-y">
 		<!-- <dv-bars-demo></dv-bars-demo> -->
 		<!-- <div class="container-fluid"> -->
-		<leaflet ng-show="locationsType" defaults="mapdefaults" center="mapcenter" layers="maplayers" paths="mappaths" height="600px"></leaflet>
-      	<br/>
-		<div ng-show="locationsType" class="color-box" ng-repeat="c in heatMap track by $index" style="background-color: {{c}};"> {{heatMapBoundaries[$index]}} to {{heatMapBoundaries[$index+1]}}</div>
-		<br/>
-		<br/>
-		<slider floor="{{ minTime }}" ceiling="{{ maxTime }}" ng-model="currentTime" translate-fn='translateTime' ng-disabled="mapPlaying"></slider>
-		<br/>
-		<button class="btn" ng-click="mapPlayPause()">{{mapPlayPauseButton}}</button><button class="btn" ng-click="mapStop()">Stop</button>
-
+		<div class="map" ng-show="locationsType">
+			<leaflet defaults="mapdefaults" center="mapcenter" layers="maplayers" paths="mappaths" height="600px"></leaflet>
+	      	<br/>
+			<div class="color-box" ng-repeat="c in heatMap track by $index" style="background-color: {{c}};"> {{heatMapBoundaries[$index]}} to {{heatMapBoundaries[$index+1]}}</div>
+			<br/>
+			<br/>
+			<slider floor="{{ minTime }}" ceiling="{{ maxTime }}" ng-model="currentTime" translate-fn='translateTime' ng-disabled="mapPlaying"></slider>
+			<br/>
+			<button class="btn" ng-click="mapPlayPause()">{{mapPlayPauseButton}}</button><button class="btn" ng-click="mapStop()">Stop</button>
+		</div>
 
 		<div ng-repeat="calInfo in calendarData track by $index">
 			<h4>{{calInfo['title']}}</h4>
