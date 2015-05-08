@@ -396,11 +396,8 @@ angular.module('dataVisualizationsApp.controllers')
         console.log("date = ", date);
         if($scope.aggregatedValues[0].length > 0){
             $scope.lineChartData = dataService.filterByDay(0, date, $scope.aggregatedValues[0], true);
-<<<<<<< HEAD
+            console.log($scope.lineChartData)
         }
-=======
-        console.log($scope.lineChartData)
->>>>>>> c35e0629ca4a53d12dbf0d9c60a240b974c64460
     }
 
 
