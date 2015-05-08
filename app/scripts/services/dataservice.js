@@ -296,7 +296,7 @@ angular.module('dataVisualizationsApp.services')
 				return results;
 			}*/
 		}
-		console.log(results);
+		//console.log(results);
 		return results;
 	};
 

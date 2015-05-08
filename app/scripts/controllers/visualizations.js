@@ -394,9 +394,12 @@ angular.module('dataVisualizationsApp.controllers')
 
     function clickOnDay(date, nb){
         console.log("date = ", date);
-        if($scope.aggregatedValues[0].length > 0)
+        var tempLineChartData;
+        if($scope.aggregatedValues[0].length > 0){
             $scope.lineChartData = dataService.filterByDay(0, date, $scope.aggregatedValues[0], true);
-        console.log($scope.lineChartData)
+            $scope.$apply();
+        }
+
     }
 
 
