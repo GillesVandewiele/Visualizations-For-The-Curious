@@ -12,25 +12,21 @@ angular.module('dataVisualizationsApp.directives')
       template: '<div class="linechart" config="config"></div>',
       restrict: 'E',
 	  scope: {
-	    config: '='
+	    config: '=',
 	  },
       link: function(scope, element, attrs) {
         scope.$evalAsync(function() {
             var config = scope.config || {};
-            scope.data = config.data;
 
             var svg = d3.select(element[0]).append("svg");
 
-          	scope.$watch('config', function(newVals, oldVals) {                
-                console.log('data has changed', scope.config);
-                console.log("newVals = ", newVals);
-                console.log("oldVals = ", oldVals);
-                scope.render(newVals.data);
+          	scope.$watch('config.data', function(newVals, oldVals) {
+                return scope.render(newVals);
           	}, true);
 
             scope.render = function(data){
             	if(data.length > 0){
-		            console.log("we're in the linechart directive atm!", data);
+		            console.log("we're in the linechart directive atm!");
 
                   	// remove all previous items before render
                   	svg.selectAll('*').remove();
@@ -60,8 +56,7 @@ angular.module('dataVisualizationsApp.directives')
 					    .scale(y)
 					    .orient("left");
 
-					// Declaring a svg element to put our visualization in
-					
+					// Declaring a svg element to put our visualization in					
 					svg.attr("width", width + margin.left + margin.right)
 					    .attr("height", height + margin.top + margin.bottom)
 					  .append("g")
@@ -138,7 +133,7 @@ angular.module('dataVisualizationsApp.directives')
 					        d = x0 - d0.date > d1.date - x0 ? d1 : d0;
 					    focus.attr("transform", "translate(" + x(d.date) + "," + y(d.data) + ")");
 					    focus.select("text").text(getTimeFormat(d.date) + " ; " + Number((d.data)).toFixed(2));
-				    	});			
+				    	});		
 				}//end of if
 			};//end of render
         });//end of evalAsync
