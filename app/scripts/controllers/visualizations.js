@@ -52,10 +52,16 @@ angular.module('dataVisualizationsApp.controllers')
 
     $scope.calendarData = [];
     $scope.lineChartData = [];
+
     $scope.barData = [];
     $scope.barDict = [];
     $scope.barSeries= [];
     $scope.barLegend = false;
+
+    $scope.multilineData = [];
+    $scope.multilineDict = [];
+    $scope.multilineSeries= [];
+    $scope.multilineLegend = false;
 
     for(var c=0;c<$scope.numDatasets;c++){
         $scope.values[c] = dataService.getValues(c);
@@ -139,6 +145,7 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.$on('leafletDirectivePath.click', function(event,args) {
         var newLocation = true;
 
+        //only add the clicked locations if it isn't already in the charts.
         if($scope.locations2Visualize.length > 0){
             for(var v=0; v<$scope.locations2Visualize.length; v++){
                 if($scope.locations2Visualize[v] == args.modelName){
@@ -148,6 +155,9 @@ angular.module('dataVisualizationsApp.controllers')
             }
         }
 
+        
+        //the locations2Visualize acts as a FIFO register. the first locations that went in, 
+        //will be the first to be thrown out when the maximum number of locations is exceeded
         if(newLocation){
             if($scope.lastAddedLocation2Visualize < maxLocations2Visualize-1){
                 $scope.lastAddedLocation2Visualize ++;
@@ -157,9 +167,6 @@ angular.module('dataVisualizationsApp.controllers')
                 $scope.lastAddedLocation2Visualize = 0;
             }
         }
-
-        console.log('last added index', $scope.lastAddedLocation2Visualize);
-        console.log('locations to visualize', $scope.locations2Visualize);
     });
 
     /************************ WATCHES *************************/
@@ -183,7 +190,6 @@ angular.module('dataVisualizationsApp.controllers')
             if($scope.valuesToday[0].length > 0){
                 if($scope.locationsDict[0]){
                     editLocationColors(0);
-                    editMultilineWithLocations(0); 
                 }
             }
         }
@@ -196,6 +202,9 @@ angular.module('dataVisualizationsApp.controllers')
                 if($scope.locationsDict[0]){
                     initLegend(0);
                     editLocationColors(0); 
+
+                    if($scope.locations2Visualize.length > 0)
+                        editMultilineWithLocations(0); 
                 } 
             }
         }
@@ -206,6 +215,7 @@ angular.module('dataVisualizationsApp.controllers')
         if($scope.groupedAndAggregatedValues[0]){
             if($scope.locations2Visualize.length > 0){
                 editBarDataWithLocations(0);
+                editMultilineWithLocations(0); 
             } else if($scope.locations[0].length == 0){
                 editBarDataWithoutLocations(0);
             }
@@ -526,9 +536,33 @@ angular.module('dataVisualizationsApp.controllers')
 
    function editMultilineWithLocations(index){ 
         //last edited location must be chanded in barchart
-        console.log($scope.valuesToday[index]);
+        console.log('data for multiline', $scope.valuesToday[index]);
 
-        
+        //fill the data of the multilinechart
+        var tempMultilineData = []
+
+        for(var l=0; l<$scope.locations2Visualize.length; l++){
+            tempMultilineData[l] = [];
+            for(var v=0; v<$scope.valuesToday[index].length; v++){
+                tempMultilineData[l][v] = $scope.valuesToday[index][v].data[$scope.locations2Visualize[l]].toFixed(1);
+            }
+        }
+
+        $scope.multilineData = tempMultilineData;
+
+        //fill the dict for the x-axis
+        var tempMultilineDict = [];
+
+        for(var v=0; v<$scope.valuesToday[index].length; v++){
+            tempMultilineDict[v] = $scope.valuesToday[index][v].date.toLocaleTimeString();
+        }
+
+        $scope.multilineDict = tempMultilineDict;
+
+        $scope.multilineSeries[$scope.lastAddedLocation2Visualize] = $scope.mappaths[$scope.locations2Visualize[$scope.lastAddedLocation2Visualize].toString()].name;
+        $scope.multilineLegend = true;
+
+
     } 
 
   }]);
