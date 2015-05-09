@@ -42,9 +42,9 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.aggregatedValues = [];
     $scope.groupedAndAggregatedValues = [];
 
-    $scope.locations2Visualize = {};
+    $scope.locations2Visualize = [];
     var maxLocations2Visualize = 5; // value from 1->7
-    $scope.lastAddedLocation2Visualize = 0;
+    $scope.lastAddedLocation2Visualize = maxLocations2Visualize;
 
     $scope.valuesDict = [];
     $scope.timesDict = [];
@@ -137,26 +137,29 @@ angular.module('dataVisualizationsApp.controllers')
     //when a location is clicked, we catch this to select the two locations we want to visualize
     //possibility to edit locations2Visualize should also exist in dropdown?
     $scope.$on('leafletDirectivePath.click', function(event,args) {
-        //console.log(args.modelName);
-        //var newLocation = true;
+        var newLocation = true;
 
-        console.log("Clicked on the map!");
-        if($scope.locations2Visualize.indexOf(args.modelName) == -1){
-        //for(var v in $scope.locations2Visualize){
-        //    if($scope.locations2Visualize[v] == args.modelName){
-        //        newLocation = false;
-        //    }
-        //}
-
-        //if(newLocation){
-            //if($scope.lastAddedLocation2Visualize < (maxLocations2Visualize - 1)){
-            $scope.locations2Visualize[($scope.lastAddedLocation2Visualize++)%maxLocations2Visualize] = args.modelName;
-            //    $scope.lastAddedLocation2Visualize ++;
-            //} else {
-            //    $scope.locations2Visualize[0] = args.modelName;
-            //    $scope.lastAddedLocation2Visualize = 0;
-            //}
+        if($scope.locations2Visualize.length > 0){
+            for(var v=0; v<$scope.locations2Visualize.length; v++){
+                if($scope.locations2Visualize[v] == args.modelName){
+                    newLocation = false;
+                    console.log('This location is already visualized in the charts.')
+                }
+            }
         }
+
+        if(newLocation){
+            if($scope.lastAddedLocation2Visualize < maxLocations2Visualize-1){
+                $scope.lastAddedLocation2Visualize ++;
+                $scope.locations2Visualize[$scope.lastAddedLocation2Visualize] = args.modelName;
+            } else {
+                $scope.locations2Visualize[0] = args.modelName;
+                $scope.lastAddedLocation2Visualize = 0;
+            }
+        }
+
+        console.log('last added index', $scope.lastAddedLocation2Visualize);
+        console.log('locations to visualize', $scope.locations2Visualize);
     });
 
     /************************ WATCHES *************************/
@@ -179,8 +182,9 @@ angular.module('dataVisualizationsApp.controllers')
         if($scope.valuesToday.length > 0){   
             if($scope.valuesToday[0].length > 0){
                 if($scope.locationsDict[0]){
-                    editLocationColors(0); 
-                } 
+                    editLocationColors(0);
+                    editMultilineWithLocations(0); 
+                }
             }
         }
     });
@@ -200,13 +204,13 @@ angular.module('dataVisualizationsApp.controllers')
     //watch for editing the stackbardata
     $scope.$watch('lastAddedLocation2Visualize', function(){
         if($scope.groupedAndAggregatedValues[0]){
-            if($scope.locations2Visualize[0]){
+            if($scope.locations2Visualize.length > 0){
                 editBarDataWithLocations(0);
             } else if($scope.locations[0].length == 0){
                 editBarDataWithoutLocations(0);
             }
         } 
-    });
+    }, true); //dirty watch
 
 
     /****************** MAP INITIALISATION *********************/
@@ -475,7 +479,8 @@ angular.module('dataVisualizationsApp.controllers')
 
         //add legend to chart --> apparently leaflet-directive and angular-chart.js conflict when legend is involved...
         //had to disable all legend functionality of angular-leaflet-directive by commenting out
-        $scope.barSeries[$scope.lastAddedLocation2Visualize] = $scope.mappaths[$scope.locations2Visualize[$scope.lastAddedLocation2Visualize]].name;
+        console.log($scope.locations2Visualize[$scope.lastAddedLocation2Visualize]);
+        $scope.barSeries[$scope.lastAddedLocation2Visualize] = $scope.mappaths[$scope.locations2Visualize[$scope.lastAddedLocation2Visualize].toString()].name;
         $scope.barLegend = true;
 
         console.log($scope.barSeries);
@@ -516,5 +521,16 @@ angular.module('dataVisualizationsApp.controllers')
         console.log($scope.barSeries);
     }
 
+
+    /************* HELPER FUNCTIONS FOR Mutliline Chart *************/
+
+   function editMultilineWithLocations(index){ 
+        //last edited location must be chanded in barchart
+        console.log($scope.valuesToday[index]);
+
+        
+    } 
+
   }]);
+
 

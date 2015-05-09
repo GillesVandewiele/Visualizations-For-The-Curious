@@ -29,7 +29,7 @@
 		<!-- Now, only index 0 is been passed along, this should be dynamic.. -->
 		<d3-line-chart config="{data: lineChartData, axisTitle: valuesTitles[0]}"></d3-line-chart>
 
-		<d3-multi-line-chart config="{data: multiLineChartData, axisTitle: valuesTitles[0]}"></d3-multi-line-chart>
+		<!--<d3-multi-line-chart config="{data: multiLineChartData, axisTitle: valuesTitles[0]}"></d3-multi-line-chart>-->
 		<!-- This is shit and has to be moved to a stylesheet of course.. -->
 		<style>
 			.axis path,
@@ -59,7 +59,12 @@
 
 		<br />
 
-  		<canvas id="bar" class="chart chart-bar" data="barData" labels="barDict" legend="barLegend" series="barSeries"></canvas> 
+  		<canvas id="bar" class="chart chart-bar" data="barData" labels="barDict" series="barSeries"></canvas>
+
+
+  		<br/>
+
+  		<canvas id="line" class="chart chart-line" data="multilineData" labels="multilineDict" legend="true" series="multilineSeries"></canvas> 
   </div>
 
 		
