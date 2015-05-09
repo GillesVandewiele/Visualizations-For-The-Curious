@@ -33,6 +33,7 @@ angular.module('dataVisualizationsApp.directives')
                     subDomain: 'day',
                     subDomainTextFormat: '%d',
                     domainLabelFormat: '%B %Y',
+                    verticalOrientation: true,
                     data: '',
                     cellSize: 25,
                     range: 3,
