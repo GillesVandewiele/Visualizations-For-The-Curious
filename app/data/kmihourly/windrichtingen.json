@@ -1,70 +1,70 @@
 [
  {
-  "name": "Z",
+  "name": "ZW",
   "nr": 0
  },
  {
-  "name": "NNO",
+  "name": "VER",
   "nr": 1
  },
  {
-  "name": "NO",
+  "name": "ZZO",
   "nr": 2
  },
  {
-  "name": "ZO",
+  "name": "NO",
   "nr": 3
  },
  {
-  "name": "ONO",
+  "name": "ZO",
   "nr": 4
  },
  {
-  "name": "O",
+  "name": "Z",
   "nr": 5
  },
  {
-  "name": "N",
+  "name": "WNW",
   "nr": 6
  },
  {
-  "name": "ZZW",
+  "name": "OZO",
   "nr": 7
  },
  {
-  "name": "W",
+  "name": "NNW",
   "nr": 8
  },
  {
-  "name": "ZZO",
+  "name": "W",
   "nr": 9
  },
  {
-  "name": "WZW",
+  "name": "NNO",
   "nr": 10
  },
  {
-  "name": "NNW",
+  "name": "N",
   "nr": 11
  },
  {
-  "name": "WNW",
+  "name": "WZW",
   "nr": 12
  },
  {
-  "name": "NW",
+  "name": "O",
   "nr": 13
  },
  {
-  "name": "ZW",
+  "name": "ONO",
   "nr": 14
  },
  {
-  "name": "VER",
+  "name": "NW",
   "nr": 15
  },
  {
-  "name": "OZO",
+  "name": "ZZW",
   "nr": 16
  }
 ]

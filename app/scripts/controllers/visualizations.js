@@ -39,7 +39,6 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.valuesTitles = [];
     $scope.times = [];
     $scope.locations = [];
-    $scope.aggregatedValues = [];
     $scope.groupedAndAggregatedValues = [];
 
     $scope.locations2Visualize = [];
@@ -71,12 +70,11 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.valuesDict[c] = dataService.getValuesDict(c);
         $scope.timesDict[c] = dataService.getTimesDict(c);
         $scope.locationsDict[c] = dataService.getLocationsDict(c);
-        $scope.aggregatedValues[c] = dataService.getAggregatedValuesPerDate(c);
         $scope.groupedAndAggregatedValues[c] = dataService.getGroupedAndAggregatedValues(c);
 
 
         //initialise these on the first date in the timesDict   
-        $scope.valuesTodayAggregated[c] = dataService.filterByDay(c, new Date($scope.timesDict[c][$scope.times[c][0]].name), $scope.aggregatedValues[c], true);
+        $scope.valuesTodayAggregated[c] = dataService.aggLocPerDatByDay(c, new Date($scope.timesDict[c][$scope.times[c][0]].name));
         $scope.valuesToday[c] = dataService.filterByDay(c, new Date($scope.timesDict[c][$scope.times[c][0]].name), $scope.values[c], true);
 
         //do some calendar stuff --> must be refactored to use dataService aggregation
@@ -448,7 +446,7 @@ angular.module('dataVisualizationsApp.controllers')
     }
 
     function clickOnDay(date, nb){
-        if($scope.aggregatedValues[0].length > 0) $scope.valuesTodayAggregated[0] = dataService.filterByDay(0, date, $scope.aggregatedValues[0], true);
+        $scope.valuesTodayAggregated[0] = dataService.aggLocPerDatByDay(0, date);
         if($scope.values[0].length > 0) $scope.valuesToday[0] = dataService.filterByDay(0, date, $scope.values[0], true);
         $scope.$apply();
     }

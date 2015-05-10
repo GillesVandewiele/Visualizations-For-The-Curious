@@ -9,235 +9,266 @@
  */
 angular.module('dataVisualizationsApp.services')
   .service('dataService', ['$q', '$http', function ($q, $http) {
+	
+	// Holds the datasets and fields currently chosen by the user
 	var userDatasets = [];
-	var count = 0;
+	
+	// Holds all loaded datasets
+	var loadedDatasets = [];
+	// Holds a mapping from the names of the loaded datasets to their position
+    var nameToIndex = {};
 
-	var actualData = [];
-
-	var valuesDict = [];
-	var timesDict = [];
-	var locationsDict = []
-
-	var aggregatedValuesPerDate = [];
-
-	var groupedValues = [];
-	var groupedAndAggregatedValues = [];
-
-	var groupingTitlesWeekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+	var groupingTitlesWeekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 	var groupingTitlesWeeks = [];
 	for(var i=1; i<53; i++){
-		groupingTitlesWeeks[i-1] = "Week " + i;
+		groupingTitlesWeeks[i-1] = 'Week ' + i;
 	}
-	var groupingTitlesMonth = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+	var groupingTitlesMonth = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 	//not necessary for years: 2014 is a proper grouping title.
-
-	var valuesTitles = [];
-	var values = [];
-	var times = [];
-	var locations = [];
-
-	var returnData = [];
-
-	var dataIsLoading = [];
 
 
 	/*************** DECLARE USERSDATASETS **********************/
 
-	//add one dataset a the time
+	// Load one dataset (@Gilles: Is this ever used? If not, feel free to remove)
 	this.addOneDataset = function(d, callbackSuccess, callbackFail){
-		userDatasets[count] = d;
-		count++;
-		dataIsLoading[count] = false;
-
-		loadDataInService(callbackSuccess, callbackFail);
+		this.addMultipleDatasets([d], callbackSuccess, callbackFail);
 	};
 
-	//add mutliple datasets at once
+	// Load multiple datasets at once
 	this.addMultipleDatasets = function(ds, callbackSuccess, callbackFail){
-		for(var i=0;i<ds.length;i++){
-			userDatasets[count] = ds[i];
-			count++;
-			dataIsLoading[count] = false;		
-		}
-
-		loadDataInService(callbackSuccess, callbackFail);
-	};
-
-	this.deleteDatasets = function(){
-		userDatasets = [];
-		count = 0;
-
-		actualData = [];
-		timesDict = [];
-		locationsDict = [];
-
-		values = [];
-		times = [];
-		locations = [];
-
-		dataIsLoading = [];
-	}
-
-
-
-	/*************** LOAD THE DATA INTO THE SERVICE ***************/
-
-	function loadDataset(index){
-		var deferred = $q.defer();
-
-		//hack to make return wait until userDataset has been loaded.
-		//this is missing the purpose of promises...
-		//must be checked
-		while(userDatasets[index] == undefined || userDatasets == undefined){}
-		deferred.resolve(index);
-
-		return deferred.promise;
-	}
-
-	//function that loads the actual data of all the datasets
-	function loadActualData(index){
-		var deferred = $q.defer();
-
-		var deferredData = $q.defer();
-		var promiseData = deferredData.promise;
-		promiseData = $http.get(userDatasets[index].path);
-
-		promiseData
-			.then(function(data){
-				actualData[index] = data.data;
-				deferredData.resolve(actualData[index]);
-				deferred.resolve(index);
-
-				return deferred.promise;
-			});
-
-		return deferred.promise;
-	}
-
-	//function that loads the locations dictionnary of all the datasets
-	function loadValuesDict(index){
-		var deferred = $q.defer();
-
-		if(userDatasets[index].value.Dict ==! ""){
-			var deferredValuesDict = $q.defer();
-			var promiseValuesDict = deferredValuesDict.promise;
-			promiseValuesDict = $http.get(userDatasets[index].value.Dict);
-
-			promiseValuesDict
-				.then(function(data){
-					valuesDict[index] = jsonPath(data.data, userDatasets[index].value.Dict_mapping);
-					deferredValuesDict.resolve(valuesDict[index]);
-					deferred.resolve(index);
-					return deferred.promise;
-				});
-			
-			return deferred.promise;
-
-		} else {
-			valuesDict[index] = false;
-			deferred.resolve(index);
-
-			return deferred.promise;
-		}
-	}
-
-
-	//function that loads the times dictionnary of all the datasets
-	function loadTimesDict(index){
-		var deferred = $q.defer();
-
-		var deferredTimesDict = $q.defer();
-		var promiseTimesDict = deferredTimesDict.promise;
-		promiseTimesDict = $http.get(userDatasets[index].date.Dict);
-
-		promiseTimesDict
-			.then(function(data){
-				timesDict[index] = jsonPath(data.data, userDatasets[index].date.Dict_mapping); // TODO: get dict json path
-				deferredTimesDict.resolve(timesDict[index]);
-				deferred.resolve(index);
-				return deferred.promise;
-			});
-
-		return deferred.promise;
-	}
-
-	//function that loads the locations dictionnary of all the datasets
-	function loadLocationsDict(index){
-		if(userDatasets[index].location){
-			var deferred = $q.defer();
-
-			var deferredLocationsDict = $q.defer();
-			var promiseLocationsDict = deferredLocationsDict.promise;
-			promiseLocationsDict = $http.get(userDatasets[index].location.Dict);
-
-			promiseLocationsDict
-				.then(function(data){
-					locationsDict[index] = jsonPath(data.data, userDatasets[index].location.Dict_mapping);
-					deferredLocationsDict.resolve(locationsDict[index]);
-					deferred.resolve(index);
-					return deferred.promise;
-				});
-			
-			return deferred.promise;
-		}
-		return null;
-	}
-
-	//function loading all data into the service
-	function loadDataInService(callbackSuccess, callbackFail) {
-		//fist make sure userDatasets is loaded
-		var promiseDatasets = [];
-
-		for(var i=0; i<count; i++){
-			if(!dataIsLoading[i]){
-				var promiseDataset = loadDataset(i);
-
-				promiseDatasets.push(promiseDataset);
-
-				dataIsLoading[i] = true;
+		console.log('addMultipleDatasets');
+		userDatasets = ds;
+		var allPromises = [];
+		for (var i = 0; i<userDatasets.length; i++) {
+			var curDataName = userDatasets[i].name;
+			if (!nameToIndex.hasOwnProperty(curDataName)) {
+				nameToIndex[curDataName] = loadedDatasets.length;
+				loadedDatasets.push({});
 			}
+			allPromises.push(loadDataInto(userDatasets[i], loadedDatasets[nameToIndex[curDataName]]));
 		}
-
-		$q.all(promiseDatasets).then(function(arrayOfResults){
-			var ind;
-			var loadPromises=[];
-
-			for(ind=0;ind<arrayOfResults.length;ind++){
-				loadPromises.push(loadValuesDict(ind));
-				loadPromises.push(loadTimesDict(ind));
-				loadPromises.push(loadLocationsDict(ind));
-				loadPromises.push(loadActualData(ind));
-			}
-
-			$q.all(loadPromises).then(function(loadResults){
-				var ind2;
-				var amt=loadResults.length/4;
-				for(ind2=0;ind2<amt;ind2++){
-					aggregateData(ind2);
-				}
-
+		$q.all(allPromises).then(
+			function(){
+				console.log('Datasets successfully loaded!');
 				if(callbackSuccess){
 					callbackSuccess();
 				}
-
-			},function(){
+			}, function(){
 				//when a load promise is rejected
+				console.log('Dataset load failed!');
 				if(callbackFail){
 					callbackFail();
 				}
-			});
-
-		},function(){
-			//when a promiseDataset is rejected
-			if(callbackFail){
-				callbackFail();
 			}
-		});
+		);
+	};
+
+	// Reinitialize this service
+	this.deleteDatasets = function(){
+		console.log('deleteDatasets');
+		userDatasets = [];
+		loadedDatasets = [];
+		nameToIndex = {};
+	};
+
+	// Function that loads one user dataset into the memory. Returns a promise which is fulfilled when the dataset is ready.
+	function loadDataInto(description, destination){
+		var allPromises = [];
+		var datesAvailable = [];
+		allPromises.push(loadUrl(description.value.Dict, destination, description.value.Name + '_dict'));
+		
+		datesAvailable.push(loadUrl(description.date.Dict, destination, description.date.Name + '_dict'));
+		if (description.location !== undefined) {
+			allPromises.push(loadUrl(description.location.Dict, destination, description.location.Name + '_dict'));
+		}
+		
+		if (!destination.hasOwnProperty('values_promise')) {
+			var valuesReady = $q.defer();
+			destination.values_promise = valuesReady.promise;
+			loadUrl(description.path, destination, 'values').then(
+				function() { // success
+					storeColumns(description.columns, destination.values, destination);
+					delete destination.values;
+					valuesReady.resolve();
+				},
+				function() {
+					valuesReady.reject();
+				}
+			);
+		}
+		datesAvailable.push(destination.values_promise);
+		
+		// When both date and values are available, search for days
+		if (!destination.hasOwnProperty('dates_promise')) {
+			var datesReady = $q.defer();
+			destination.dates_promise = datesReady.promise;
+			datesAvailable = $q.all(datesAvailable).then(
+				function() {
+					destination[description.date.Name + '_dayBoundaries'] = getDayBoundaries(destination[description.date.Name + '_dict'], destination[description.date.Name]);
+					datesReady.resolve();
+				},
+				function() {
+					datesReady.reject();
+				}				
+			);
+		}
+		// The actual grouping and aggregating should be different per dataset
+		var aggregationReady = $q.defer();
+		destination.dates_promise.then(
+			function() {
+				description.aggLoc_perDat_perDay = aggLoc_perDate_perDay(destination[description.date.Name], destination[description.date.Name + '_dayBoundaries'], destination[description.value.Name], description.aggregation);
+				aggregationReady.resolve();
+			},
+			function() {
+				aggregationReady.reject();
+			}
+		);
+		allPromises.push(aggregationReady.promise);
+		return $q.all(allPromises);
+	}
+	
+	function storeColumns(columnDescription, source, destination) {
+		console.log("Reading columns...");
+		var maxColLength = 0;
+		for (var i = 0; i < columnDescription.length; i++) {
+			var column = columnDescription[i];
+			destination[column.Name] = jsonPath(source, column.Path);
+			maxColLength = Math.max(maxColLength, destination[column.Name].length);
+		}
+		console.log("Decompressing columns...");
+		for (var i = 0; i < columnDescription.length; i++) {
+			var columnName = columnDescription[i].Name;
+			if (destination[columnName].length !== maxColLength) {
+				// Expand the column by replication
+				var repeatFactor = maxColLength/destination[columnName].length;
+				var toReplicate = destination[columnName];
+				destination[columnName] = [];
+				for (var j = 0; j<toReplicate.length; j++) {
+					for (var k = 0; k<repeatFactor; k++) {
+						destination[columnName].push(toReplicate[j]);
+					}
+				}
+			}
+		}
+	}
+	
+	function getDayBoundaries(dateDict, dates) {
+		console.log('Grouping per day...');
+		var result = [];
+		var start = 0;
+		var currentDay = new Date(dateDict[dates[0]].name);
+		for (var i = 0; i<dates.length; i++) {
+			var currentDate = new Date(dateDict[dates[i]].name);
+			if (!onSameDay(currentDate, currentDay)) {
+				result.push({'day': currentDay, 'start': start, 'stop': i});
+				currentDay = currentDate;
+				start = i;
+			}
+		}
+		result.push({'day': currentDay, 'start': start, 'stop': dates.length});
+		return result;
+	}
+	
+	function onSameDay(date1, date2) {
+		return (date1.getFullYear() === date2.getFullYear() && date1.getDate() === date2.getDate() && date1.getMonth() === date2.getMonth());
+	}
+	
+	// OUT: [{day: ?, dates: [], values: []},...]
+	function aggLoc_perDate_perDay(dates, dateBoundaries, values, method) {
+		if (method==='NONE') return undefined;
+		var out = [];
+		for (var i = 0; i<dateBoundaries.length; i++) {
+			var curDay = dateBoundaries[i];
+			var curEl = {'day': curDay.day, 'dates': [], 'values': []};
+			
+			var curStart = curDay.start;
+			var curDate = dates[curStart];
+			for (var j = curDay.start; j<curDay.stop; j++) {
+				if (dates[j]!==curDate) {
+					curEl.dates.push(curDate);
+					curEl.values.push(aggregate(range(curStart, j), dates, method));
+					curDate = dates[j];
+					curStart = j;
+				}
+			}
+			curEl.dates.push(curDate);
+			curEl.values.push(aggregate(range(curStart, curDate.stop), dates, method));
+			out.push(curEl);
+		}
+		return out;
+	}
+	
+	function range(start, stop) {
+		var out = [];
+		for (var i = start; i<stop; i++) {
+			out.push(i);
+		}
+		return out;
 	}
 
+	function aggregate(indices, data, method) {
+		if (method === 'MEAN'){
+			return aggregate(indices, data, 'SUM')*1.0/indices.length;
+		} else if (method === 'SUM'){
+			var sum = 0;
+			for(var i=0; i<indices.length; i++){
+				sum += data[indices[i]];
+			}
+			return sum;
+		} else if (method === 'MAX'){
+			var max = data[indices[0]];
+			for(var i=1; i<indices.length; i++){
+				if (data[indices[i]]>max) {
+					max = data[indices[i]];
+				}
+			}
+			return max;
+		} else if (method === 'MIN'){
+			var min = data[indices[0]];
+			for(var i=1; i<indices.length; i++){
+				if (data[indices[i]]<min) {
+					min = data[indices[i]];
+				}
+			}
+			return min;
+		} else if (method === 'COUNT'){
+			// In case of COUNT, the values are stored in dictionnaries. But no worries, we can use the compressed value to count.
+			var counts = {};
+			for(var i=0; i<indices.length; i++){
+				if (!counts.hasOwnProperty(data[indices[i]])) {
+					counts[data[indices[i]]] = 0;
+				}
+				counts[data[indices[i]]] += 1;
+			}
+			return counts;
+		}
+	}
+
+	// Function that loads a url and stores the result in the property field of destination. Returns a promise which is fulfilled when the data is loaded
+	function loadUrl(url, destination, field){
+		var deferred = $q.defer();
+		if (url === undefined || url === '') {
+			deferred.resolve();
+			return deferred;
+		}
+		if (!destination.hasOwnProperty(field)) {
+			destination[field] = {};
+			destination[field + '_promise'] = deferred.promise;
+			$http.get(url)
+				.success(function(data){
+					console.log('Url loaded! ' + url);
+					destination[field] = data;
+					deferred.resolve();
+				})
+				.error(function(data){
+					console.log('Url load failed! ' + url);
+					deferred.reject();
+				});
+		}
+		return destination[field + '_promise'];
+	}
 
 	/***************** AGGREGATION FUNCTIONS *********************/
-
 	Date.prototype.getWeekNumber = function(){
 	    var d = new Date(+this);
 	    d.setHours(0,0,0);
@@ -245,392 +276,31 @@ angular.module('dataVisualizationsApp.services')
 	    return Math.ceil((((d-new Date(d.getFullYear(),0,1))/8.64e7)+1)/7);
 	};
 
+
 	// This function will filter all the values on a certain date, aggregated is a boolean telling if data is aggregated or not
 	// IMPORTANT: data must be the same length as times.
-	// Output is either an array with the number of elements equal to the number of locations or an array with the number of elements
-	// equal to the number of data entries on that day.
-	this.filterByDay = function(index, date, data){
-		console.log("Filtering the data on ", date)
-		if(!data){
-			console.log("ERROR: wrong data (undefined) given");
-			return;
-		}
-		if(data.length != times[index].length){
-			console.log("ERROR: times and data are not same length");
-			return;
-		}
-
-		var results = [];
-
-		for(var i=0; i<times[index].length; i++){
-			// Decompress the date
-			var dictTime = new Date(timesDict[index][times[index][i]].name);
-			if(dictTime.getFullYear() == date.getFullYear() && dictTime.getDate() == date.getDate() && dictTime.getMonth() == date.getMonth()){
-				results.push({"date": dictTime, "data": data[i]});
-			}
-
-			// We know the dates are sorted, so as soon as we see a date that exceeds the searched date, we stop looking
-			/*if(dictTime.getFullYear() > date.getFullYear()){
-				console.log(results);
-				return results;
-			}
-			if(dictTime.getFullYear() == date.getFullYear() && dictTime.getMonth() > date.getMonth()){
-				console.log(results);
-				return results;
-			}
-			if(dictTime.getFullYear() == date.getFullYear() && dictTime.getMonth() == date.getMonth() && dictTime.getDate() > date.getDate()){
-				console.log(results);
-				return results;
-			}*/
-		}
-		//console.log(results);
-		return results;
-	};
-
-	function aggregateData(index){
-		//for now we will pretend no aggregation or grouping is given
-		times[index] = jsonPath(actualData[index], userDatasets[index].date.Path);
-		var tmpValues = jsonPath(actualData[index], userDatasets[index].value.Path);
-		if(userDatasets[index].location){
-			var tmpLocations = jsonPath(actualData[index], userDatasets[index].location.Path);
-		} else {
-			var tmpLocations = [];
-		}
-
-		// We go to the parent object of the time property. From there, we check where the lengths of all fields and take the max.
-		// This way, we can support dynamic lengths (a dynamic number of values (and or locations) can be linked to a date)
-		var parentPath = userDatasets[index].date.Path.slice(0, userDatasets[index].date.Path.length-3);
-		var parentData = jsonPath(actualData[index], parentPath);
-		var timesLength = times[index].length;
-		var entriesPerTime = [];
-		for(var i = 0; i < timesLength; i++){
-			var j = i;
-			var flag = false;
-			while(!flag){
-				if(parentData[j][0] == times[index][i]){
-					var maxLength = 1;
-					for(var k = 0; k < parentData[j].length; k++){
-						if(parentData[j][k].constructor == Array){
-							if(parentData[j][k].length > maxLength) maxLength = parentData[j][k].length;
-						}
-					}
-					entriesPerTime[i] = maxLength;
-					flag = true;
-				}
-				j=(j+1)%times[index].length;
+	// Output is an array with the number of elements equal to the number of data entries on that day.
+	this.aggLocPerDatByDay = function(index, date){
+		var info = loadedDatasets[index].aggLoc_perDat_perDay;
+		if (info === undefined) return undefined;
+		for (var i = 0; i<info.length; i++) {
+			if (onSameDay(new Date(info[i].day), date)) {
+				// In fact, both info[i].dates & info[i].values should be returned to create a good plot...
+				return info[i].values;
 			}
 		}
-		console.log("entriesPerTime = ", entriesPerTime);
-		values[index] = [];
-		locations[index] = [];
-
-		for(var i=0; i<timesLength; i++){
-			values[index][i] = tmpValues.slice(i*entriesPerTime[i],(i+1)*entriesPerTime[i]);
-			if(tmpLocations.length > 0) {
-				locations[index][i] = tmpLocations.slice(i*entriesPerTime[i],(i+1)*entriesPerTime[i]);
-			}
-		}
-
-		valuesTitles[index] = userDatasets[index].value.Name;
-
-		/*for(var i=0; i<timesLength; i++){
-			if(valuesDict[index].length == 0){
-				console.log(values[index][i], " occured on ")
-			} else {
-				console.log(values[index][i], " (= ", valuesDict[index][values[index][i]],") occured on")
-			}
-			if(timesDict[index].length == 0){
-				console.log(times[index][i], " on location ")
-			} else {
-				console.log(times[index][i], " (= ", timesDict[index][times[index][i]],") on location ")
-			}
-			if(locations.length == 0){
-				console.log("N.A.")
-			}else {
-				if(locationsDict[index].length == 0){
-					console.log(locations[index][i])
-				} else {
-					console.log(locations[index][i], " (= ", locationsDict[index][locations[index][i]],")")
-				}
-			}
-			console.log("----------------------------------")
-		}*/
-
-		// Aggregate the values based on location and date, and store them in aggregatedValuesPerDate
-		// Had some troubles, AGAIN, with switches in javascript (<-- shitty language)
-		aggregatedValuesPerDate[index] = [];
-		console.log("Aggregating on ", userDatasets[index].aggregation);
-		if(userDatasets[index].aggregation == 'MEAN'){
-			for(var i=0; i<timesLength; i++){		
-				var sum = 0;
-				var count = 0;
-				for(var j = 0; j < values[index][i].length; j++){
-					sum += values[index][i][j];
-					count++;
-				}
-				aggregatedValuesPerDate[index][i] = sum/count;
-			}
-		} else if(userDatasets[index].aggregation == 'SUM'){
-			for(var i=0; i<timesLength; i++){					
-				var sum = 0;
-				for(var j = 0; j < values[index][i].length; j++){
-					sum += values[index][i][j];
-				}
-				aggregatedValuesPerDate[index][i] = sum;
-			}
-		} else if(userDatasets[index].aggregation == 'MAX'){
-			for(var i=0; i<timesLength; i++){	
-				aggregatedValuesPerDate[index][i] = Math.max.apply(null, values[index][i]);
-			}
-		} else if(userDatasets[index].aggregation == 'MIN'){
-			for(var i=0; i<timesLength; i++){	
-				aggregatedValuesPerDate[index][i] = Math.min.apply(null, values[index][i]);
-			}
-		}
-		else if(userDatasets[index].aggregation == 'COUNT'){
-			// In case of COUNT, the values are stored in dictionnaries. But no worries, we can use the compressed value to count.
-			for(var i=0; i<timesLength; i++){
-				var counts = {};
-				for(var j=0; j<values[index][i].length; j++){
-					// If there is no entry of this value in the counts, we create one, else we increment this entry
-					counts[values[index][i][j]] = counts[values[index][i][j]] ? counts[values[index][i][j]]+1 : 1;
-				}
-				aggregatedValuesPerDate[index][i] = counts;
-			}
-		}
-		console.log(aggregatedValuesPerDate[index]);
-
-		// We now group the values based on their dates. For this, we need to take a peak in the dictionaries.
-		groupedValues[index] = {};
-		console.log("Grouping on ", userDatasets[index].grouping);
-		if(userDatasets[index].grouping =='WEEKDAY'){
-			for(var i = 1; i < groupingTitlesWeekday.length; i++){
-				if(locations[index].length > 0)
-					groupedValues[index][groupingTitlesWeekday[i]]= {};
-				else
-					groupedValues[index][groupingTitlesWeekday[i]]= [];
-			}
-			//to get sunday at the end
-			if(locations[index].length > 0)
-				groupedValues[index][groupingTitlesWeekday[0]]= {};
-			else
-				groupedValues[index][groupingTitlesWeekday[0]]= [];
-
-			for(var i = 0; i < timesLength; i++){
-				// We check if the dates are compressed using a dict
-				if(timesDict[index])
-					var parsed = new Date(timesDict[index][times[index][i]].name);
-				else
-					var parsed = new Date(times[index][i]);
-
-				// Get the weekday from the parsed date and initialize an object or array on that index if needed
-				var weekday = parsed.getDay(); // Sunday = 0
-
-				// If locations are given, we store the values per location. Else, we just store a list per weekday
-				if(locations[index].length > 0){
-					for(var j=0; j < locations[index][i].length; j++){
-						if(!groupedValues[index][groupingTitlesWeekday[weekday]][locations[index][i][j]])
-							groupedValues[index][groupingTitlesWeekday[weekday]][locations[index][i][j]] = [];
-						groupedValues[index][groupingTitlesWeekday[weekday]][locations[index][i][j]].push(values[index][i][j]);
-					}
-				} else{
-					groupedValues[index][groupingTitlesWeekday[weekday]].push(values[index][i]);
-				}
-			}
-		} else if(userDatasets[index].grouping == 'WEEKS'){
-			for(var i = 0; i < groupingTitlesWeeks.length; i++){
-				if(locations[index].length > 0)
-					groupedValues[index][groupingTitlesWeeks[i]]= {};
-				else
-					groupedValues[index][groupingTitlesWeeks[i]]= [];
-			}
-
-
-			for(var i = 0; i < timesLength; i++){
-				if(timesDict[index])
-					var parsed = new Date(timesDict[index][times[index][i]].name);
-				else
-					var parsed = new Date(times[index][i]);
-
-				var week = parsed.getWeekNumber();
-
-				if(locations[index].length > 0){
-					for(var j=0; j < locations[index][i].length; j++){
-						if(!groupedValues[index][groupingTitlesWeeks[week-1]][locations[index][i][j]])
-							groupedValues[index][groupingTitlesWeeks[week-1]][locations[index][i][j]] = [];
-						groupedValues[index][groupingTitlesWeeks[week-1]][locations[index][i][j]].push(values[index][i][j]);
-					}
-				} else{
-					groupedValues[index][groupingTitlesWeeks[week-1]].push(values[index][i]);
-				}
-			}
-		} else if(userDatasets[index].grouping == 'MONTH'){
-			for(var i = 0; i < groupingTitlesMonth.length; i++){
-				if(locations[index].length > 0)
-					groupedValues[index][groupingTitlesMonth[i]]= {};
-				else
-					groupedValues[index][groupingTitlesMonth[i]]= [];
-			}
-
-			for(var i = 0; i < timesLength; i++){
-				if(timesDict[index])
-					var parsed = new Date(timesDict[index][times[index][i]].name);
-				else
-					var parsed = new Date(times[index][i]);
-
-				var month = parsed.getMonth();
-
-				if(locations[index].length > 0){
-					for(var j=0; j < locations[index][i].length; j++){
-						if(!groupedValues[index][groupingTitlesMonth[month]][locations[index][i][j]])
-							groupedValues[index][groupingTitlesMonth[month]][locations[index][i][j]] = [];
-						groupedValues[index][groupingTitlesMonth[month]][locations[index][i][j]].push(values[index][i][j]);
-					}
-				} else{
-					groupedValues[index][groupingTitlesMonth[month]].push(values[index][i]);
-				}
-			}
-		} else if(userDatasets[index].grouping == 'YEAR'){
-			for(var i = 0; i < timesLength; i++){
-				if(timesDict[index])
-					var parsed = new Date(timesDict[index][times[index][i]].name);
-				else
-					var parsed = new Date(times[index][i]);
-
-				var year = parsed.getFullYear(); // Sunday = 0
-				if(!groupedValues[index][year])
-					if(locations[index].length > 0)
-						groupedValues[index][year]= {};
-					else
-						groupedValues[index][year]= [];
-
-				if(locations[index].length > 0){
-					for(var j=0; j < locations[index][i].length; j++){
-						if(!groupedValues[index][year][locations[index][i][j]])
-							groupedValues[index][year][locations[index][i][j]] = [];
-						groupedValues[index][year][locations[index][i][j]].push(values[index][i][j]);
-					}
-				} else{
-					groupedValues[index][year].push(values[index][i]);
-				}
-			}
-		}
-
-		console.log(groupedValues[index]);
-
-		//groupedValues will now be aggregated
-		//sometimes there will be no locations data!
-		groupedAndAggregatedValues[index] = {};
-		if((userDatasets[index].aggregation !== 'NONE') && (userDatasets[index].grouping !== 'NONE')){
-			for(var k in groupedValues[index]){ //iterate over grouping level
-				//if data contains locations
-				if(locations[index].length > 0){
-					groupedAndAggregatedValues[index][k] = {};
-					for(var l in groupedValues[index][k]){ //take mean over aggregated time data
-						if(userDatasets[index].aggregation == 'MEAN'){
-							var sum = 0, count = 0;
-							for(var i=0; i<groupedValues[index][k][l].length; i++){
-								sum += groupedValues[index][k][l][i];
-								count++;
-							}
-							groupedAndAggregatedValues[index][k][l] = sum/count;
-
-						} else if(userDatasets[index].aggregation == 'SUM'){
-							var sum = 0;
-							for(var i=0; i<groupedValues[index][k][l].length; i++){
-								sum += groupedValues[index][k][l][i];
-							}
-							groupedAndAggregatedValues[index][k][l] = sum;
-
-						} else if(userDatasets[index].aggregation == 'MAX'){
-							groupedAndAggregatedValues[index][k][l] = d3.max(groupedValues[index][k][l]);
-
-						} else if(userDatasets[index].aggregation == 'MIN'){
-							groupedAndAggregatedValues[index][k][l] = d3.min(groupedValues[index][k][l]);
-
-						} else if(userDatasets[index].aggregation == 'COUNT'){
-							var counts = {};
-							for(var j=0; j<groupedValues[index][k][l].length; j++){
-								// If there is no entry of this value in the counts, we create one, else we increment this entry
-								counts[groupedValues[index][k][l][j]] = counts[groupedValues[index][k][l][j]] ? counts[groupedValues[index][k][l][j]]+1 : 1;
-							}
-							groupedAndAggregatedValues[index][k][l] = counts;	
-						}
-					}
-				//if data contains no locations
-				} else {
-					if(userDatasets[index].aggregation == 'MEAN'){
-						var sum = 0, count = 0;
-						for(var i=0; i<groupedValues[index][k].length; i++){
-							// console.log(groupedValues[index][k][i]); --> Array[1] !!
-							for(var j=0; j<groupedValues[index][k][i].length; j++){
-								sum += groupedValues[index][k][i][j];
-								count++;
-							}
-						}
-
-						console.log('sum', sum);
-
-						groupedAndAggregatedValues[index][k] = sum/count;
-
-					} else if(userDatasets[index].aggregation == 'SUM'){
-						var sum = 0;
-						for(var i=0; i<groupedValues[index][k].length; i++){
-							for(var j=0; j<groupedValues[index][k][i].length; j++){
-								sum += groupedValues[index][k][i][j];
-							}
-						}
-						groupedAndAggregatedValues[index][k] = sum;
-
-					} else if(userDatasets[index].aggregation == 'MAX'){
-						groupedAndAggregatedValues[index][k] = d3.max(groupedValues[index][k], function(d){
-							return d3.max(d);
-						});
-
-					} else if(userDatasets[index].aggregation == 'MIN'){
-						groupedAndAggregatedValues[index][k] = d3.min(groupedValues[index][k], function(d){
-							return d3.min(d);
-						});
-
-					} else if(userDatasets[index].aggregation == 'COUNT'){
-						var counts = {};
-						for(var j=0; j<groupedValues[index][k].length; j++){
-							// If there is no entry of this value in the counts, we create one, else we increment this entry
-							counts[groupedValues[index][k][j]] = counts[groupedValues[index][k][j]] ? counts[groupedValues[index][k][j]]+1 : 1;
-						}
-						groupedAndAggregatedValues[index][k]= counts;	
-					}
-				}
-			}			
-		}
-		
-		console.log("grouped and aggregated values");
-		console.log(groupedAndAggregatedValues[index]);		
 	};
 
 	/***************** GET DATA FROM SERVICE ********************/
 
 	this.getGroupedAndAggregatedValues = function(index){
+		console.log('ERROR: getGroupedAndAggregatedValues not ready yet');
 		return groupedAndAggregatedValues[index];
 	};
 
 	this.getGroupedValues = function(index){
+		console.log('ERROR: getGroupedValues not ready yet');
 		return groupedValues[index];
-	};
-
-	//function returning the number of datasets in the service
-	this.getNumDatasets = function(){
-		return count;
-	};
-
-	//return the values: in some cases a dict will be necessary to map numbers to text
-	this.getValues = function(index){
-		return values[index];
-	};
-
-	//return the valuesTitle:
-	this.getValuesTitle = function(index){
-		return valuesTitles[index];
 	};
 
 	//return the aggregation parameter selected by the user
@@ -640,32 +310,68 @@ angular.module('dataVisualizationsApp.services')
 
 	//a getter for the aggregated values per date
 	this.getAggregatedValuesPerDate = function(index){
+		console.log('ERROR: getAggregatedValuesPerDate not ready yet');
 		return aggregatedValuesPerDate[index];
+	};
+
+	//function returning the number of datasets in the service
+	this.getNumDatasets = function(){
+		return userDatasets.length;
+	};
+
+	//return the values: in some cases a dict will be necessary to map numbers to text
+	this.getValues = function(index){
+		var datasetName = userDatasets[index].name;
+		var valuesName = userDatasets[index].value.Name;
+		return loadedDatasets[nameToIndex[datasetName]][valuesName];
+	};
+
+	//return the valuesTitle:
+	this.getValuesTitle = function(index){
+		return userDatasets[index].value.Name;
 	};
 
 	//return the times: dict will be necessary to convert numbers to real times
 	this.getTimes = function(index){
-		return times[index];
+		var datasetName = userDatasets[index].name;
+		var timesName = userDatasets[index].date.Name;
+		return loadedDatasets[nameToIndex[datasetName]][timesName];
 	};
 
 	//returns the locations: dict will be necessary to convert numbers to real locations
 	this.getLocations = function(index){
-		return locations[index];
+		var datasetName = userDatasets[index].name;
+		var locationsName = userDatasets[index].location.Name;
+		return loadedDatasets[nameToIndex[datasetName]][locationsName];
 	};
 
 	//function returning the valuesDict
 	this.getValuesDict = function(index){
-		return valuesDict[index];
+		if (userDatasets[index].value.Dict === undefined || userDatasets[index].value.Dict === '') {
+			return undefined;
+		}
+		var datasetName = userDatasets[index].name;
+		var dictName = userDatasets[index].value.Name + '_dict';
+		return loadedDatasets[nameToIndex[datasetName]][dictName];
 	};
 
 	//function returning the timesDict
 	this.getTimesDict = function(index){
-		return timesDict[index];	
+		if (userDatasets[index].date.Dict === undefined || userDatasets[index].date.Dict === '') {
+			return undefined;
+		}
+		var datasetName = userDatasets[index].name;
+		var dictName = userDatasets[index].date.Name + '_dict';
+		return loadedDatasets[nameToIndex[datasetName]][dictName];
 	};
 
 	//function returning the locationsDict
 	this.getLocationsDict = function(index){
-		return locationsDict[index];
+		if (userDatasets[index].location.Dict === undefined || userDatasets[index].location.Dict === '') {
+			return undefined;
+		}
+		var datasetName = userDatasets[index].name;
+		var dictName = userDatasets[index].location.Name + '_dict';
+		return loadedDatasets[nameToIndex[datasetName]][dictName];
 	};
-
-  }]);
+}]);
