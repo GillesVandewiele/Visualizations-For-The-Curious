@@ -669,3 +669,22 @@ angular.module('dataVisualizationsApp.services')
 	};
 
   }]);
+
+$("#linechartLink").click(function() {
+	console.log("click");
+    $("#barchartTab")[0].style.display = "none";
+    $("#linechartTab")[0].style.display = "block";
+    $("#linechartTab")[0].style.width = "50%";
+    $("#linechartTab")[0].style.height = "50%";
+
+});
+
+$("#barchartLink").click(function() {
+	console.log("click");
+    $("#linechartTab")[0].style.display = "none";
+    $("#barchartTab")[0].style.display = "block";
+    $(".chart-bar")[0].width = "50%";
+    $(".chart-bar")[0].height = "50%";
+    $(".chart-bar")[0].style.width = "50%";
+    $(".chart-bar")[0].style.height = "50%";
+});
