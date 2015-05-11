@@ -27,7 +27,6 @@ angular.module('dataVisualizationsApp.services')
 
 	// Load multiple datasets at once
 	this.addMultipleDatasets = function(ds, callbackSuccess, callbackFail){
-		console.log('addMultipleDatasets');
 		userDatasets = ds;
 		var allPromises = [];
 		for (var i = 0; i<userDatasets.length; i++) {
@@ -56,10 +55,10 @@ angular.module('dataVisualizationsApp.services')
 
 	// Reinitialize this service
 	this.deleteDatasets = function(){
-		console.log('deleteDatasets');
 		userDatasets = [];
 		loadedDatasets = [];
 		nameToIndex = {};
+		console.log('Deleted datasets');
 	};
 
 	// Function that loads one user dataset into the memory. Returns a promise which is fulfilled when the dataset is ready.
@@ -72,6 +71,7 @@ angular.module('dataVisualizationsApp.services')
 		}
 		
 		datesAvailable.push(loadUrl(description.date.Dict, destination, description.date.Name + '_dict'));
+		
 		if (description.location !== null && description.location !== undefined) {
 			allPromises.push(loadUrl(description.location.Dict, destination, description.location.Name + '_dict'));
 		}
@@ -111,9 +111,11 @@ angular.module('dataVisualizationsApp.services')
 		destination.dates_promise.then(
 			function() {
 				// Here grouping and aggregation
-				var aggMethods = convertAggPeriod(description.grouping);
-				aggMethods.aggregation = description.aggregation;
-				description.aggregated = userAggregate(destination[description.date.Name], destination[description.date.Name + '_dict'], destination[description.value.Name], aggMethods, description);
+				if (description.grouping!==null && description.grouping!==undefined && description.grouping!=="NONE") {
+					var aggMethods = convertAggPeriod(description.grouping);
+					aggMethods.aggregation = description.aggregation;
+					description.aggregated = userAggregate(destination[description.date.Name], destination[description.date.Name + '_dict'], destination[description.value.Name], aggMethods, description);
+				}
 				aggregationReady.resolve();
 			},
 			function() {
@@ -154,7 +156,7 @@ angular.module('dataVisualizationsApp.services')
 			out.trans = function(index) {
 				return index;
 			};
-			out.map = function(date1) {
+			out.map = function(date) {
 				return date.getYear();
 			};
 		}
@@ -164,7 +166,6 @@ angular.module('dataVisualizationsApp.services')
 	function userAggregate(dates, dateDict, values, aggMethods) {
 		var out = [[], []];
 		var aggrs = {};
-		console.log(values)
 		for (var j = 0; j<dates.length; j++) {
 			var curAgg = aggMethods.map(new Date(dateDict[dates[j]].name));
 			if (!aggrs.hasOwnProperty(curAgg)) {
@@ -176,7 +177,6 @@ angular.module('dataVisualizationsApp.services')
 			out[0].push(aggMethods.trans(parseInt(attr)));
 			out[1].push(aggregate(aggrs[attr], aggMethods.aggregation));
 		}
-		console.log(out);
 		return out;
 	}
 				
@@ -274,6 +274,9 @@ angular.module('dataVisualizationsApp.services')
 				counts[data[l]] += 1;
 			}
 			return counts;
+		} else {
+			// Avoid falling through this method: in case no method is specified: use the mean
+			aggregate(data, 'MEAN');
 		}
 	}
 
@@ -417,6 +420,9 @@ angular.module('dataVisualizationsApp.services')
 
 	// Returns a two dimensional array: [[labels], [values]]
 	this.getGroupedValues = function(index){
+		if (userDatasets[index].aggregated === null || userDatasets[index].aggregated === undefined) {
+			return undefined;
+		}
 		return userDatasets[index].aggregated;
 	};
 
@@ -432,7 +438,7 @@ angular.module('dataVisualizationsApp.services')
 
 	//function returning the valuesDict
 	this.getValuesDict = function(index){
-		if (userDatasets[index].value.Dict === undefined || userDatasets[index].value.Dict === '') {
+		if (userDatasets[index].value.Dict === null || userDatasets[index].value.Dict === undefined || userDatasets[index].value.Dict === '') {
 			return undefined;
 		}
 		var datasetName = userDatasets[index].name;
@@ -441,10 +447,7 @@ angular.module('dataVisualizationsApp.services')
 	};
 
 	//function returning the timesDict
-	this.getTimesDict = function(index){
-		if (userDatasets[index].date.Dict === undefined || userDatasets[index].date.Dict === '') {
-			return undefined;
-		}
+	this.getTimesDict = function(index) {
 		var datasetName = userDatasets[index].name;
 		var dictName = userDatasets[index].date.Name + '_dict';
 		return loadedDatasets[nameToIndex[datasetName]][dictName];
@@ -452,7 +455,7 @@ angular.module('dataVisualizationsApp.services')
 
 	//function returning the locationsDict
 	this.getLocationsDict = function(index){
-		if (userDatasets[index].location.Dict === undefined || userDatasets[index].location.Dict === '') {
+		if (userDatasets[index].location === null || userDatasets[index].location === undefined || userDatasets[index].location.Dict === null || userDatasets[index].location.Dict === undefined || userDatasets[index].location.Dict === '') {
 			return undefined;
 		}
 		var datasetName = userDatasets[index].name;

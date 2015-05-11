@@ -62,7 +62,7 @@
 				{
 					"Name": "Windrichting",
 					"Path": "$.data[*][2][*][4]",
-					"Dict": "data/kmihourly/windrichting.json",
+					"Dict": "data/kmihourly/windrichtingen.json",
 					"Dict_mapping": "$[*]"
 				},
 				{
