@@ -1,0 +1,20 @@
+[
+ {
+  "nr": 0,
+  "name": "Galway Bay Wave Buoy",
+  "lat": 53.227,
+  "long": -9.271
+ },
+ {
+  "nr": 1,
+  "name": "Belmullet Wave Buoy Berth B",
+  "lat": 54.231,
+  "long": -10.146
+ },
+ {
+  "nr": 2,
+  "name": "Belmullet Wave Buoy Berth A",
+  "lat": 54.28,
+  "long": -10.278
+ }
+]

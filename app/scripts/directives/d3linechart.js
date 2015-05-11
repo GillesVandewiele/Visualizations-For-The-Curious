@@ -18,7 +18,11 @@ angular.module('dataVisualizationsApp.directives')
         scope.$evalAsync(function() {
             var config = scope.config || {};
 
-            var svg = d3.select(element[0]).append("svg");
+            var svg = d3.select(element[0]).append("svg").attr('width', '100%');
+
+            var containerWidth = element[0].getBoundingClientRect().width;
+
+            console.log(containerWidth);
 
           	scope.$watch('config.data', function(newVals, oldVals) {
                 return scope.render(newVals);
@@ -28,6 +32,8 @@ angular.module('dataVisualizationsApp.directives')
             	if(data.length > 0){
 		            console.log("we're in the linechart directive atm!");
 
+		            console.log(element[0].getBoundingClientRect());
+
                   	// remove all previous items before render
                   	svg.selectAll('*').remove();
 
@@ -35,8 +41,8 @@ angular.module('dataVisualizationsApp.directives')
 		            //data.sort(function(a, b){return a.date - b.date;});
 
 		            // Declaring the margins
-		            var margin = {top: 20, right: 20, bottom: 30, left: 50}, width = 960 - margin.left - margin.right, 
-		            	height = 500 - margin.top - margin.bottom;
+		            var margin = {top: 20, right: 10, bottom: 30, left: 10}, width = containerWidth - margin.left - margin.right, 
+		            	height = 600 - margin.top - margin.bottom;
 
 		            // The reach of x and y 
 					var x = d3.time.scale().range([0, width]);
@@ -69,7 +75,11 @@ angular.module('dataVisualizationsApp.directives')
 
 	                // Domain of x and y
 		            x.domain(d3.extent(data, function(d) { return d.date; }));
-		  			y.domain(d3.extent(data, function(d) { return d.data; }));
+		            //fix for hover pointer
+		            var domainY = d3.extent(data, function(d) { return d.data; });
+		            domainY[1] += domainY[1]*0.1;
+		            domainY[0] -= domainY[1]*0.1;
+		  			y.domain(domainY);
 
 		  			// Drawing x axis
 				    svg.append("g")

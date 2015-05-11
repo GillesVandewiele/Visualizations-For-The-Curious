@@ -1,57 +1,50 @@
-<div class="layoutcol fullContent">
-	<div class="layoutrow titlerow">
+<div class="layoutcol calendarCol">
+	<!-- <div class="col-xs-2 col-md-2"> -->
+		<div ng-repeat="calInfo in calendarData track by $index">
+			<h4>{{calInfo['title']}}</h4>
+			<button class="btn" id="btn-previous{{$index}}">Previous</button><button class="btn" id="btn-next{{$index}}">Next</button>
+			<d3-calendar config="{domain:'month',range:2, data:calInfo['data'],start:firstDate, highlight: 'now', legend: calInfo['legend'], click: calInfo['click']}" nxt="#btn-next{{$index}}" prv="#btn-previous{{$index}}"></d3-calendar>
+			<br />
+		</div>
+	<!-- </div> -->
+</div>
+
+<div class="layoutcol mapCol">
+	<div class="layoutrow titlerow visualizationsRow">
 		<h3>Visualizations</h3>
 	</div>
 
 	<div class="layoutrow titlecontent scroll-y">
 		<!-- <dv-bars-demo></dv-bars-demo> -->
-		<!-- <div class="container-fluid"> -->
 
-		<div class="row" style="margin-left:15px; width:75%;">
-			<div class="map" ng-show="locationsType">
-				<leaflet defaults="mapDefaults" center="mapCenter" layers="mapLayers" paths="mapPaths" height="600px"></leaflet>
-		      	<br/>
-				<div class="color-box" ng-repeat="c in heatMap track by $index" style="background-color: {{c}};"> {{heatMapBoundaries[$index]}} to {{heatMapBoundaries[$index+1]}}</div>
-				<br/>
-				<br/>
-				<slider floor="{{ minTime }}" ceiling="{{ maxTime }}" ng-model="currentTime" translate-fn='translateTime' ng-disabled="mapPlaying"></slider>
-				<br/>
-				<button class="btn" ng-click="mapPlayPause()">{{mapPlayPauseButton}}</button><button class="btn" ng-click="mapStop()">Stop</button>
+		<!-- 	
+			Rows must be placed within a .container (fixed-width) or .container-fluid (full-width) for proper alignment and padding.
+			Use rows to create horizontal groups of columns.
+			Content should be placed within columns, and only columns may be immediate children of rows. 
+		-->
+		<div class="container-fluid">
+			<br/>
+
+			<div>
+				<div class="map" ng-show="locationsType">
+					<leaflet defaults="mapDefaults" center="mapCenter" layers="mapLayers" paths="mapPaths" height="500px"></leaflet>
+			      	<br/>
+					<div class="color-box" ng-repeat="c in heatMap track by $index" style="background-color: {{c}};"> {{heatMapBoundaries[$index]}} <br/>to<br/> {{heatMapBoundaries[$index+1]}}</div>
+					<br/>
+					<br/>
+					<slider floor="{{ minTime }}" ceiling="{{ maxTime }}" ng-model="currentTime" translate-fn='translateTime' ng-disabled="mapPlaying"></slider>
+					<br/>
+					<button class="btn" ng-click="mapPlayPause()">{{mapPlayPauseButton}}</button><button class="btn" ng-click="mapStop()">Stop</button>
+				</div>
 			</div>
 		</div>
-		
-		<div class="row" style="margin-left:15px;">
-			<div class="col-xs-2 col-md-2">
-				<div ng-repeat="calInfo in calendarData track by $index">
-					<h4>{{calInfo['title']}}</h4>
-					<button class="btn" id="btn-previous{{$index}}">Previous</button><button class="btn" id="btn-next{{$index}}">Next</button>
-					<d3-calendar config="{domain:'month',range:3, data:calInfo['data'],start:firstDate, highlight: 'now', legend: calInfo['legend'], click: calInfo['click']}" nxt="#btn-next{{$index}}" prv="#btn-previous{{$index}}"></d3-calendar>
-					<br />
-				</div>
-			</div>
+	</div>
+</div>
 
-			<div class="col-xs-10 col-md-10">
-			<!-- failed attempt on tabs --> <!--
-				<div id="Tabs">
-					<ul>
-						<li id="li_linechart" onclick="tab('linechart', ['linechart', 'barchart', 'multilinechart'])" ><a>linechart</a></li>
-						<li id="li_barchart" onclick="tab('barchart', ['linechart', 'barchart', 'multilinechart'])"><a>barchart</a></li>
-						<li id="li_multilinechart" onclick="tab('multilinechart', ['linechart', 'barchart', 'multilinechart'])"><a>multi-linechart</a></li>
-					</ul>
-						<div id="Content_Area">
-						<div id="linechart">
-							<d3-line-chart config="{data: lineChartData, axisTitle: valuesTitles[0]}"></d3-line-chart>
-						</div>
-						<div id="barchart" style="display:none;">
-							<canvas id="bar" class="chart chart-bar" data="barData" labels="barDict" series="barSeries" legend="barLegend"></canvas>
-						</div>
-						<div id="multilinechart" style="display:none;">
-							<canvas id="line" class="chart chart-line" data="multilineData" labels="multilineDict" legend="true" series="multilineSeries"></canvas> 
-						</div>
-						</div>
-				</div>
-				-->
-
+<div class="layoutcol visualizationsCol">
+	<div class="layoutrow titlecontent scroll-y">
+		<div class="container-fluid">
+			<div>
 				<div class="tabbable">
 		            <ul class="nav nav-tabs">
 		                <li class="active"><a id="linechartLink" data-toggle="tab">Linechart</a></li>
@@ -60,22 +53,22 @@
 		                <li><a id="piechartLink" data-toggle="tab">Piechart</a></li>
 		            </ul>
 		            <div class="tab-content">
-		                <div class="tab-pane active" id="linechartTab" >
+		                <div class="tab-pane active" id="linechartTab">
 		                	<br />
 		                    <d3-line-chart config="{data: lineChartData, axisTitle: valuesTitles[0]}"></d3-line-chart>
 		                </div>
 
-		                <div class="tab-pane active" id="barchartTab" >
+		                <div class="tab-pane active" id="barchartTab">
 		                	<br />
 	                    	<canvas id="bar" class="chart chart-bar" data="barData" labels="barDict" series="barSeries" legend="barLegend"></canvas>
 		                </div>
 
-		                <div class="tab-pane active" id="multilinechartTab" >
+		                <div class="tab-pane active" id="multilinechartTab">
 		                	<br />
-	                    	<canvas id="line" class="chart chart-line" data="multilineData" labels="multilineDict" legend="true" series="multilineSeries"></canvas>
+	                    	<canvas id="line" class="chart chart-line" data="multilineData" labels="multilineDict" legend="true"  series="multilineSeries" options="{ datasetFill: false, showTooltips: false,}"></canvas>
 		                </div>
 
-    		            <div class="tab-pane active" id="piechartTab" >
+    		            <div class="tab-pane active" id="piechartTab">
 		                	<br />
 	                    	<div ng-repeat="vals in valuesTodayAggregated track by $index">
 								<h4>{{valuesTitles[$index]}}</h4>
@@ -83,14 +76,9 @@
 								<br />
 							</div>
 		                </div>
-
-		            </div>
-
-		            
+		            </div>	            
 		        </div>	
   			</div>
 		</div>	
-
   	</div>
-
 </div>

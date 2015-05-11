@@ -22,7 +22,8 @@ angular.module('dataVisualizationsApp.controllers')
 
     $scope.showLinechart = true;
     $scope.showBarchart = false;
-
+    $scope.showMultilinechart = false;
+    $scope.showPiechart = false;
 
     $scope.locationsType = 0;
 
@@ -198,7 +199,7 @@ angular.module('dataVisualizationsApp.controllers')
     //watch for editing the map when the timebar has changed
     $scope.$watch('currentTime', function(){
         if($scope.valuesToday.length > 0){   
-            if($scope.valuesToday[0].length > 0){
+            if($scope.valuesToday[0]){
                 if($scope.locationsDict[0]){
                     editLocationColors(0);
                 }
@@ -236,35 +237,40 @@ angular.module('dataVisualizationsApp.controllers')
 
     /****************** TABS INITIALISATION *********************/
 
+
+    $("#linechartTab")[0].style.width = '95%';
+    $("#linechartTab")[0].style.height = '600px';
+    $("#linechartTab")[0].style.position = 'absolute';
+    $("#linechartTab")[0].style.top = '10';
+    $("#linechartTab")[0].style.left = '2';
+
+
+    $("#barchartTab")[0].style.width = '95%';
+    $("#barchartTab")[0].style.height = '600px';
+    $("#barchartTab")[0].style.position = 'absolute';
+    $("#barchartTab")[0].style.top = '10';
+    $("#barchartTab")[0].style.left = '2';
+
+    $("#multilinechartTab")[0].style.width = '95%';
+    $("#multilinechartTab")[0].style.height = '600px';
+    $("#multilinechartTab")[0].style.position = 'absolute';
+    $("#multilinechartTab")[0].style.top = '10';
+    $("#multilinechartTab")[0].style.left = '2';
+
+    $("#piechartTab")[0].style.width = '95%';
+    $("#piechartTab")[0].style.height = '600px';
+    $("#piechartTab")[0].style.position = 'absolute';
+    $("#piechartTab")[0].style.top = '10';
+    $("#piechartTab")[0].style.left = '2';
+
     $("#linechartTab")[0].style.visibility = 'visible';
     $("#barchartTab")[0].style.visibility = 'hidden';
     $("#multilinechartTab")[0].style.visibility = 'hidden';
     $("#piechartTab")[0].style.visibility = 'hidden';
 
-    $("#linechartTab")[0].style.width = '100%';
-    $("#linechartTab")[0].style.height = '300x';
-
-    $("#barchartTab")[0].style.width = '0%';
-    $("#barchartTab")[0].style.height = '0px'; 
-    $("#multilinechartTab")[0].style.width = '0%';
-    $("#multilinechartTab")[0].style.height = '0px';
-    $("#piechartTab")[0].style.width = '0%';
-    $("#piechartTab")[0].style.height = '0px';
-
 
     $("#linechartLink").click(function() {
         console.log('clicked on linecharttab');
-        
-        $("#linechartTab")[0].style.width = '100%';
-        $("#linechartTab")[0].style.height = '300px';
-
-        $("#barchartTab")[0].style.width = '0%';
-        $("#barchartTab")[0].style.height = '0px'; 
-        $("#multilinechartTab")[0].style.width = '0%';
-        $("#multilinechartTab")[0].style.height = '0px';
-        $("#piechartTab")[0].style.width = '0%';
-        $("#piechartTab")[0].style.height = '0px';
-
 
         $("#linechartTab")[0].style.visibility = 'visible';
         $("#barchartTab")[0].style.visibility = 'hidden';
@@ -276,58 +282,31 @@ angular.module('dataVisualizationsApp.controllers')
     $("#barchartLink").click(function() {
         console.log('clicked on barcharttab');
 
-        $("#barchartTab")[0].style.width = '100%';
-        $("#barchartTab")[0].style.height = '300px';
-
-        $("#linechartTab")[0].style.width = '0%';
-        $("#linechartTab")[0].style.height = '0px'; 
-        $("#multilinechartTab")[0].style.width = '0%';
-        $("#multilinechartTab")[0].style.height = '0px';
-        $("#piechartTab")[0].style.width = '0%';
-        $("#piechartTab")[0].style.height = '0px';
-
         $("#linechartTab")[0].style.visibility = 'hidden';
-        $("#barchartTab")[0].style.visibility = 'visible';  
+        $("#barchartTab")[0].style.visibility = 'visible';
         $("#multilinechartTab")[0].style.visibility = 'hidden';
-        $("#piechartTab")[0].style.visibility = 'hidden';  
+        $("#piechartTab")[0].style.visibility = 'hidden';
+            
     });
 
     $("#multilinechartLink").click(function() {
-        console.log('clicked on barcharttab');
-
-        $("#multilinechartTab")[0].style.width = '100%';
-        $("#multilinechartTab")[0].style.height = '300px';
-
-        $("#barchartTab")[0].style.width = '0%';
-        $("#barchartTab")[0].style.height = '0px'; 
-        $("#linechartTab")[0].style.width = '0%';
-        $("#linechartTab")[0].style.height = '0px';
-        $("#piechartTab")[0].style.width = '0%';
-        $("#piechartTab")[0].style.height = '0px';
+        console.log('clicked on multilinecharttab');
 
         $("#linechartTab")[0].style.visibility = 'hidden';
-        $("#barchartTab")[0].style.visibility = 'hidden';  
+        $("#barchartTab")[0].style.visibility = 'hidden';
         $("#multilinechartTab")[0].style.visibility = 'visible';
-        $("#piechartTab")[0].style.visibility = 'hidden';  
+        $("#piechartTab")[0].style.visibility = 'hidden';
+
     });
 
     $("#piechartLink").click(function() {
-        console.log('clicked on barcharttab');
-
-        $("#piechartTab")[0].style.width = '100%';
-        $("#piechartTab")[0].style.height = '500px';
-
-        $("#barchartTab")[0].style.width = '0%';
-        $("#barchartTab")[0].style.height = '0px'; 
-        $("#multilinechartTab")[0].style.width = '0%';
-        $("#multilinechartTab")[0].style.height = '0px';
-        $("#linechartTab")[0].style.width = '0%';
-        $("#linechartTab")[0].style.height = '0px';
+        console.log('clicked on piecharttab');
 
         $("#linechartTab")[0].style.visibility = 'hidden';
-        $("#barchartTab")[0].style.visibility = 'hidden';  
+        $("#barchartTab")[0].style.visibility = 'hidden';
         $("#multilinechartTab")[0].style.visibility = 'hidden';
-        $("#piechartTab")[0].style.visibility = 'visible';  
+        $("#piechartTab")[0].style.visibility = 'visible';
+
     });
 
     /****************** MAP INITIALISATION *********************/
@@ -339,14 +318,15 @@ angular.module('dataVisualizationsApp.controllers')
 
     function initMap(){
         $scope.mapDefaults = {
-                maxZoom: 14,
-                minZoom: 7
+                maxZoom: 7,
+                minZoom: 7,
+                dragging: false,
         };
 
         $scope.mapCenter = {
             lat: 50.5,
             lng: 4.303,
-            zoom: 8,
+            zoom: 7,
         };
 
         $scope.mapLayers = {
@@ -452,6 +432,8 @@ angular.module('dataVisualizationsApp.controllers')
     }
 
     function editLocationColors(index){
+        console.log('edit routes');
+
         if($scope.locationsType == 2){
             editMarkers(index);
         } else if($scope.locationsType == 1){
@@ -485,7 +467,7 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.mapCenter = {
             lat: (sumLat/$scope.locationsDict[index].length),
             lng: (sumLong/$scope.locationsDict[index].length),
-            zoom: 8,
+            zoom: 7,
         };
     }
 
@@ -493,7 +475,7 @@ angular.module('dataVisualizationsApp.controllers')
         //now that we have min and max, map all values to a color between green and red.
         for(var k in $scope.valuesToday[index]){
             var temp = Math.floor(($scope.valuesToday[index][k][$scope.currentTime].data-$scope.mapExtent[0])/($scope.mapExtent[1]-$scope.mapExtent[0])*($scope.heatMap.length-1));
-            $scope.mapPaths[''+k].color = $scope.heatMap[temp];
+            $scope.mapPaths[k].color = $scope.heatMap[temp];
         }
     }
 
@@ -524,15 +506,15 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.mapCenter = {
             lat: (sumLat/$scope.locationsDict[index].length),
             lng: (sumLong/$scope.locationsDict[index].length),
-            zoom: 8,
+            zoom: 7,
         };
     }
 
     function editRoutes(index){
         for(var k in $scope.valuesToday[index]){
             var temp = Math.floor(($scope.valuesToday[index][k][$scope.currentTime].data-$scope.mapExtent[0])/($scope.mapExtent[1]-$scope.mapExtent[0])*($scope.heatMap.length-1));
-            $scope.mapPaths[''+k].color = $scope.heatMap[temp];
-            $scope.mapPaths[''+k].opacity = 0.1 + $scope.heatMap[temp]/($scope.heatMap.length-1)*0.9;
+            $scope.mapPaths[k].color = $scope.heatMap[temp];
+            $scope.mapPaths[k].opacity = 0.1 + $scope.heatMap[temp]/($scope.heatMap.length-1)*0.9;
         }
     }
 
@@ -701,7 +683,11 @@ angular.module('dataVisualizationsApp.controllers')
         var tempMultilineDict = [];
 
         for(var v=0; v<$scope.valuesToday[index][0].length; v++){
-            tempMultilineDict[v] = $scope.valuesToday[index][0][v].date.toLocaleTimeString();
+            if((1+v)%4==0){
+                tempMultilineDict[v] = $scope.valuesToday[index][0][v].date.toLocaleTimeString();
+            } else {
+                tempMultilineDict[v] = "";
+            }
         }
 
         $scope.multilineDict = tempMultilineDict;
