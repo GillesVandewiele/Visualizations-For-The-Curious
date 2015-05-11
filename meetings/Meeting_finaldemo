@@ -9,7 +9,19 @@ Karel: lay-out finishen, install page
 
 Pieter: dataservice aan het herschrijven
 
-Gilles: Demo voorbereiden (WK Voetbal)
+Gilles: Demo voorbereiden (WK Voetbal, staking 11/12/14)
 
+future improvements
+- COUNT aggregation
+- Support for multiple dataset visualization in front-end
+- Dynamic discovery of useful visualizations, aggregation & grouping parameters 
+- 
+
+
+DEMO:
+-----
+- 11 December 2014:
+De treinstaking van vandaag zorgde voor de zwaarste ochtendspits van het jaar in Vlaanderen. Voor heel België was het zelfs de op één na zwaarste. Op een bepaald moment stond er 365 kilometer file. Richting Brussel liepen de wachttijden op tot twee uur.
+( http://www.hln.be/hln/nl/957/Binnenland/article/detail/2149193/2014/12/11/Staking-zorgt-voor-langste-file-van-2014.dhtml )
 
 
