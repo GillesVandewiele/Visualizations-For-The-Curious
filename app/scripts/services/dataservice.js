@@ -249,8 +249,8 @@ angular.module('dataVisualizationsApp.services')
 	// IMPORTANT: data must be the same length as times.
 	// Output is either an array with the number of elements equal to the number of locations or an array with the number of elements
 	// equal to the number of data entries on that day.
-	this.filterByDay = function(index, date, data){
-		console.log("Filtering the data on ", date)
+	this.filterByDay = function(index, date, data, aggregated){
+		console.log("Filtering the data on ", date.toString())
 		if(!data){
 			console.log("ERROR: wrong data (undefined) given");
 			return;
@@ -259,18 +259,31 @@ angular.module('dataVisualizationsApp.services')
 			console.log("ERROR: times and data are not same length");
 			return;
 		}
-
-		var results = [];
-
+		if(aggregated || locations[index].length == 0){
+			var results = [];
+		}else {
+			var results = {};
+		}
 		for(var i=0; i<times[index].length; i++){
 			// Decompress the date
 			var dictTime = new Date(timesDict[index][times[index][i]].name);
 			if(dictTime.getFullYear() == date.getFullYear() && dictTime.getDate() == date.getDate() && dictTime.getMonth() == date.getMonth()){
-				results.push({"date": dictTime, "data": data[i]});
+				if(aggregated || locations[index].length == 0){
+					// If there are no locations, or we have aggregated values, we just push them to our results array.
+					results.push({"date": dictTime, "data": data[i]});
+				}else {
+					// If the values are not aggregated (or if no locations are specified), we store them per location
+					for(var j=0;j<locations[index][i].length; j++){
+						if(!results[locations[index][i][j]]){
+							results[locations[index][i][j]] = [];
+						}
+						results[locations[index][i][j]].push({"date": dictTime, "data": data[i][j]});
+					}
+				}
 			}
 
 			// We know the dates are sorted, so as soon as we see a date that exceeds the searched date, we stop looking
-			if(dictTime.getFullYear() > date.getFullYear()){
+			/*if(dictTime.getFullYear() > date.getFullYear()){
 				console.log(results);
 				return results;
 			}
@@ -281,7 +294,7 @@ angular.module('dataVisualizationsApp.services')
 			if(dictTime.getFullYear() == date.getFullYear() && dictTime.getMonth() == date.getMonth() && dictTime.getDate() > date.getDate()){
 				console.log(results);
 				return results;
-			}
+			}*/
 		}
 		//console.log(results);
 		return results;

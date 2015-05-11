@@ -51,102 +51,43 @@
 						</div>
 				</div>
 				-->
-				<!--<div class="tabbable">
+
+				<div class="tabbable">
 		            <ul class="nav nav-tabs">
 		                <li class="active"><a id="linechartLink" data-toggle="tab">Linechart</a></li>
 		                <li><a id="barchartLink" data-toggle="tab">Barchart</a></li>
+		                <li><a id="multilinechartLink" data-toggle="tab">Multilinechart</a></li>
+		                <li><a id="piechartLink" data-toggle="tab">Piechart</a></li>
 		            </ul>
 		            <div class="tab-content">
-		                <div class="tab-pane active" id="linechartTab">
-		                    	<d3-line-chart config="{data: lineChartData, axisTitle: valuesTitles[0]}"></d3-line-chart>
+		                <div class="tab-pane active" id="linechartTab" >
+		                	<br />
+		                    <d3-line-chart config="{data: lineChartData, axisTitle: valuesTitles[0]}"></d3-line-chart>
 		                </div>
-		                <div class="tab-pane" id="barchartTab">
-		                    	<canvas id="bar" class="chart chart-bar" data="barData" labels="barDict" series="barSeries" legend="barLegend"></canvas>
+
+		                <div class="tab-pane active" id="barchartTab" >
+		                	<br />
+	                    	<canvas id="bar" class="chart chart-bar" data="barData" labels="barDict" series="barSeries" legend="barLegend"></canvas>
 		                </div>
+
+		                <div class="tab-pane active" id="multilinechartTab" >
+		                	<br />
+	                    	<canvas id="line" class="chart chart-line" data="multilineData" labels="multilineDict" legend="true" series="multilineSeries"></canvas>
+		                </div>
+
+    		            <div class="tab-pane active" id="piechartTab" >
+		                	<br />
+	                    	<div ng-repeat="vals in valuesTodayAggregated track by $index">
+								<h4>{{valuesTitles[$index]}}</h4>
+					  			<d3-donut-chart donutcolors="heatMap" values="vals" labels=""></d3-donut-chart>
+								<br />
+							</div>
+		                </div>
+
 		            </div>
+
+		            
 		        </div>	
-
-				<br />
-				<br />
-
-				<!--<d3-multi-line-chart config="{data: multiLineChartData, axisTitle: valuesTitles[0]}"></d3-multi-line-chart>-->
-				<!-- This is shit and has to be moved to a stylesheet of course.. -->
-
-				<style>
-					.axis path,
-					.axis line {
-					  fill: none;
-					  stroke: #000;
-					  shape-rendering: crispEdges;
-					}
-
-					.line {
-					  fill: none;
-					  stroke: steelblue;
-					  stroke-width: 1.5px;
-					}
-
-					.overlay {
-					  fill: none;
-					  pointer-events: all;
-					}
-
-					.focus circle {
-					  fill: none;
-					  stroke: steelblue;
-					}
-
-				</style>
-
-				<br />
-
-		        <script>
-			        $("#linechartLink").click(function() {
-						console.log("click");
-						/*$('.tab-pane').removeClass('active'); // remove active class from tabs
-    					$(this).addClass('active'); // add active class to clicked tab*/
-					    $("#barchartTab")[0].style.display = "none";
-					    $("#linechartTab")[0].style.display = "block";
-					    $("#linechartTab")[0].style.width = "50%";
-					    $("#linechartTab")[0].style.height = "50%";
-					});
-
-
-					$("#barchartLink").click(function() {
-						console.log("click");
-						/*$('.tab-pane').removeClass('active'); // remove active class from tabs
-    					$(this).addClass('active'); // add active class to clicked tab*/
-					    $("#linechartTab")[0].style.display = "none";
-					    $("#barchartTab")[0].style.display = "block";
-					    $("#barchartTab")[0].style.width = "100%";	
-					    $("#barchartTab")[0].style.height = "500px";					    
-					    /*$(".chart-bar")[0].width = "500";
-					    $(".chart-bar")[0].height = "500";
-					    $(".chart-bar")[0].style.width = "100%";
-					    $(".chart-bar")[0].style.height = "100%";*/
-					});
-
-		        </script>
-				
-				<div ng-repeat="vals in valuesTodayAggregated track by $index">
-					<h4>{{valuesTitles[$index]}}</h4>
-		  			<d3-donut-chart donutcolors="heatMap" values="vals" labels=""></d3-donut-chart>
-					<br />
-				</div>
-
-				<!--<br/>
-				<d3-line-chart config="{data: lineChartData, axisTitle: valuesTitles[0]}"></d3-line-chart>
-				<br/>
-				<canvas id="bar" class="chart chart-bar" data="barData" labels="barDict" series="barSeries"></canvas>
-				<br/>				
-				<canvas id="line" class="chart chart-line" data="multilineData" labels="multilineDict" legend="true" series="multilineSeries"></canvas>
-				<div ng-repeat="vals in valuesTodayAggregated track by $index">
-					<h4>{{valuesTitles[$index]}}</h4>
-
-		  			<d3-donut-chart donutcolors="heatMap" values="vals" labels=""></d3-donut-chart>
-					<br />
-				</div>-->
-
   			</div>
 		</div>	
 
