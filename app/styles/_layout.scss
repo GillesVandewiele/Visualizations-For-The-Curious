@@ -5,6 +5,7 @@ $logoPadding: 10px;
 $logoRowHeight: $logoHeight + 2 * $logoPadding;
 $titleRowHeight: 60px;
 $contentPadding: 15px;
+$calColumnWidth: 200px;
 
 /* Generic pane rules */
 body { 
@@ -74,6 +75,24 @@ body {
 		right:0;
 		width:38%;
 	}
+
+	&.calendarCol{
+		left:0;
+		width:12%;
+	}
+
+	&.mapCol{
+		width:44%;
+		left:12%;
+	}
+	&.visualizationsCol{
+		width:44%;
+		left:56%;
+	}
+}
+
+.visualizationsRow{
+	padding-left: 10px;
 }
 
 .scroll-x { 

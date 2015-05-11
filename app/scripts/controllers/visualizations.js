@@ -19,6 +19,12 @@ angular.module('dataVisualizationsApp.controllers')
     if locations --> routes = lines on a map, can be represented with polylines
     if locations --> none = hide map
     */ 
+
+    $scope.showLinechart = true;
+    $scope.showBarchart = false;
+    $scope.showMultilinechart = false;
+    $scope.showPiechart = false;
+
     $scope.locationsType = 0;
 
     //always start with currentTime at zero
@@ -77,8 +83,8 @@ angular.module('dataVisualizationsApp.controllers')
 
 
         //initialise these on the first date in the timesDict   
-        $scope.valuesTodayAggregated[c] = dataService.aggLocPerDatByDay(c, new Date($scope.timesDict[c][$scope.times[c][0]].name));
-        $scope.valuesToday[c] = dataService.filterByDay(c, new Date($scope.timesDict[c][$scope.times[c][0]].name), $scope.values[c], true);
+        $scope.valuesTodayAggregated[c] = dataService.filterByDay(c, new Date($scope.timesDict[c][$scope.times[c][0]].name), $scope.aggregatedValues[c], true);
+        $scope.valuesToday[c] = dataService.filterByDay(c, new Date($scope.timesDict[c][$scope.times[c][0]].name), $scope.values[c], false);
 
         //do some calendar stuff --> must be refactored to use dataService aggregation
         var tmp ={};
@@ -172,6 +178,7 @@ angular.module('dataVisualizationsApp.controllers')
         }
     });
 
+
     /************************ WATCHES *************************/
 
     //watch for checking changes in the selected day and updating the linechart accordingly
@@ -190,7 +197,7 @@ angular.module('dataVisualizationsApp.controllers')
     //watch for editing the map when the timebar has changed
     $scope.$watch('currentTime', function(){
         if($scope.valuesToday.length > 0){   
-            if($scope.valuesToday[0].length > 0){
+            if($scope.valuesToday[0]){
                 if($scope.locationsDict[0]){
                     editLocationColors(0);
                 }
@@ -201,7 +208,7 @@ angular.module('dataVisualizationsApp.controllers')
     //watch for editing the map when a new day has been selected
     $scope.$watch('valuesToday', function(){
         if($scope.valuesToday.length > 0){   
-            if($scope.valuesToday[0].length > 0){
+            if($scope.valuesToday[0]){
                 if($scope.locationsDict[0]){
                     initLegend(0);
                     editLocationColors(0); 
@@ -226,6 +233,80 @@ angular.module('dataVisualizationsApp.controllers')
     }, true); //dirty watch
 
 
+    /****************** TABS INITIALISATION *********************/
+
+
+    $("#linechartTab")[0].style.width = '95%';
+    $("#linechartTab")[0].style.height = '600px';
+    $("#linechartTab")[0].style.position = 'absolute';
+    $("#linechartTab")[0].style.top = '10';
+    $("#linechartTab")[0].style.left = '2';
+
+
+    $("#barchartTab")[0].style.width = '95%';
+    $("#barchartTab")[0].style.height = '600px';
+    $("#barchartTab")[0].style.position = 'absolute';
+    $("#barchartTab")[0].style.top = '10';
+    $("#barchartTab")[0].style.left = '2';
+
+    $("#multilinechartTab")[0].style.width = '95%';
+    $("#multilinechartTab")[0].style.height = '600px';
+    $("#multilinechartTab")[0].style.position = 'absolute';
+    $("#multilinechartTab")[0].style.top = '10';
+    $("#multilinechartTab")[0].style.left = '2';
+
+    $("#piechartTab")[0].style.width = '95%';
+    $("#piechartTab")[0].style.height = '600px';
+    $("#piechartTab")[0].style.position = 'absolute';
+    $("#piechartTab")[0].style.top = '10';
+    $("#piechartTab")[0].style.left = '2';
+
+    $("#linechartTab")[0].style.visibility = 'visible';
+    $("#barchartTab")[0].style.visibility = 'hidden';
+    $("#multilinechartTab")[0].style.visibility = 'hidden';
+    $("#piechartTab")[0].style.visibility = 'hidden';
+
+
+    $("#linechartLink").click(function() {
+        console.log('clicked on linecharttab');
+
+        $("#linechartTab")[0].style.visibility = 'visible';
+        $("#barchartTab")[0].style.visibility = 'hidden';
+        $("#multilinechartTab")[0].style.visibility = 'hidden';
+        $("#piechartTab")[0].style.visibility = 'hidden';
+    });
+
+
+    $("#barchartLink").click(function() {
+        console.log('clicked on barcharttab');
+
+        $("#linechartTab")[0].style.visibility = 'hidden';
+        $("#barchartTab")[0].style.visibility = 'visible';
+        $("#multilinechartTab")[0].style.visibility = 'hidden';
+        $("#piechartTab")[0].style.visibility = 'hidden';
+            
+    });
+
+    $("#multilinechartLink").click(function() {
+        console.log('clicked on multilinecharttab');
+
+        $("#linechartTab")[0].style.visibility = 'hidden';
+        $("#barchartTab")[0].style.visibility = 'hidden';
+        $("#multilinechartTab")[0].style.visibility = 'visible';
+        $("#piechartTab")[0].style.visibility = 'hidden';
+
+    });
+
+    $("#piechartLink").click(function() {
+        console.log('clicked on piecharttab');
+
+        $("#linechartTab")[0].style.visibility = 'hidden';
+        $("#barchartTab")[0].style.visibility = 'hidden';
+        $("#multilinechartTab")[0].style.visibility = 'hidden';
+        $("#piechartTab")[0].style.visibility = 'visible';
+
+    });
+
     /****************** MAP INITIALISATION *********************/
 
     //--> should be done in directive
@@ -235,14 +316,15 @@ angular.module('dataVisualizationsApp.controllers')
 
     function initMap(){
         $scope.mapDefaults = {
-                maxZoom: 14,
-                minZoom: 7
+                maxZoom: 7,
+                minZoom: 7,
+                dragging: false,
         };
 
         $scope.mapCenter = {
             lat: 50.5,
             lng: 4.303,
-            zoom: 8,
+            zoom: 7,
         };
 
         $scope.mapLayers = {
@@ -348,6 +430,8 @@ angular.module('dataVisualizationsApp.controllers')
     }
 
     function editLocationColors(index){
+        console.log('edit routes');
+
         if($scope.locationsType == 2){
             editMarkers(index);
         } else if($scope.locationsType == 1){
@@ -381,15 +465,15 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.mapCenter = {
             lat: (sumLat/$scope.locationsDict[index].length),
             lng: (sumLong/$scope.locationsDict[index].length),
-            zoom: 8,
+            zoom: 7,
         };
     }
 
     function editMarkers(index){
         //now that we have min and max, map all values to a color between green and red.
-        for(var k=0; k<$scope.valuesToday[index][$scope.currentTime].data.length; k++){
-            var temp = Math.floor(($scope.valuesToday[index][$scope.currentTime].data[k]-$scope.mapExtent[0])/($scope.mapExtent[1]-$scope.mapExtent[0])*($scope.heatMap.length-1));
-            $scope.mapPaths[''+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
+        for(var k in $scope.valuesToday[index]){
+            var temp = Math.floor(($scope.valuesToday[index][k][$scope.currentTime].data-$scope.mapExtent[0])/($scope.mapExtent[1]-$scope.mapExtent[0])*($scope.heatMap.length-1));
+            $scope.mapPaths[k].color = $scope.heatMap[temp];
         }
     }
 
@@ -411,8 +495,7 @@ angular.module('dataVisualizationsApp.controllers')
                     clickable: true,  
             };
 
-            //use first coordinate of every route
-            console.log(decoded);
+            //use first coordinate of every routes
             sumLat += decoded[0][0];
             sumLong += decoded[0][1];            
         }
@@ -421,33 +504,43 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.mapCenter = {
             lat: (sumLat/$scope.locationsDict[index].length),
             lng: (sumLong/$scope.locationsDict[index].length),
-            zoom: 8,
+            zoom: 7,
         };
     }
 
     function editRoutes(index){
-        for(var k=0; k<$scope.valuesToday[index][$scope.currentTime].data.length; k++){
-            var temp = Math.floor(($scope.valuesToday[index][$scope.currentTime].data[k]-$scope.mapExtent[0])/($scope.mapExtent[1]-$scope.mapExtent[0])*($scope.heatMap.length-1));
-            $scope.mapPaths[''+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
-            $scope.mapPaths[''+$scope.locations[index][$scope.currentTime][k]].opacity = 0.1 + $scope.heatMap[temp]/($scope.heatMap.length-1)*0.9;
+        for(var k in $scope.valuesToday[index]){
+            var temp = Math.floor(($scope.valuesToday[index][k][$scope.currentTime].data-$scope.mapExtent[0])/($scope.mapExtent[1]-$scope.mapExtent[0])*($scope.heatMap.length-1));
+            $scope.mapPaths[k].color = $scope.heatMap[temp];
+            $scope.mapPaths[k].opacity = 0.1 + $scope.heatMap[temp]/($scope.heatMap.length-1)*0.9;
         }
     }
 
     function initLegend(index){
         //first find the maximal value
-        $scope.mapExtent[1] = d3.max($scope.valuesToday[index], function(d){
-            return d3.max(d.data);
-        });
-        //second the minimal value
-        $scope.mapExtent[0] = d3.min($scope.valuesToday[index], function(d){
-            return d3.min(d.data);
-        });
+        $scope.mapExtent = [99999, -99999];
+
+        for(var l in $scope.valuesToday[index]){
+            var lMax = d3.max($scope.valuesToday[index][l], function(d){
+                return d.data;
+            });
+            var lMin = d3.min($scope.valuesToday[index][l], function(d){
+                return d.data;
+            });
+
+            if(lMax > $scope.mapExtent[1])
+                $scope.mapExtent[1] = lMax;
+
+            if(lMin < $scope.mapExtent[0])
+                $scope.mapExtent[0] = lMin;
+
+        }
 
         console.log($scope.mapExtent);
 
         //for the legend, the heatmapboudaries must be set.
         for(var j=0; j<$scope.heatMapBoundaries.length; j++){
-            $scope.heatMapBoundaries[j] = (($scope.mapExtent[0] + j*($scope.mapExtent[1]-$scope.mapExtent[0])/$scope.heatMapBoundaries.length).toFixed(1)).toString();
+            $scope.heatMapBoundaries[j] = (($scope.mapExtent[0] + j*($scope.mapExtent[1]-$scope.mapExtent[0])/($scope.heatMapBoundaries.length-1)).toFixed(1)).toString();
         }
     }
 
@@ -485,8 +578,8 @@ angular.module('dataVisualizationsApp.controllers')
     }
 
     function clickOnDay(date, nb){
-        $scope.valuesTodayAggregated[0] = dataService.aggLocPerDatByDay(0, date);
-        if($scope.values[0].length > 0) $scope.valuesToday[0] = dataService.filterByDay(0, date, $scope.values[0], true);
+        if($scope.aggregatedValues[0].length > 0) $scope.valuesTodayAggregated[0] = dataService.filterByDay(0, date, $scope.aggregatedValues[0], true);
+        if($scope.values[0].length > 0) $scope.valuesToday[0] = dataService.filterByDay(0, date, $scope.values[0], false);
         $scope.$apply();
     }
 
@@ -529,8 +622,6 @@ angular.module('dataVisualizationsApp.controllers')
         console.log($scope.locations2Visualize[$scope.lastAddedLocation2Visualize]);
         $scope.barSeries[$scope.lastAddedLocation2Visualize] = $scope.mapPaths[$scope.locations2Visualize[$scope.lastAddedLocation2Visualize].toString()].name;
         $scope.barLegend = true;
-
-        console.log($scope.barSeries);
     }
 
     function editBarDataWithoutLocations(index){
@@ -564,8 +655,6 @@ angular.module('dataVisualizationsApp.controllers')
         //always only 1 series --> index = 0
         $scope.barSeries[0] = $scope.valuesTitles[index];
         $scope.barLegend = true;
-
-        console.log($scope.barSeries);
     }
 
 
@@ -573,45 +662,40 @@ angular.module('dataVisualizationsApp.controllers')
 
    function editMultilineWithLocations(index){ 
         //last edited location must be chanded in barchart
-        console.log('data for multiline', $scope.valuesToday[index]);
 
         //fill the data of the multilinechart
         var tempMultilineData = []
 
         for(var l=0; l<$scope.locations2Visualize.length; l++){
             tempMultilineData[l] = [];
-            for(var v=0; v<$scope.valuesToday[index].length; v++){
-                tempMultilineData[l][v] = $scope.valuesToday[index][v].data[$scope.locations2Visualize[l]].toFixed(1);
+            for(var v=0; v<$scope.valuesToday[index][0].length; v++){
+                tempMultilineData[l][v] = $scope.valuesToday[index][$scope.locations2Visualize[l]][v].data.toFixed(1);
             }
         }
+
+        console.log(tempMultilineData);
 
         $scope.multilineData = tempMultilineData;
 
         //fill the dict for the x-axis
         var tempMultilineDict = [];
 
-        for(var v=0; v<$scope.valuesToday[index].length; v++){
-            tempMultilineDict[v] = $scope.valuesToday[index][v].date.toLocaleTimeString();
+        for(var v=0; v<$scope.valuesToday[index][0].length; v++){
+            if((1+v)%4==0){
+                tempMultilineDict[v] = $scope.valuesToday[index][0][v].date.toLocaleTimeString();
+            } else {
+                tempMultilineDict[v] = "";
+            }
         }
 
         $scope.multilineDict = tempMultilineDict;
 
         $scope.multilineSeries[$scope.lastAddedLocation2Visualize] = $scope.mapPaths[$scope.locations2Visualize[$scope.lastAddedLocation2Visualize].toString()].name;
         $scope.multilineLegend = true;
-
-
     } 
 
   }]);
 
-function tab(tab, tabs) {
-    console.log("test: ", tab, tabs, tabs.length);
-    for(var i=0; i < tabs.length; i++){
-        document.getElementById(tabs[i]).style.display = 'none'
-        document.getElementById('li_' + tabs[i]).setAttribute("class", "");
-    }
-    document.getElementById(tab).style.display = 'block';
-    document.getElementById('li_'+tab).setAttribute("class", "active");
-}
+
 
 
