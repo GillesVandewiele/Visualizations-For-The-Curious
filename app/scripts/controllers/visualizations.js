@@ -174,7 +174,7 @@ angular.module('dataVisualizationsApp.controllers')
     //watch for checking changes in the selected day and updating the linechart accordingly
     $scope.$watch('valuesTodayAggregated', function(){
          if($scope.valuesTodayAggregated.length > 0){
-            if($scope.valuesTodayAggregated[0].length > 0){
+            if($scope.valuesTodayAggregated[0] && $scope.valuesTodayAggregated[0].length > 0){
                 $scope.lineChartData = $scope.valuesTodayAggregated[0];
 
                 console.log("Updating timebar");

@@ -65,6 +65,15 @@
   		<br/>
 
   		<canvas id="line" class="chart chart-line" data="multilineData" labels="multilineDict" legend="true" series="multilineSeries"></canvas> 
+
+
+  		<br/>
+  		<div ng-repeat="vals in valuesTodayAggregated track by $index">
+			<h4>{{valuesTitles[$index]}}</h4>
+
+  			<d3-donut-chart donutcolors="heatMap" values="vals" labels=""></d3-donut-chart>
+			<br />
+		</div>
   </div>
 
 		
