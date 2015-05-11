@@ -567,4 +567,14 @@ angular.module('dataVisualizationsApp.controllers')
 
   }]);
 
+function tab(tab, tabs) {
+    console.log("test: ", tab, tabs, tabs.length);
+    for(var i=0; i < tabs.length; i++){
+        document.getElementById(tabs[i]).style.display = 'none'
+        document.getElementById('li_' + tabs[i]).setAttribute("class", "");
+    }
+    document.getElementById(tab).style.display = 'block';
+    document.getElementById('li_'+tab).setAttribute("class", "active");
+}
+
 
