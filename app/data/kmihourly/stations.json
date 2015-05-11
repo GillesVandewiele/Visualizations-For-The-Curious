@@ -1,56 +1,56 @@
 [
  {
-  "long": 5.371832,
-  "lat": 50.0251593,
+  "name": "Kleine-Brogel",
   "nr": 0,
-  "name": "Saint-Hubert"
- },
- {
-  "long": 5.4512607,
-  "lat": 50.6547149,
-  "nr": 1,
-  "name": "Bierset"
- },
- {
-  "long": 5.5942184,
-  "lat": 49.6478969,
-  "nr": 2,
-  "name": "Buzenol"
- },
- {
-  "long": 4.3372348,
-  "lat": 50.8018201,
-  "nr": 3,
-  "name": "Ukkel"
- },
- {
-  "long": 3.7990805,
-  "lat": 51.0031757,
-  "nr": 4,
-  "name": "Melle"
- },
- {
   "long": 5.4520263,
-  "lat": 51.1725458,
-  "nr": 5,
-  "name": "Kleine-Brogel"
+  "lat": 51.1725458
  },
  {
-  "long": 3.810128,
-  "lat": 50.587693,
-  "nr": 6,
-  "name": "Chièvres"
+  "name": "Ukkel",
+  "nr": 1,
+  "long": 4.3372348,
+  "lat": 50.8018201
  },
  {
+  "name": "Florennes",
+  "nr": 2,
   "long": 4.6030187,
-  "lat": 50.2514227,
-  "nr": 7,
-  "name": "Florennes"
+  "lat": 50.2514227
  },
  {
+  "name": "Melle",
+  "nr": 3,
+  "long": 3.7990805,
+  "lat": 51.0031757
+ },
+ {
+  "name": "Buzenol",
+  "nr": 4,
+  "long": 5.5942184,
+  "lat": 49.6478969
+ },
+ {
+  "name": "Bierset",
+  "nr": 5,
+  "long": 5.4512607,
+  "lat": 50.6547149
+ },
+ {
+  "name": "Chièvres",
+  "nr": 6,
+  "long": 3.810128,
+  "lat": 50.587693
+ },
+ {
+  "name": "Middelkerke",
+  "nr": 7,
   "long": 2.80814281623748,
-  "lat": 51.18267355,
+  "lat": 51.18267355
+ },
+ {
+  "name": "Saint-Hubert",
   "nr": 8,
-  "name": "Middelkerke"
+  "long": 5.371832,
+  "lat": 50.0251593
  }
 ]
