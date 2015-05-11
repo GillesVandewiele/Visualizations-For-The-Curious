@@ -22,7 +22,7 @@
 				<div ng-repeat="calInfo in calendarData track by $index">
 					<h4>{{calInfo['title']}}</h4>
 					<button class="btn" id="btn-previous{{$index}}">Previous</button><button class="btn" id="btn-next{{$index}}">Next</button>
-					<d3-calendar config="{domain:'month',range:5, data:calInfo['data'],start:firstDate, highlight: 'now', legend: calInfo['legend'], click: calInfo['click']}" nxt="#btn-next{{$index}}" prv="#btn-previous{{$index}}"></d3-calendar>
+					<d3-calendar config="{domain:'month',range:3, data:calInfo['data'],start:firstDate, highlight: 'now', legend: calInfo['legend'], click: calInfo['click']}" nxt="#btn-next{{$index}}" prv="#btn-previous{{$index}}"></d3-calendar>
 					<br />
 				</div>
 			</div>
@@ -47,7 +47,7 @@
 						</div>
 				</div>
 				-->
-				<div class="tabbable">
+				<!--<div class="tabbable">
 		            <ul class="nav nav-tabs">
 		                <li class="active"><a id="linechartLink" data-toggle="tab">Linechart</a></li>
 		                <li><a id="barchartLink" data-toggle="tab">Barchart</a></li>
@@ -85,13 +85,13 @@
 					    $(".chart-bar")[0].style.width = "100%";
 					    $(".chart-bar")[0].style.height = "100%";
 					});
-		        </script>
-					<!--<br/>
+		        </script>-->
+					<br/>
 					<d3-line-chart config="{data: lineChartData, axisTitle: valuesTitles[0]}"></d3-line-chart>
 					<br/>
 					<canvas id="bar" class="chart chart-bar" data="barData" labels="barDict" series="barSeries"></canvas>
 					<br/>				
-					<canvas id="line" class="chart chart-line" data="multilineData" labels="multilineDict" legend="true" series="multilineSeries"></canvas>-->
+					<canvas id="line" class="chart chart-line" data="multilineData" labels="multilineDict" legend="true" series="multilineSeries"></canvas>
 					<div ng-repeat="vals in valuesTodayAggregated track by $index">
 						<h4>{{valuesTitles[$index]}}</h4>
 
