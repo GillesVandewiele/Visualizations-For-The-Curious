@@ -17,16 +17,7 @@ angular.module('dataVisualizationsApp.services')
 	var loadedDatasets = [];
 	// Holds a mapping from the names of the loaded datasets to their position
     var nameToIndex = {};
-
-	var groupingTitlesWeekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-	var groupingTitlesWeeks = [];
-	for(var i=1; i<53; i++){
-		groupingTitlesWeeks[i-1] = 'Week ' + i;
-	}
-	var groupingTitlesMonth = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-	//not necessary for years: 2014 is a proper grouping title.
-
-
+	
 	/*************** DECLARE USERSDATASETS **********************/
 
 	// Load one dataset (@Gilles: Is this ever used? If not, feel free to remove)
@@ -75,10 +66,13 @@ angular.module('dataVisualizationsApp.services')
 	function loadDataInto(description, destination){
 		var allPromises = [];
 		var datesAvailable = [];
-		allPromises.push(loadUrl(description.value.Dict, destination, description.value.Name + '_dict'));
+		
+		if (description.value.Dict !== '' && description.value.Dict !== undefined && description.value.Dict !== null) {
+			allPromises.push(loadUrl(description.value.Dict, destination, description.value.Name + '_dict'));
+		}
 		
 		datesAvailable.push(loadUrl(description.date.Dict, destination, description.date.Name + '_dict'));
-		if (description.location !== undefined) {
+		if (description.location !== null && description.location !== undefined) {
 			allPromises.push(loadUrl(description.location.Dict, destination, description.location.Name + '_dict'));
 		}
 		
@@ -116,7 +110,10 @@ angular.module('dataVisualizationsApp.services')
 		var aggregationReady = $q.defer();
 		destination.dates_promise.then(
 			function() {
-				description.aggLoc_perDat_perDay = aggLoc_perDate_perDay(destination[description.date.Name], destination[description.date.Name + '_dayBoundaries'], destination[description.value.Name], description.aggregation);
+				// Here grouping and aggregation
+				var aggMethods = convertAggPeriod(description.grouping);
+				aggMethods.aggregation = description.aggregation;
+				description.aggregated = userAggregate(destination[description.date.Name], destination[description.date.Name + '_dict'], destination[description.value.Name], aggMethods, description);
 				aggregationReady.resolve();
 			},
 			function() {
@@ -127,16 +124,85 @@ angular.module('dataVisualizationsApp.services')
 		return $q.all(allPromises);
 	}
 	
+	var groupingTitlesWeekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+	var groupingTitlesMonth = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+	function convertAggPeriod(period) {
+		var out = {};
+		if (period === 'WEEKDAY') {
+			out.trans = function(index) {
+				return groupingTitlesWeekday[index];
+			};
+			out.map = function(date) {
+				return date.getDay();
+			};
+		} else if (period === 'WEEKS') {
+			out.trans = function(index) {
+				return "Week " + index;
+			};
+			out.map = function(date) {
+				return date.getWeek();
+			};
+		} else if (period === 'MONTH') {
+			out.trans = function(index) {
+				return groupingTitlesMonth[index];
+			};
+			out.map = function(date) {
+				return date.getMonth();
+			};
+		} else if (period === 'YEAR') {
+			out.trans = function(index) {
+				return index;
+			};
+			out.map = function(date1) {
+				return date.getYear();
+			};
+		}
+		return out;
+	}
+	
+	function userAggregate(dates, dateDict, values, aggMethods) {
+		var out = [[], []];
+		var aggrs = {};
+		console.log(values)
+		for (var j = 0; j<dates.length; j++) {
+			var curAgg = aggMethods.map(new Date(dateDict[dates[j]].name));
+			if (!aggrs.hasOwnProperty(curAgg)) {
+				aggrs[curAgg] = [];
+			}
+			aggrs[curAgg].push(values[j]);
+		}
+		for (var attr in aggrs) {
+			out[0].push(aggMethods.trans(parseInt(attr)));
+			out[1].push(aggregate(aggrs[attr], aggMethods.aggregation));
+		}
+		console.log(out);
+		return out;
+	}
+				
+	
+	Date.prototype.getWeek = function() {
+		var date = new Date(this.getTime());
+		date.setHours(0, 0, 0, 0);
+		// Thursday in current week decides the year.
+		date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+		// January 4 is always in week 1.
+		var week1 = new Date(date.getFullYear(), 0, 4);
+		// Adjust to Thursday in week 1 and count number of weeks from date to week1.
+		return 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+	}
+	
 	function storeColumns(columnDescription, source, destination) {
-		console.log("Reading columns...");
+		console.log('Reading columns...');
 		var maxColLength = 0;
-		for (var i = 0; i < columnDescription.length; i++) {
+		var i;
+		for (i = 0; i < columnDescription.length; i++) {
 			var column = columnDescription[i];
 			destination[column.Name] = jsonPath(source, column.Path);
 			maxColLength = Math.max(maxColLength, destination[column.Name].length);
 		}
-		console.log("Decompressing columns...");
-		for (var i = 0; i < columnDescription.length; i++) {
+		console.log('Decompressing columns...');
+		for (i = 0; i < columnDescription.length; i++) {
 			var columnName = columnDescription[i].Name;
 			if (destination[columnName].length !== maxColLength) {
 				// Expand the column by replication
@@ -172,73 +238,40 @@ angular.module('dataVisualizationsApp.services')
 	function onSameDay(date1, date2) {
 		return (date1.getFullYear() === date2.getFullYear() && date1.getDate() === date2.getDate() && date1.getMonth() === date2.getMonth());
 	}
-	
-	// OUT: [{day: ?, dates: [], values: []},...]
-	function aggLoc_perDate_perDay(dates, dateBoundaries, values, method) {
-		if (method==='NONE') return undefined;
-		var out = [];
-		for (var i = 0; i<dateBoundaries.length; i++) {
-			var curDay = dateBoundaries[i];
-			var curEl = {'day': curDay.day, 'dates': [], 'values': []};
-			
-			var curStart = curDay.start;
-			var curDate = dates[curStart];
-			for (var j = curDay.start; j<curDay.stop; j++) {
-				if (dates[j]!==curDate) {
-					curEl.dates.push(curDate);
-					curEl.values.push(aggregate(range(curStart, j), dates, method));
-					curDate = dates[j];
-					curStart = j;
-				}
-			}
-			curEl.dates.push(curDate);
-			curEl.values.push(aggregate(range(curStart, curDate.stop), dates, method));
-			out.push(curEl);
-		}
-		return out;
-	}
-	
-	function range(start, stop) {
-		var out = [];
-		for (var i = start; i<stop; i++) {
-			out.push(i);
-		}
-		return out;
-	}
-
-	function aggregate(indices, data, method) {
+		
+	function aggregate(data, method) {
 		if (method === 'MEAN'){
-			return aggregate(indices, data, 'SUM')*1.0/indices.length;
+			return aggregate(data, 'SUM')*1.0/data.length;
 		} else if (method === 'SUM'){
 			var sum = 0;
-			for(var i=0; i<indices.length; i++){
-				sum += data[indices[i]];
+			for(var i=0; i<data.length; i++){
+				sum += data[i];
 			}
 			return sum;
 		} else if (method === 'MAX'){
-			var max = data[indices[0]];
-			for(var i=1; i<indices.length; i++){
-				if (data[indices[i]]>max) {
-					max = data[indices[i]];
+			var max = data[0];
+			for(var j=1; j<data.length; j++){
+				if (data[j]>max) {
+					max = data[j];
 				}
 			}
 			return max;
 		} else if (method === 'MIN'){
-			var min = data[indices[0]];
-			for(var i=1; i<indices.length; i++){
-				if (data[indices[i]]<min) {
-					min = data[indices[i]];
+			var min = data[0];
+			for(var k=1; k<data.length; k++){
+				if (data[k]<min) {
+					min = data[k];
 				}
 			}
 			return min;
 		} else if (method === 'COUNT'){
 			// In case of COUNT, the values are stored in dictionnaries. But no worries, we can use the compressed value to count.
 			var counts = {};
-			for(var i=0; i<indices.length; i++){
-				if (!counts.hasOwnProperty(data[indices[i]])) {
-					counts[data[indices[i]]] = 0;
+			for(var l=0; l<data.length; l++){
+				if (!counts.hasOwnProperty(data[l])) {
+					counts[data[l]] = 0;
 				}
-				counts[data[indices[i]]] += 1;
+				counts[data[l]] += 1;
 			}
 			return counts;
 		}
@@ -267,51 +300,124 @@ angular.module('dataVisualizationsApp.services')
 		}
 		return destination[field + '_promise'];
 	}
+	
+	this.getByDay = function(index, day, what) {
+		// Allow to leave out the what parameter
+		if (what === undefined) {
+			what = {};
+		}
+		if (what.date === undefined) {
+			what.date = true;
+		}
+		if (what.loc === undefined) {
+			what.loc = 'yes';
+		}
+		
+		var dataset = loadedDatasets[nameToIndex[userDatasets[index].name]];
+		var method = userDatasets[index].aggregation;
+		var days = dataset[userDatasets[index].date.Name + '_dayBoundaries'];
+		var dat = dataset[userDatasets[index].date.Name];
+		var val = dataset[userDatasets[index].value.Name];
+		
+		var lB = (userDatasets[index].location !== null) && (userDatasets[index].location !== undefined);
+		var loc;
+		if (lB) {
+			loc = dataset[userDatasets[index].location.Name];
+		}
 
-	/***************** AGGREGATION FUNCTIONS *********************/
-	Date.prototype.getWeekNumber = function(){
-	    var d = new Date(+this);
-	    d.setHours(0,0,0);
-	    d.setDate(d.getDate()+4-(d.getDay()||7));
-	    return Math.ceil((((d-new Date(d.getFullYear(),0,1))/8.64e7)+1)/7);
-	};
-
-
-	// This function will filter all the values on a certain date, aggregated is a boolean telling if data is aggregated or not
-	// IMPORTANT: data must be the same length as times.
-	// Output is an array with the number of elements equal to the number of data entries on that day.
-	this.aggLocPerDatByDay = function(index, date){
-		var info = loadedDatasets[index].aggLoc_perDat_perDay;
-		if (info === undefined) return undefined;
-		for (var i = 0; i<info.length; i++) {
-			if (onSameDay(new Date(info[i].day), date)) {
-				// In fact, both info[i].dates & info[i].values should be returned to create a good plot...
-				return info[i].values;
+		// Select data of correct day
+		var found = false;
+		for (var i = 0; i<days.length; i++) {
+			if (onSameDay(days[i].day, day)) {
+				found = true;
+				dat = dat.slice(days[i].start, days[i].stop);
+				if (lB) {
+					loc = loc.slice(days[i].start, days[i].stop);
+				}
+				val = val.slice(days[i].start, days[i].stop);
 			}
 		}
-	};
+		if (!found) {
+			return undefined;
+		}
 
-	/***************** GET DATA FROM SERVICE ********************/
+		// Handle the case when no locations are present (easy)
+		if (!lB) {
+			if (what.loc !== 'no') {
+				return undefined;
+			} else {
+				if (what.date) {
+					return [dat, val];
+				} else {
+					return aggregate(val, method);
+				}
+			}
+		}
+		// There are locations in the dataset
+		if (what.loc === 'yes') {
+			// Keep the locations
+			if (what.date) {
+				// Keep locations and date
+				return [dat, loc, val];
+			} else {
+				// Keep locations, but aggregate on date
+				var out = [[], []];
+				var locations = {};
+				for (var j = 0; j<dat.length; j++) {
+					if (!locations.hasOwnProperty(loc[j])) {
+						locations[loc[j]] = [];
+					}
+					locations[loc[j]].push(val[j]);
+				}
+				for (var attr in locations) {
+					out[0].push(parseInt(attr));
+					out[1].push(aggregate(locations[attr], method));
+				}
+				return out;
+			}
+		} else if (what.loc === 'no') {
+			// Aggregate on the locations
+			if (what.date) {
+				// Aggregate over locations, but keep the date
+				var out = [[], []];
+				var curStart = 0;
+				var curDate = dat[0];
+				for (var i = 1; i<dat.length; i++) {
+					if (dat[i]!==curDate) {
+						out[0].push(curDate);
+						out[1].push(aggregate(val.slice(curStart, i), method));
+						curDate = dat[i];
+						curStart = i;
+					}
+				}
+				out[0].push(curDate);
+				out[1].push(aggregate(val.slice(curStart, dat.length), method));
+				return out;
+			} else {
+				// Aggregate on both location and date
+				return aggregate(val, method);
+			}
+		} else {
+			// Filter on location
+			var newDat = [];
+			var newVal = [];
+			for (var i = 0; i<loc.length; i++) {
+				if (loc[i] === what.loc) {
+					newDat.push(dat[i]);
+					newVal.push(val[i]);
+				}
+			}
+			if (what.date) {
+				return [newDat, newVal];
+			} else {
+				return aggregate(newVal, method);
+			}
+		}
+	}
 
-	this.getGroupedAndAggregatedValues = function(index){
-		console.log('ERROR: getGroupedAndAggregatedValues not ready yet');
-		return groupedAndAggregatedValues[index];
-	};
-
+	// Returns a two dimensional array: [[labels], [values]]
 	this.getGroupedValues = function(index){
-		console.log('ERROR: getGroupedValues not ready yet');
-		return groupedValues[index];
-	};
-
-	//return the aggregation parameter selected by the user
-	this.getAggregationType = function(index){
-		return userDatasets[index].aggregation;
-	};
-
-	//a getter for the aggregated values per date
-	this.getAggregatedValuesPerDate = function(index){
-		console.log('ERROR: getAggregatedValuesPerDate not ready yet');
-		return aggregatedValuesPerDate[index];
+		return userDatasets[index].aggregated;
 	};
 
 	//function returning the number of datasets in the service
@@ -319,30 +425,9 @@ angular.module('dataVisualizationsApp.services')
 		return userDatasets.length;
 	};
 
-	//return the values: in some cases a dict will be necessary to map numbers to text
-	this.getValues = function(index){
-		var datasetName = userDatasets[index].name;
-		var valuesName = userDatasets[index].value.Name;
-		return loadedDatasets[nameToIndex[datasetName]][valuesName];
-	};
-
 	//return the valuesTitle:
 	this.getValuesTitle = function(index){
 		return userDatasets[index].value.Name;
-	};
-
-	//return the times: dict will be necessary to convert numbers to real times
-	this.getTimes = function(index){
-		var datasetName = userDatasets[index].name;
-		var timesName = userDatasets[index].date.Name;
-		return loadedDatasets[nameToIndex[datasetName]][timesName];
-	};
-
-	//returns the locations: dict will be necessary to convert numbers to real locations
-	this.getLocations = function(index){
-		var datasetName = userDatasets[index].name;
-		var locationsName = userDatasets[index].location.Name;
-		return loadedDatasets[nameToIndex[datasetName]][locationsName];
 	};
 
 	//function returning the valuesDict
