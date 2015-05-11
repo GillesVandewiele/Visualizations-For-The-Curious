@@ -69,6 +69,9 @@ To run this scaffold you will need:
 
     ##### Troubleshooting ruby gem installation
 
+    First try to install ruby-dev
+    `apt-get install ruby-dev`
+
     If you're on windows and this is giving you troubles with certificates (like it did on my pc), do the following:
     (taken from [here](http://stackoverflow.com/questions/5720484/how-to-solve-certificate-verify-failed-on-windows))
 
