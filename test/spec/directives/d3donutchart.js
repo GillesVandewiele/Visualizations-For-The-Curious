@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: donutChart', function () {
+describe('Directive: d3DonutChart', function () {
 
   // load the directive's module
   beforeEach(module('dataVisualizationsApp'));
@@ -13,8 +13,8 @@ describe('Directive: donutChart', function () {
   }));
 
   it('should make hidden element visible', inject(function ($compile) {
-    element = angular.element('<donut-chart></donut-chart>');
+    element = angular.element('<d3-donut-chart></d3-donut-chart>');
     element = $compile(element)(scope);
-    //expect(element.text()).toBe('this is the donutChart directive');
+    //expect(element.text()).toBe('this is the d3DonutChart directive');
   }));
 });

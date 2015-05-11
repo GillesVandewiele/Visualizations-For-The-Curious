@@ -179,7 +179,7 @@ angular.module('dataVisualizationsApp.controllers')
     //watch for checking changes in the selected day and updating the linechart accordingly
     $scope.$watch('valuesTodayAggregated', function(){
          if($scope.valuesTodayAggregated.length > 0){
-            if($scope.valuesTodayAggregated[0].length > 0){
+            if($scope.valuesTodayAggregated[0] && $scope.valuesTodayAggregated[0].length > 0){
                 $scope.lineChartData = $scope.valuesTodayAggregated[0];
 
                 console.log("Updating timebar");
@@ -246,7 +246,6 @@ angular.module('dataVisualizationsApp.controllers')
             lng: 4.303,
             zoom: 8,
         };
-
 
         $scope.mapLayers = {
             baselayers: {
@@ -606,5 +605,15 @@ angular.module('dataVisualizationsApp.controllers')
     } 
 
   }]);
+
+function tab(tab, tabs) {
+    console.log("test: ", tab, tabs, tabs.length);
+    for(var i=0; i < tabs.length; i++){
+        document.getElementById(tabs[i]).style.display = 'none'
+        document.getElementById('li_' + tabs[i]).setAttribute("class", "");
+    }
+    document.getElementById(tab).style.display = 'block';
+    document.getElementById('li_'+tab).setAttribute("class", "active");
+}
 
 

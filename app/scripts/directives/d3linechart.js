@@ -32,7 +32,7 @@ angular.module('dataVisualizationsApp.directives')
                   	svg.selectAll('*').remove();
 
                   	// Sort the data on date
-		            data.sort(function(a, b){return a.date - b.date;});
+		            //data.sort(function(a, b){return a.date - b.date;});
 
 		            // Declaring the margins
 		            var margin = {top: 20, right: 20, bottom: 30, left: 50}, width = 960 - margin.left - margin.right, 

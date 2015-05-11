@@ -270,7 +270,7 @@ angular.module('dataVisualizationsApp.services')
 			}
 
 			// We know the dates are sorted, so as soon as we see a date that exceeds the searched date, we stop looking
-			/*if(dictTime.getFullYear() > date.getFullYear()){
+			if(dictTime.getFullYear() > date.getFullYear()){
 				console.log(results);
 				return results;
 			}
@@ -281,7 +281,7 @@ angular.module('dataVisualizationsApp.services')
 			if(dictTime.getFullYear() == date.getFullYear() && dictTime.getMonth() == date.getMonth() && dictTime.getDate() > date.getDate()){
 				console.log(results);
 				return results;
-			}*/
+			}
 		}
 		//console.log(results);
 		return results;

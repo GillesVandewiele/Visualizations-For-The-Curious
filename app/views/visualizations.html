@@ -2,71 +2,140 @@
 	<div class="layoutrow titlerow">
 		<h3>Visualizations</h3>
 	</div>
+
 	<div class="layoutrow titlecontent scroll-y">
 		<!-- <dv-bars-demo></dv-bars-demo> -->
 		<!-- <div class="container-fluid"> -->
-		<div class="map" ng-show="locationsType">
-			<leaflet defaults="mapDefaults" center="mapCenter" layers="mapLayers" paths="mapPaths" height="600px"></leaflet>
-	      	<br/>
-			<div class="color-box" ng-repeat="c in heatMap track by $index" style="background-color: {{c}};"> {{heatMapBoundaries[$index]}} to {{heatMapBoundaries[$index+1]}}</div>
-			<br/>
-			<br/>
-			<slider floor="{{ minTime }}" ceiling="{{ maxTime }}" ng-model="currentTime" translate-fn='translateTime' ng-disabled="mapPlaying"></slider>
-			<br/>
-			<button class="btn" ng-click="mapPlayPause()">{{mapPlayPauseButton}}</button><button class="btn" ng-click="mapStop()">Stop</button>
+
+		<div class="row" style="margin-left:15px; width:75%;">
+			<div class="map" ng-show="locationsType">
+				<leaflet defaults="mapDefaults" center="mapCenter" layers="mapLayers" paths="mapPaths" height="600px"></leaflet>
+		      	<br/>
+				<div class="color-box" ng-repeat="c in heatMap track by $index" style="background-color: {{c}};"> {{heatMapBoundaries[$index]}} to {{heatMapBoundaries[$index+1]}}</div>
+				<br/>
+				<br/>
+				<slider floor="{{ minTime }}" ceiling="{{ maxTime }}" ng-model="currentTime" translate-fn='translateTime' ng-disabled="mapPlaying"></slider>
+				<br/>
+				<button class="btn" ng-click="mapPlayPause()">{{mapPlayPauseButton}}</button><button class="btn" ng-click="mapStop()">Stop</button>
+			</div>
 		</div>
-
-		<div ng-repeat="calInfo in calendarData track by $index">
-			<h4>{{calInfo['title']}}</h4>
-			<button class="btn" id="btn-previous{{$index}}">Previous</button><button class="btn" id="btn-next{{$index}}">Next</button>
-			<d3-calendar config="{domain:'month',range:8,data:calInfo['data'],start:firstDate, highlight: 'now', legend: calInfo['legend'], click: calInfo['click']}" nxt="#btn-next{{$index}}" prv="#btn-previous{{$index}}"></d3-calendar>
-			<br />
-		</div>
-
-		<br />
-		<br />
-
-		<!-- Now, only index 0 is been passed along, this should be dynamic.. -->
-		<d3-line-chart config="{data: lineChartData, axisTitle: valuesTitles[0]}"></d3-line-chart>
-
-		<!--<d3-multi-line-chart config="{data: multiLineChartData, axisTitle: valuesTitles[0]}"></d3-multi-line-chart>-->
-		<!-- This is shit and has to be moved to a stylesheet of course.. -->
-		<style>
-			.axis path,
-			.axis line {
-			  fill: none;
-			  stroke: #000;
-			  shape-rendering: crispEdges;
-			}
-
-			.line {
-			  fill: none;
-			  stroke: steelblue;
-			  stroke-width: 1.5px;
-			}
-
-			.overlay {
-			  fill: none;
-			  pointer-events: all;
-			}
-
-			.focus circle {
-			  fill: none;
-			  stroke: steelblue;
-			}
-
-		</style>
-
-		<br />
-
-  		<canvas id="bar" class="chart chart-bar" data="barData" labels="barDict" series="barSeries" legend="barLegend"></canvas>
-
-
-  		<br/>
-
-  		<canvas id="line" class="chart chart-line" data="multilineData" labels="multilineDict" legend="multilineLegend" series="multilineSeries"></canvas> 
-  </div>
-
 		
-	</div>
+		<div class="row" style="margin-left:15px;">
+			<div class="col-xs-2 col-md-2">
+				<div ng-repeat="calInfo in calendarData track by $index">
+					<h4>{{calInfo['title']}}</h4>
+					<button class="btn" id="btn-previous{{$index}}">Previous</button><button class="btn" id="btn-next{{$index}}">Next</button>
+					<d3-calendar config="{domain:'month',range:5, data:calInfo['data'],start:firstDate, highlight: 'now', legend: calInfo['legend'], click: calInfo['click']}" nxt="#btn-next{{$index}}" prv="#btn-previous{{$index}}"></d3-calendar>
+					<br />
+				</div>
+			</div>
+
+			<div class="col-xs-10 col-md-10">
+			<!-- failed attempt on tabs --> <!--
+				<div id="Tabs">
+					<ul>
+						<li id="li_linechart" onclick="tab('linechart', ['linechart', 'barchart', 'multilinechart'])" ><a>linechart</a></li>
+						<li id="li_barchart" onclick="tab('barchart', ['linechart', 'barchart', 'multilinechart'])"><a>barchart</a></li>
+						<li id="li_multilinechart" onclick="tab('multilinechart', ['linechart', 'barchart', 'multilinechart'])"><a>multi-linechart</a></li>
+					</ul>
+						<div id="Content_Area">
+						<div id="linechart">
+							<d3-line-chart config="{data: lineChartData, axisTitle: valuesTitles[0]}"></d3-line-chart>
+						</div>
+						<div id="barchart" style="display:none;">
+							<canvas id="bar" class="chart chart-bar" data="barData" labels="barDict" series="barSeries" legend="barLegend"></canvas>
+						</div>
+						<div id="multilinechart" style="display:none;">
+							<canvas id="line" class="chart chart-line" data="multilineData" labels="multilineDict" legend="true" series="multilineSeries"></canvas> 
+						</div>
+						</div>
+				</div>
+				-->
+				<div class="tabbable">
+		            <ul class="nav nav-tabs">
+		                <li class="active"><a id="linechartLink" data-toggle="tab">Linechart</a></li>
+		                <li><a id="barchartLink" data-toggle="tab">Barchart</a></li>
+		            </ul>
+		            <div class="tab-content">
+		                <div class="tab-pane active" id="linechartTab">
+		                    	<d3-line-chart config="{data: lineChartData, axisTitle: valuesTitles[0]}"></d3-line-chart>
+		                </div>
+		                <div class="tab-pane" id="barchartTab">
+		                    	<canvas id="bar" class="chart chart-bar" data="barData" labels="barDict" series="barSeries" legend="barLegend"></canvas>
+		                </div>
+		            </div>
+		        </div>	
+
+				<br />
+				<br />
+
+				<!--<d3-multi-line-chart config="{data: multiLineChartData, axisTitle: valuesTitles[0]}"></d3-multi-line-chart>-->
+				<!-- This is shit and has to be moved to a stylesheet of course.. -->
+
+				<style>
+					.axis path,
+					.axis line {
+					  fill: none;
+					  stroke: #000;
+					  shape-rendering: crispEdges;
+					}
+
+					.line {
+					  fill: none;
+					  stroke: steelblue;
+					  stroke-width: 1.5px;
+					}
+
+					.overlay {
+					  fill: none;
+					  pointer-events: all;
+					}
+
+					.focus circle {
+					  fill: none;
+					  stroke: steelblue;
+					}
+
+				</style>
+
+				<br />
+
+		        <script>
+			        $("#linechartLink").click(function() {
+						console.log("click");
+						/*$('.tab-pane').removeClass('active'); // remove active class from tabs
+    					$(this).addClass('active'); // add active class to clicked tab*/
+					    $("#barchartTab")[0].style.display = "none";
+					    $("#linechartTab")[0].style.display = "block";
+					    $("#linechartTab")[0].style.width = "50%";
+					    $("#linechartTab")[0].style.height = "50%";
+					});
+
+
+					$("#barchartLink").click(function() {
+						console.log("click");
+						/*$('.tab-pane').removeClass('active'); // remove active class from tabs
+    					$(this).addClass('active'); // add active class to clicked tab*/
+					    $("#linechartTab")[0].style.display = "none";
+					    $("#barchartTab")[0].style.display = "block";
+					    $("#barchartTab")[0].style.width = "100%";	
+					    $("#barchartTab")[0].style.height = "500px";					    
+					    /*$(".chart-bar")[0].width = "500";
+					    $(".chart-bar")[0].height = "500";
+					    $(".chart-bar")[0].style.width = "100%";
+					    $(".chart-bar")[0].style.height = "100%";*/
+					});
+		        </script>
+				
+				<div ng-repeat="vals in valuesTodayAggregated track by $index">
+					<h4>{{valuesTitles[$index]}}</h4>
+		  			<d3-donut-chart donutcolors="heatMap" values="vals" labels=""></d3-donut-chart>
+					<br />
+				</div>
+
+  			</div>
+		</div>	
+
+  	</div>
+
 </div>
