@@ -2,12 +2,14 @@
 	<div class="layoutrow titlerow">
 		<h3>Visualizations</h3>
 	</div>
+
 	<div class="layoutrow titlecontent scroll-y">
 		<!-- <dv-bars-demo></dv-bars-demo> -->
 		<!-- <div class="container-fluid"> -->
+
 		<div class="row" style="margin-left:15px; width:75%;">
 			<div class="map" ng-show="locationsType">
-				<leaflet defaults="mapdefaults" center="mapcenter" layers="maplayers" paths="mappaths" height="600px"></leaflet>
+				<leaflet defaults="mapDefaults" center="mapCenter" layers="mapLayers" paths="mapPaths" height="600px"></leaflet>
 		      	<br/>
 				<div class="color-box" ng-repeat="c in heatMap track by $index" style="background-color: {{c}};"> {{heatMapBoundaries[$index]}} to {{heatMapBoundaries[$index+1]}}</div>
 				<br/>
@@ -17,6 +19,7 @@
 				<button class="btn" ng-click="mapPlayPause()">{{mapPlayPauseButton}}</button><button class="btn" ng-click="mapStop()">Stop</button>
 			</div>
 		</div>
+		
 		<div class="row" style="margin-left:15px;">
 			<div class="col-xs-2 col-md-2">
 				<div ng-repeat="calInfo in calendarData track by $index">
@@ -26,6 +29,7 @@
 					<br />
 				</div>
 			</div>
+
 			<div class="col-xs-10 col-md-10">
 			<!-- failed attempt on tabs --> <!--
 				<div id="Tabs">
@@ -39,7 +43,7 @@
 							<d3-line-chart config="{data: lineChartData, axisTitle: valuesTitles[0]}"></d3-line-chart>
 						</div>
 						<div id="barchart" style="display:none;">
-							<canvas id="bar" class="chart chart-bar" data="barData" labels="barDict" series="barSeries"></canvas>
+							<canvas id="bar" class="chart chart-bar" data="barData" labels="barDict" series="barSeries" legend="barLegend"></canvas>
 						</div>
 						<div id="multilinechart" style="display:none;">
 							<canvas id="line" class="chart chart-line" data="multilineData" labels="multilineDict" legend="true" series="multilineSeries"></canvas> 
@@ -53,55 +57,99 @@
 		                <li><a id="barchartLink" data-toggle="tab">Barchart</a></li>
 		            </ul>
 		            <div class="tab-content">
-		                <div class="tab-pane active">
-		                    <acontent id="linechartTab">
+		                <div class="tab-pane active" id="linechartTab">
 		                    	<d3-line-chart config="{data: lineChartData, axisTitle: valuesTitles[0]}"></d3-line-chart>
-		                    </acontent>
 		                </div>
-		                <div class="tab-pane">
-		                    <bcontent id="barchartTab">
-		                    	<canvas id="bar" class="chart chart-bar" data="barData" labels="barDict" series="barSeries"></canvas>
-		                    </bcontent>
+		                <div class="tab-pane" id="barchartTab">
+		                    	<canvas id="bar" class="chart chart-bar" data="barData" labels="barDict" series="barSeries" legend="barLegend"></canvas>
 		                </div>
 		            </div>
 		        </div>	
 
+				<br />
+				<br />
+
+				<!--<d3-multi-line-chart config="{data: multiLineChartData, axisTitle: valuesTitles[0]}"></d3-multi-line-chart>-->
+				<!-- This is shit and has to be moved to a stylesheet of course.. -->
+
+				<style>
+					.axis path,
+					.axis line {
+					  fill: none;
+					  stroke: #000;
+					  shape-rendering: crispEdges;
+					}
+
+					.line {
+					  fill: none;
+					  stroke: steelblue;
+					  stroke-width: 1.5px;
+					}
+
+					.overlay {
+					  fill: none;
+					  pointer-events: all;
+					}
+
+					.focus circle {
+					  fill: none;
+					  stroke: steelblue;
+					}
+
+				</style>
+
+				<br />
+
 		        <script>
 			        $("#linechartLink").click(function() {
 						console.log("click");
+						/*$('.tab-pane').removeClass('active'); // remove active class from tabs
+    					$(this).addClass('active'); // add active class to clicked tab*/
 					    $("#barchartTab")[0].style.display = "none";
 					    $("#linechartTab")[0].style.display = "block";
 					    $("#linechartTab")[0].style.width = "50%";
 					    $("#linechartTab")[0].style.height = "50%";
-
 					});
+
 
 					$("#barchartLink").click(function() {
 						console.log("click");
+						/*$('.tab-pane').removeClass('active'); // remove active class from tabs
+    					$(this).addClass('active'); // add active class to clicked tab*/
 					    $("#linechartTab")[0].style.display = "none";
 					    $("#barchartTab")[0].style.display = "block";
-					    $(".chart-bar")[0].width = "500";
+					    $("#barchartTab")[0].style.width = "100%";	
+					    $("#barchartTab")[0].style.height = "500px";					    
+					    /*$(".chart-bar")[0].width = "500";
 					    $(".chart-bar")[0].height = "500";
 					    $(".chart-bar")[0].style.width = "100%";
-					    $(".chart-bar")[0].style.height = "100%";
+					    $(".chart-bar")[0].style.height = "100%";*/
 					});
-		        </script>-->
-					<br/>
-					<d3-line-chart config="{data: lineChartData, axisTitle: valuesTitles[0]}"></d3-line-chart>
-					<br/>
-					<canvas id="bar" class="chart chart-bar" data="barData" labels="barDict" series="barSeries"></canvas>
-					<br/>				
-					<canvas id="line" class="chart chart-line" data="multilineData" labels="multilineDict" legend="true" series="multilineSeries"></canvas>
-					<div ng-repeat="vals in valuesTodayAggregated track by $index">
-						<h4>{{valuesTitles[$index]}}</h4>
 
-			  			<d3-donut-chart donutcolors="heatMap" values="vals" labels=""></d3-donut-chart>
-						<br />
-					</div>
+		        </script>
+				
+				<div ng-repeat="vals in valuesTodayAggregated track by $index">
+					<h4>{{valuesTitles[$index]}}</h4>
+		  			<d3-donut-chart donutcolors="heatMap" values="vals" labels=""></d3-donut-chart>
+					<br />
+				</div>
+
+				<!--<br/>
+				<d3-line-chart config="{data: lineChartData, axisTitle: valuesTitles[0]}"></d3-line-chart>
+				<br/>
+				<canvas id="bar" class="chart chart-bar" data="barData" labels="barDict" series="barSeries"></canvas>
+				<br/>				
+				<canvas id="line" class="chart chart-line" data="multilineData" labels="multilineDict" legend="true" series="multilineSeries"></canvas>
+				<div ng-repeat="vals in valuesTodayAggregated track by $index">
+					<h4>{{valuesTitles[$index]}}</h4>
+
+		  			<d3-donut-chart donutcolors="heatMap" values="vals" labels=""></d3-donut-chart>
+					<br />
+				</div>-->
+
   			</div>
 		</div>	
-  </div>
 
-		
-	</div>
+  	</div>
+
 </div>
