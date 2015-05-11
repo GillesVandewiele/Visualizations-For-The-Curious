@@ -6,7 +6,7 @@
 		<!-- <dv-bars-demo></dv-bars-demo> -->
 		<!-- <div class="container-fluid"> -->
 		<div class="map" ng-show="locationsType">
-			<leaflet defaults="mapdefaults" center="mapcenter" layers="maplayers" paths="mappaths" height="600px"></leaflet>
+			<leaflet defaults="mapDefaults" center="mapCenter" layers="mapLayers" paths="mapPaths" height="600px"></leaflet>
 	      	<br/>
 			<div class="color-box" ng-repeat="c in heatMap track by $index" style="background-color: {{c}};"> {{heatMapBoundaries[$index]}} to {{heatMapBoundaries[$index+1]}}</div>
 			<br/>
@@ -59,12 +59,12 @@
 
 		<br />
 
-  		<canvas id="bar" class="chart chart-bar" data="barData" labels="barDict" series="barSeries"></canvas>
+  		<canvas id="bar" class="chart chart-bar" data="barData" labels="barDict" series="barSeries" legend="barLegend"></canvas>
 
 
   		<br/>
 
-  		<canvas id="line" class="chart chart-line" data="multilineData" labels="multilineDict" legend="true" series="multilineSeries"></canvas> 
+  		<canvas id="line" class="chart chart-line" data="multilineData" labels="multilineDict" legend="multilineLegend" series="multilineSeries"></canvas> 
   </div>
 
 		

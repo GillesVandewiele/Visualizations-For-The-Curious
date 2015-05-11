@@ -27,8 +27,11 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.heatMap = ['#00ff00', '#66ff33', '#99ff33', '#ccff33', '#ffff00', '#ffcc00','#ff9933','#ff6600', '#ff3300', '#ff0000'];
     $scope.heatMapBoundaries = ["","","","","","","","","","",""];  
 
-    $scope.mappaths = {};
+    $scope.mapPaths = {};
     $scope.mapExtent = [];
+    $scope.mapDefaults = {};
+    $scope.mapCenter = {};
+    $scope.mapLayers = {};
 
     $scope.numDatasets = dataService.getNumDatasets();
 
@@ -121,6 +124,8 @@ angular.module('dataVisualizationsApp.controllers')
 
     //check type of locations
     if($scope.locationsDict[0]){
+        //if locations are available:
+        initMap();
         //only the coordinates of a village/city are expressed with .long and .lat
         if($scope.locationsDict[0][0].long){
             $scope.locationsType = 2;
@@ -230,30 +235,33 @@ angular.module('dataVisualizationsApp.controllers')
     //this function initialises the leafletmap by centering the map
     //and by selecting the right map on mapbox. 
 
-    $scope.mapdefaults = {
-            maxZoom: 14,
-            minZoom: 8
-    };
+    function initMap(){
+        $scope.mapDefaults = {
+                maxZoom: 14,
+                minZoom: 7
+        };
 
-    $scope.mapcenter = {
-        lat: 50.5,
-        lng: 4.303,
-        zoom: 8,
-    };
+        $scope.mapCenter = {
+            lat: 50.5,
+            lng: 4.303,
+            zoom: 8,
+        };
 
-    $scope.maplayers = {
-        baselayers: {
-            mapbox_terrain: {
-                name: 'MapboxTerrain',
-                url: 'http://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
-                type: 'xyz',
-                layerOptions: {
-                    apikey: 'pk.eyJ1Ijoia3NlcnJ1eXMiLCJhIjoiZk9JSWRQUSJ9.SvA5S_FzBKsyXVm6xf5lGQ',
-                    mapid: 'kserruys.lmilh1gp'
+
+        $scope.mapLayers = {
+            baselayers: {
+                mapbox_terrain: {
+                    name: 'MapboxTerrain',
+                    url: 'http://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                    type: 'xyz',
+                    layerOptions: {
+                        apikey: 'pk.eyJ1Ijoia3NlcnJ1eXMiLCJhIjoiZk9JSWRQUSJ9.SvA5S_FzBKsyXVm6xf5lGQ',
+                        mapid: 'kserruys.lmilh1gp'
+                    }
                 }
             }
-        }
-    };
+        };
+    }
 
     /****************** TIMEBAR INITIALISATION *********************/
 
@@ -351,9 +359,14 @@ angular.module('dataVisualizationsApp.controllers')
     }
 
     function drawMarkers(index){
+        //variables for determining the center of the map.
+        var sumLat = 0;
+        var sumLong = 0;
+
+        //drawing all locations
         for(var i=0; i<$scope.locationsDict[index].length; i++){
 
-            $scope.mappaths[''+i] = {
+            $scope.mapPaths[''+i] = {
                     weight: 2,
                     color: '#00ff00',
                     latlngs: [$scope.locationsDict[index][i].lat, $scope.locationsDict[index][i].long],
@@ -362,22 +375,37 @@ angular.module('dataVisualizationsApp.controllers')
                     clickable: true,
                     name: $scope.locationsDict[index][i].name
                 };
+
+            sumLat += $scope.locationsDict[index][i].lat;
+            sumLong += $scope.locationsDict[index][i].long;
         }
+
+        //centering the map
+        $scope.mapCenter = {
+            lat: (sumLat/$scope.locationsDict[index].length),
+            lng: (sumLong/$scope.locationsDict[index].length),
+            zoom: 8,
+        };
     }
 
     function editMarkers(index){
         //now that we have min and max, map all values to a color between green and red.
         for(var k=0; k<$scope.valuesToday[index][$scope.currentTime].data.length; k++){
             var temp = Math.floor(($scope.valuesToday[index][$scope.currentTime].data[k]-$scope.mapExtent[0])/($scope.mapExtent[1]-$scope.mapExtent[0])*($scope.heatMap.length-1));
-            $scope.mappaths[''+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
+            $scope.mapPaths[''+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
         }
     }
 
     function drawRoutes(index){
+        //variables for determining the center of the map.
+        var sumLat = 0;
+        var sumLong = 0;
+
+        //draw all routes
         for(var i=0; i<$scope.locationsDict[index].length; i++){
             var decoded = polyline.decode($scope.locationsDict[index][i].coordinates);
 
-            $scope.mappaths[''+i] = {
+            $scope.mapPaths[''+i] = {
                     weight: 4,
                     opacity: 0.6,
                     color: '#00ff00',
@@ -385,14 +413,26 @@ angular.module('dataVisualizationsApp.controllers')
                     name: $scope.locationsDict[index][i].name,
                     clickable: true,  
             };
+
+            //use first coordinate of every route
+            console.log(decoded);
+            sumLat += decoded[0][0];
+            sumLong += decoded[0][1];            
         }
+
+        //centering the map
+        $scope.mapCenter = {
+            lat: (sumLat/$scope.locationsDict[index].length),
+            lng: (sumLong/$scope.locationsDict[index].length),
+            zoom: 8,
+        };
     }
 
     function editRoutes(index){
         for(var k=0; k<$scope.valuesToday[index][$scope.currentTime].data.length; k++){
             var temp = Math.floor(($scope.valuesToday[index][$scope.currentTime].data[k]-$scope.mapExtent[0])/($scope.mapExtent[1]-$scope.mapExtent[0])*($scope.heatMap.length-1));
-            $scope.mappaths[''+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
-            $scope.mappaths[''+$scope.locations[index][$scope.currentTime][k]].opacity = 0.1 + $scope.heatMap[temp]/($scope.heatMap.length-1)*0.9;
+            $scope.mapPaths[''+$scope.locations[index][$scope.currentTime][k]].color = $scope.heatMap[temp];
+            $scope.mapPaths[''+$scope.locations[index][$scope.currentTime][k]].opacity = 0.1 + $scope.heatMap[temp]/($scope.heatMap.length-1)*0.9;
         }
     }
 
@@ -490,7 +530,7 @@ angular.module('dataVisualizationsApp.controllers')
         //add legend to chart --> apparently leaflet-directive and angular-chart.js conflict when legend is involved...
         //had to disable all legend functionality of angular-leaflet-directive by commenting out
         console.log($scope.locations2Visualize[$scope.lastAddedLocation2Visualize]);
-        $scope.barSeries[$scope.lastAddedLocation2Visualize] = $scope.mappaths[$scope.locations2Visualize[$scope.lastAddedLocation2Visualize].toString()].name;
+        $scope.barSeries[$scope.lastAddedLocation2Visualize] = $scope.mapPaths[$scope.locations2Visualize[$scope.lastAddedLocation2Visualize].toString()].name;
         $scope.barLegend = true;
 
         console.log($scope.barSeries);
@@ -559,7 +599,7 @@ angular.module('dataVisualizationsApp.controllers')
 
         $scope.multilineDict = tempMultilineDict;
 
-        $scope.multilineSeries[$scope.lastAddedLocation2Visualize] = $scope.mappaths[$scope.locations2Visualize[$scope.lastAddedLocation2Visualize].toString()].name;
+        $scope.multilineSeries[$scope.lastAddedLocation2Visualize] = $scope.mapPaths[$scope.locations2Visualize[$scope.lastAddedLocation2Visualize].toString()].name;
         $scope.multilineLegend = true;
 
 
