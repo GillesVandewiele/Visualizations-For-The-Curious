@@ -122,9 +122,11 @@ angular.module('dataVisualizationsApp.controllers')
         tmp['title'] = $scope.valuesTitles[c];
         tmp['data'] = {};
         var vals = [];
-        for(var i = 0; i < dataService.getDays(c).length; i++){
-            tmp['data'][Date.parse(dataService.getDays(c)[i])/1000] = dataService.getByDay(c, dataService.getDays(c)[i], {'date': false, loc: 'no'});
-            vals.push(dataService.getByDay(c, dataService.getDays(c)[i], {'date': false, loc: 'no'}));
+        var days = dataService.getDays(c);
+        for(var i = 0; i < days.length; i++){
+            var value = dataService.getByDay(c, days[i], {'date': false, loc: 'no'});
+            tmp['data'][(days[i].getTime()/1000).toString()] = value;
+            vals.push(value);
         }
         //var vals = Object.keys($scope.timesDict[c]).map(function(key){ return dataService.getByDay(c, new Date($scope.timesDict[c][key].name), {'date': false, loc: 'no'}); });
         console.log("[CALENDAR] data = ", tmp['data']);
@@ -136,7 +138,8 @@ angular.module('dataVisualizationsApp.controllers')
 
     //if data is loaded, set first date of the calender equal the first date in data
     if($scope.timesDict.length > 0){
-        $scope.firstDate = new Date($scope.timesDict[Object.keys($scope.timesDict)[0]].name);
+        console.log("first date = ", $scope.timesDict[0][Object.keys($scope.timesDict[0])[0]].name);
+        $scope.firstDate = new Date($scope.timesDict[0][Object.keys($scope.timesDict[0])[0]].name);
     } else {
         $scope.firstDate = new Date(2015, 0, 30);
     }
@@ -367,13 +370,14 @@ angular.module('dataVisualizationsApp.controllers')
     //initialisation of the timebar
     //if times are correctly loaded, use times to make the timebar
     function initTimeBar(){
-        if($scope.times[0]){
+        if($scope.valuesTodayAggregated[0]){
             $scope.currentTime = 0;
             $scope.minTime = 0; //set the min index of the timebar
-            $scope.maxTime = $scope.valuesTodayAggregated[0].length-1; //set the max index of the timebar
+            console.log("values today aggregated = ", $scope.valuesTodayAggregated[0], $scope.valuesTodayAggregated[0][0].length);
+            $scope.maxTime = $scope.valuesTodayAggregated[0][0].length-1; //set the max index of the timebar
             //make a function that translates an index to a string containing the time
             $scope.translateTime = function(currentTime){
-                return $scope.valuesTodayAggregated[0][currentTime].date.toString();
+                return $scope.timesDict[0][$scope.valuesTodayAggregated[0][0][currentTime]].name.toString();
             };
         }
         //if times are not correctly loaded use standard values.
@@ -587,7 +591,7 @@ angular.module('dataVisualizationsApp.controllers')
                 var intervalSize =  Math.floor(range/amountOfThresholds);
 
                 for(var cnt = 1; cnt<amountOfThresholds;cnt++){
-                    legend.push(min+cnt*intervalSize);
+                    legend.push(Math.round(min+cnt*intervalSize));
                 }
             }
         }
@@ -596,9 +600,9 @@ angular.module('dataVisualizationsApp.controllers')
     }
 
     function clickOnDay(date, nb){
-        if($scope.aggregatedValues[0].length > 0) $scope.valuesTodayAggregated[0] = dataService.getByDay(0, date, {'date': true, loc: 'no'});
+        $scope.valuesTodayAggregated[0] = dataService.getByDay(0, date, {'date': true, loc: 'no'});
             //dataService.filterByDay(0, date, $scope.aggregatedValues[0], true);
-        if($scope.values[0].length > 0) $scope.valuesToday[0] = dataService.getByDay(0, date, {'date': true, loc: 'yes'});
+        $scope.valuesToday[0] = dataService.getByDay(0, date, {'date': true, loc: 'yes'});
             //$scope.valuesToday[0] = dataService.filterByDay(0, date, $scope.values[0], false);
         $scope.$apply();
     }
