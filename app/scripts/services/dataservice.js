@@ -425,6 +425,18 @@ angular.module('dataVisualizationsApp.services')
 		}
 		return userDatasets[index].aggregated;
 	};
+	
+	// Returns an array with all days in the dataset
+	this.getDays = function(index){
+		var datasetName = userDatasets[index].name;
+		var daysName = userDatasets[index].date.Name + '_dayBoundaries';
+		var days = loadedDatasets[nameToIndex[datasetName]][daysName]
+		var out = [];
+		for (var i = 0; i<days.length; i++) {
+			out.push(days[i].day);
+		}
+		return out;
+	};
 
 	//function returning the number of datasets in the service
 	this.getNumDatasets = function(){
