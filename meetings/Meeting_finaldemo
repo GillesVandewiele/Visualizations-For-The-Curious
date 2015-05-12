@@ -39,11 +39,11 @@ Op zoek naar de warmste dag van het jaar
 Warmste dag --> files richting kust
 ------------------------------------
 
-3) Bestuderen van de files op 18 juli 2014 (verkeerstijden, vertraging) op de kaart. GROUPING: Weekdays; AGGREGATE: SUM
+- Bestuderen van de files op 18 juli 2014 (verkeerstijden, vertraging) + (acc_inc_fli, incidenten) op de kaart. GROUPING: Weekdays; AGGREGATE: SUM
 
-4) Tonen van linechart en multilinechart (routes aan de kust en 2 andere willekeurige) voor die dag
+- Tonen van linechart en multilinechart (routes richting) voor die dag
 
 Bewijzen van generiekheid
 -------------------------
 
-4) Toevoegen van eigen dataset: boeien
+- Toevoegen van eigen dataset: boeien

@@ -178,6 +178,7 @@ angular.module('dataVisualizationsApp.controllers')
          if($scope.valuesTodayAggregated.length > 0){
             if($scope.valuesTodayAggregated[0] && $scope.valuesTodayAggregated[0].length > 0){
                 $scope.lineChartData = [];
+                console.log("ValuesTodayAgg = ", $scope.valuesTodayAggregated[0]);
                 for(var i = 0; i < $scope.valuesTodayAggregated[0][1].length; i++){
                     $scope.lineChartData.push({date: new Date($scope.timesDict[0][$scope.valuesTodayAggregated[0][0][i]].name), data: $scope.valuesTodayAggregated[0][1][i]});
                 }
