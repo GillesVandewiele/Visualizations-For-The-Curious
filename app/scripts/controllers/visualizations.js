@@ -215,8 +215,9 @@ angular.module('dataVisualizationsApp.controllers')
                     initLegend(0);
                     editLocationColors(0); 
 
-                    if($scope.locations2Visualize.length > 0)
+                    if($scope.locations2Visualize.length > 0){
                         editMultilineWithLocations(0); 
+                    }
                 } 
             }
         }
@@ -714,8 +715,12 @@ angular.module('dataVisualizationsApp.controllers')
 
         $scope.multilineDict = tempMultilineDict;
 
-        $scope.multilineSeries.unshift($scope.mapPaths[$scope.locations2Visualize[0].toString()].name);
-        $scope.multilineSeries = $scope.multilineSeries.slice(0,maxLocations2Visualize);
+        var newName = $scope.mapPaths[$scope.locations2Visualize[0].toString()].name;
+        if($scope.multilineSeries.length==0 || ($scope.multilineSeries[0] && newName !== $scope.multilineSeries[0])){
+            $scope.multilineSeries.unshift($scope.mapPaths[$scope.locations2Visualize[0].toString()].name);
+            $scope.multilineSeries = $scope.multilineSeries.slice(0,maxLocations2Visualize);
+        }
+
         $scope.multilineLegend = true;
     } 
 
