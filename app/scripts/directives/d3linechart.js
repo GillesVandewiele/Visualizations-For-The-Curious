@@ -21,6 +21,7 @@ angular.module('dataVisualizationsApp.directives')
             var svg = d3.select(element[0]).append("svg").attr('width', '100%');
 
             var containerWidth = element[0].getBoundingClientRect().width;
+            var containerHeight = 600;
 
           	scope.$watch('config.data', function(newVals, oldVals) {
                 return scope.render(newVals);
@@ -36,8 +37,8 @@ angular.module('dataVisualizationsApp.directives')
 		            //data.sort(function(a, b){return a.date - b.date;});
 
 		            // Declaring the margins
-		            var margin = {top: 20, right: 10, bottom: 30, left: 10}, width = containerWidth - margin.left - margin.right, 
-		            	height = 600 - margin.top - margin.bottom;
+		            var margin = {top: 20, right: 50, bottom: 30, left: 25}, width = containerWidth - margin.left - margin.right, 
+		            	height = containerHeight - margin.top - margin.bottom;
 
 		            // The reach of x and y 
 					var x = d3.time.scale().range([0, width]);
