@@ -619,7 +619,7 @@ angular.module('dataVisualizationsApp.controllers')
 
             if (tmpPieData){
                 for(var i=0;i<tmpPieData[1].length;i++){
-                    tempPieChartData.push({"val":tmpPieData[1][i],"lbl":locationLabel});
+                    tempPieChartData.push({"val":tmpPieData[1][i],"lbl":loclabels[i]});
                 }
                 $scope.pieChartData = tempPieChartData;
             }
