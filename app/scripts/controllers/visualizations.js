@@ -54,6 +54,7 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.valuesDict = [];
     $scope.timesDict = [];
     $scope.locationsDict = [];
+    $scope.pieChartData = [];
 
     $scope.currentDay = null;
 
@@ -80,7 +81,8 @@ angular.module('dataVisualizationsApp.controllers')
 
         $scope.valuesTodayAggregated[c] = dataService.getByDay(c, new Date($scope.timesDict[c][Object.keys($scope.timesDict[c])[0]].name), {'date': true, loc: 'no'});
         $scope.valuesToday[c] = dataService.getByDay(c, new Date($scope.timesDict[c][Object.keys($scope.timesDict[c])[0]].name), {'date': true, loc: 'yes'});
-       
+        console.log("valuesTodayAggregated = ", $scope.valuesTodayAggregated[c]);
+
         console.log("Testing...");
         console.log("Date = True; Loc = Locnr", dataService.getByDay(c, new Date($scope.timesDict[c][Object.keys($scope.timesDict[c])[0]].name), {'date': true, loc: 55}));
         console.log("Date = False; Loc = yes", dataService.getByDay(c, new Date($scope.timesDict[c][Object.keys($scope.timesDict[c])[0]].name), {'date': false, loc: 'yes'}));
@@ -102,6 +104,8 @@ angular.module('dataVisualizationsApp.controllers')
         tmp['click'] = clickOnDay;
         $scope.calendarData.push(tmp);
     }
+    console.log(dataService.getByDay(0, new Date($scope.timesDict[0][Object.keys($scope.timesDict[0])[0]].name), {'date': false, loc: 'yes'})[1]);
+    $scope.pieChartData = dataService.getByDay(0, new Date($scope.timesDict[0][Object.keys($scope.timesDict[0])[0]].name), {'date': false, loc: 'yes'})[1];
 
     //if data is loaded, set first date of the calender equal the first date in data
     if($scope.timesDict.length > 0){
@@ -560,6 +564,7 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.valuesTodayAggregated[0] = dataService.getByDay(0, date, {'date': true, loc: 'no'});
         $scope.valuesToday[0] = dataService.getByDay(0, date, {'date': true, loc: 'yes'});
         $scope.currentDay = date;
+        $scope.pieChartData = dataService.getByDay(0, $scope.currentDay, {'date': false, loc: 'yes'})[1];
         $scope.$apply();
     }
 
@@ -575,7 +580,7 @@ angular.module('dataVisualizationsApp.controllers')
         var tempBarData = [];
         
         var i = 0;
-        for(var v in $scope.groupedAndAggregatedValues[index]){
+        /*for(var v in $scope.groupedAndAggregatedValues[index]){
             tempBarData[i] = [];
             if($scope.groupedAndAggregatedValues[index][v][$scope.locations2Visualize[$scope.lastAddedLocation2Visualize]])
                 //rounding to one digit
@@ -583,7 +588,7 @@ angular.module('dataVisualizationsApp.controllers')
             else
                 tempBarData[i] = 0;
             i++;
-        }
+        }*/
 
         if($scope.barDict.length < 1){
             var tempBarDict = [];
