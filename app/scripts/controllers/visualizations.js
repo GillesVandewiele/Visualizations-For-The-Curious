@@ -90,7 +90,7 @@ angular.module('dataVisualizationsApp.controllers')
         var days = dataService.getDays(c);
         for(var i = 0; i < days.length; i++){
             var value = dataService.getByDay(c, days[i], {'date': false, loc: 'no'});
-            tmp['data'][(days[i].getTime()/1000).toString()] = Number(value.toFixed(2));
+            tmp['data'][(days[i].getTime()/1000).toString()] = Number(value);
             vals.push(value);
         }
         tmp['legend'] = getLegend(d3.extent(vals));
@@ -650,7 +650,7 @@ angular.module('dataVisualizationsApp.controllers')
             tempBarData[i] = [];
             if($scope.groupedAndAggregatedValues[index][1][v])
                 //rouding to two digit
-                tempBarData[i] = $scope.groupedAndAggregatedValues[index][1][v].toFixed(2);
+                tempBarData[i] = $scope.groupedAndAggregatedValues[index][1][v];
             else
                 tempBarData[i] = 0;
             i++;
@@ -682,7 +682,7 @@ angular.module('dataVisualizationsApp.controllers')
             tempMultilineData[l] = [];
             var data = dataService.getByDay(index, $scope.currentDay, {date: true, loc: Number($scope.locations2Visualize[l])})[1];
             for(var v=0; v<data.length; v++){
-                tempMultilineData[l][v] = data[v].toFixed(2);
+                tempMultilineData[l][v] = data[v];
             }
         }
 
