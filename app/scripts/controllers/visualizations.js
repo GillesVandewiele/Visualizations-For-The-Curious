@@ -12,7 +12,6 @@ angular.module('dataVisualizationsApp.controllers')
 
     /********************LOAD DATA**********************/
 
-
     // if locations are locations = 2 , routes = 1 , no locations = 0
     /*
     if locations --> cities = points on a map, can be represented with markers

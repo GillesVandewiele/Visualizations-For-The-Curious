@@ -109,7 +109,11 @@ angular.module('dataVisualizationsApp.services')
 				if (description.grouping!==null && description.grouping!==undefined && description.grouping!=="NONE") {
 					var aggMethods = convertAggPeriod(description.grouping);
 					aggMethods.aggregation = description.aggregation;
-					description.aggregated = userAggregate(destination[description.date.Name], destination[description.date.Name + '_dict'], destination[description.value.Name], aggMethods, description);
+					var locations;
+					if (description.location !== null && description.location !== undefined) {
+						locations = destination[description.location.Name];
+					}
+					description.aggregated = userAggregate(destination[description.date.Name], destination[description.date.Name + '_dict'], locations, destination[description.value.Name], aggMethods, description);
 				}
 				aggregationReady.resolve();
 			},
@@ -158,23 +162,46 @@ angular.module('dataVisualizationsApp.services')
 		return out;
 	}
 	
-	function userAggregate(dates, dateDict, values, aggMethods) {
-		var out = [[], []];
-		var aggrs = {};
-		for (var j = 0; j<dates.length; j++) {
-			var curAgg = aggMethods.map(new Date(dateDict[dates[j]].name));
-			if (!aggrs.hasOwnProperty(curAgg)) {
-				aggrs[curAgg] = [];
+	function userAggregate(dates, dateDict, locations, values, aggMethods) {
+		if (locations !== undefined) {
+			var out = [[], [], []];
+			var aggrs = {};
+			for (var j = 0; j<dates.length; j++) {
+				var curAgg = aggMethods.map(new Date(dateDict[dates[j]].name));
+				if (!aggrs.hasOwnProperty(curAgg)) {
+					aggrs[curAgg] = {};
+				}
+				if (!aggrs[curAgg].hasOwnProperty(locations[j])) {
+					aggrs[curAgg][locations[j]] = [];
+				}
+				aggrs[curAgg][locations[j]].push(values[j]);
 			}
-			aggrs[curAgg].push(values[j]);
+			for (var attr in aggrs) {
+				var cAgg = aggrs[attr];
+				for (var loc in cAgg) {
+					out[0].push(aggMethods.trans(parseInt(attr)));
+					out[1].push(loc);
+					out[2].push(aggregate(aggrs[attr][loc], aggMethods.aggregation));		
+				}
+			}
+			return out;
+		} else {
+			var out = [[], []];
+			var aggrs = {};
+			for (var j = 0; j<dates.length; j++) {
+				var curAgg = aggMethods.map(new Date(dateDict[dates[j]].name));
+				if (!aggrs.hasOwnProperty(curAgg)) {
+					aggrs[curAgg] = [];
+				}
+				aggrs[curAgg].push(values[j]);
+			}
+			for (var attr in aggrs) {
+				out[0].push(aggMethods.trans(parseInt(attr)));
+				out[1].push(aggregate(aggrs[attr], aggMethods.aggregation));
+			}
+			return out;			
 		}
-		for (var attr in aggrs) {
-			out[0].push(aggMethods.trans(parseInt(attr)));
-			out[1].push(aggregate(aggrs[attr], aggMethods.aggregation));
-		}
-		return out;
 	}
-				
 	
 	Date.prototype.getWeek = function() {
 		var date = new Date(this.getTime());
@@ -414,11 +441,54 @@ angular.module('dataVisualizationsApp.services')
 	}
 
 	// Returns a two dimensional array: [[labels], [values]]
-	this.getGroupedValues = function(index){
+	this.getGroupedValues = function(index, opts){
 		if (userDatasets[index].aggregated === null || userDatasets[index].aggregated === undefined) {
 			return undefined;
 		}
-		return userDatasets[index].aggregated;
+		if (opts === undefined || opts.loc === undefined) {
+			opts = {'loc': 'no'}; // For legacy reasons, standard is no
+		}
+		var aggregatedValues = userDatasets[index].aggregated;
+		var lB = (aggregatedValues.length === 3);
+		// Handle the case with no locations present
+		if (!lB) {
+			if (opts.loc!=='no') {
+				return undefined;
+			} else {
+				return aggregatedValues;
+			}
+		}
+		// Handle the case with locations present
+		var method = userDatasets[index].aggregation;
+		if (opts.loc === 'yes') {
+			return aggregatedValues;
+		} else if (opts.loc === 'no') {
+			// Aggregate over the locations
+			var aggregates = {};
+			for (var i = 0; i<aggregatedValues[0].length; i++) {
+				if (!aggregates.hasOwnProperty(aggregatedValues[0][i])) {
+					aggregates[aggregatedValues[0][i]] = [];
+				}
+				aggregates[aggregatedValues[0][i]].push(aggregatedValues[2][i]);
+			}
+			var out = [[], []];
+			for (var attr in aggregates) {
+				out[0].push(attr);
+				out[1].push(aggregate(aggregates[attr], method));
+			}
+			return out;
+		} else {
+			// Select on location
+			var out = [[], []];
+			var seachedString = opts.loc.toString();
+			for (var i = 0; i<aggregatedValues[0].length; i++) {
+				if (aggregatedValues[1][i] === seachedString) {
+					out[0].push(aggregatedValues[0][i]);
+					out[1].push(aggregatedValues[2][i]);
+				}
+			}
+			return out;
+		}
 	};
 	
 	// Returns an array with all days in the dataset
