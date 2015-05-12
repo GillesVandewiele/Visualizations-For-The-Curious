@@ -16,7 +16,7 @@ angular.module('dataVisualizationsApp.controllers')
 
   	/****** VARIABLES USED IN START SCREEN VIEW ******/
 
-	  	$scope.aggregations = ["MEAN", "SUM", "MAX", "MIN", "COUNT"];
+	  	$scope.aggregations = ["MEAN", "SUM", "MAX", "MIN"];
 	  	$scope.grouping = ["WEEKDAY", "WEEKS", "MONTH", "YEAR"];
 
 	  	$scope.selectedFile;
