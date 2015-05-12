@@ -88,7 +88,7 @@ angular.module('dataVisualizationsApp.controllers')
         var days = dataService.getDays(c);
         for(var i = 0; i < days.length; i++){
             var value = dataService.getByDay(c, days[i], {'date': false, loc: 'no'});
-            tmp['data'][(days[i].getTime()/1000).toString()] = value;
+            tmp['data'][(days[i].getTime()/1000).toString()] = Number(value.toFixed(2));
             vals.push(value);
         }
         tmp['legend'] = getLegend(d3.extent(vals));

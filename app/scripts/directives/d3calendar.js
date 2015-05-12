@@ -37,7 +37,7 @@ angular.module('dataVisualizationsApp.directives')
                     domainLabelFormat: '%B %Y',
                     verticalOrientation: true,
                     cellSize: 25,
-                    itemName: 'item',
+                    itemName: '',
                     nextSelector: nxt,
                     previousSelector: prv,
                     onClick: clickOnDay

@@ -26,7 +26,6 @@ angular.module('dataVisualizationsApp.directives')
         //   }
         // }
         var values = scope.values || [];
-        console.log("values = ", values);
         //var color = d3.scale.linear().domain([0,values.length]).range(["green","red"]).clamp(true);
 
         var color = d3.scale.category20();
