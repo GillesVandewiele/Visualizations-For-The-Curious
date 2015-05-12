@@ -55,6 +55,8 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.timesDict = [];
     $scope.locationsDict = [];
 
+    $scope.currentDay = null;
+
     $scope.calendarData = [];
     $scope.lineChartData = [];
 
@@ -79,6 +81,13 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.valuesTodayAggregated[c] = dataService.getByDay(c, new Date($scope.timesDict[c][Object.keys($scope.timesDict[c])[0]].name), {'date': true, loc: 'no'});
         $scope.valuesToday[c] = dataService.getByDay(c, new Date($scope.timesDict[c][Object.keys($scope.timesDict[c])[0]].name), {'date': true, loc: 'yes'});
        
+        console.log("Testing...");
+        console.log("Date = True; Loc = Locnr", dataService.getByDay(c, new Date($scope.timesDict[c][Object.keys($scope.timesDict[c])[0]].name), {'date': true, loc: 55}));
+        console.log("Date = False; Loc = yes", dataService.getByDay(c, new Date($scope.timesDict[c][Object.keys($scope.timesDict[c])[0]].name), {'date': false, loc: 'yes'}));
+        console.log("Date = False; Loc = no", dataService.getByDay(c, new Date($scope.timesDict[c][Object.keys($scope.timesDict[c])[0]].name), {'date': false, loc: 'no'}));
+        console.log("Date = False; Loc = Locnr", dataService.getByDay(c, new Date($scope.timesDict[c][Object.keys($scope.timesDict[c])[0]].name), {'date': false, loc: 0}));
+
+
         var tmp ={};
         tmp['title'] = $scope.valuesTitles[c];
         tmp['data'] = {};
@@ -97,8 +106,10 @@ angular.module('dataVisualizationsApp.controllers')
     //if data is loaded, set first date of the calender equal the first date in data
     if($scope.timesDict.length > 0){
         $scope.firstDate = new Date($scope.timesDict[0][Object.keys($scope.timesDict[0])[0]].name);
+        $scope.currentDay = $scope.firstDate;
     } else {
         $scope.firstDate = new Date(2015, 0, 30);
+        $scope.currentDay = $scope.firstDate;
     }
 
     //check type of locations
@@ -547,9 +558,8 @@ angular.module('dataVisualizationsApp.controllers')
 
     function clickOnDay(date, nb){
         $scope.valuesTodayAggregated[0] = dataService.getByDay(0, date, {'date': true, loc: 'no'});
-            //dataService.filterByDay(0, date, $scope.aggregatedValues[0], true);
         $scope.valuesToday[0] = dataService.getByDay(0, date, {'date': true, loc: 'yes'});
-            //$scope.valuesToday[0] = dataService.filterByDay(0, date, $scope.values[0], false);
+        $scope.currentDay = date;
         $scope.$apply();
     }
 
@@ -577,8 +587,8 @@ angular.module('dataVisualizationsApp.controllers')
 
         if($scope.barDict.length < 1){
             var tempBarDict = [];
-            for(var v in $scope.groupedAndAggregatedValues[index]){
-                tempBarDict.push(v);
+            for(var v in $scope.groupedAndAggregatedValues[index][0]){
+                tempBarDict.push($scope.groupedAndAggregatedValues[index][0][v]);
             }
             $scope.barDict = tempBarDict;
         }
@@ -589,7 +599,7 @@ angular.module('dataVisualizationsApp.controllers')
 
         //add legend to chart --> apparently leaflet-directive and angular-chart.js conflict when legend is involved...
         //had to disable all legend functionality of angular-leaflet-directive by commenting out
-        console.log("locations2visualize = ", $scope.locations2Visualize[$scope.lastAddedLocation2Visualize]);
+        console.log("locations2visualize = ", $scope.locations2Visualize);
         $scope.barSeries[$scope.lastAddedLocation2Visualize] = $scope.mapPaths[$scope.locations2Visualize[$scope.lastAddedLocation2Visualize].toString()].name;
         $scope.barLegend = true;
     }
@@ -628,28 +638,23 @@ angular.module('dataVisualizationsApp.controllers')
     /************* HELPER FUNCTIONS FOR Mutliline Chart *************/
 
    function editMultilineWithLocations(index){ 
-        //last edited location must be chanded in barchart
-
         //fill the data of the multilinechart
         var tempMultilineData = []
-
         for(var l=0; l<$scope.locations2Visualize.length; l++){
             tempMultilineData[l] = [];
-            for(var v=0; v<$scope.valuesToday[index][0].length; v++){
-                tempMultilineData[l][v] = $scope.valuesToday[index][$scope.locations2Visualize[l]][v].data.toFixed(1);
+            var data = dataService.getByDay(index, $scope.currentDay, {date: true, loc: Number($scope.locations2Visualize[l])})[1];
+            for(var v=0; v<data.length; v++){
+                tempMultilineData[l][v] = data[v].toFixed(1);
             }
         }
-
-        console.log(tempMultilineData);
 
         $scope.multilineData = tempMultilineData;
 
         //fill the dict for the x-axis
         var tempMultilineDict = [];
-
-        for(var v=0; v<$scope.valuesToday[index][0].length; v++){
+        for(var v=0; v<$scope.valuesTodayAggregated[index][0].length; v++){
             if((1+v)%4==0){
-                tempMultilineDict[v] = $scope.valuesToday[index][0][v].date.toLocaleTimeString();
+                tempMultilineDict[v] = new Date($scope.timesDict[0][$scope.valuesTodayAggregated[index][0][v]].name).toLocaleTimeString();
             } else {
                 tempMultilineDict[v] = "";
             }
