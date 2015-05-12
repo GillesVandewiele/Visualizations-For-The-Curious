@@ -108,6 +108,8 @@ angular.module('dataVisualizationsApp.controllers')
     var tmpPieData = dataService.getByDay(0, new Date($scope.timesDict[0][Object.keys($scope.timesDict[0])[0]].name), {'date': false, loc: 'yes'});
     if(tmpPieData) $scope.pieChartData = dataService.getByDay(0, new Date($scope.timesDict[0][Object.keys($scope.timesDict[0])[0]].name), {'date': false, loc: 'yes'})[1];
 
+    editBarDataWithoutLocations(0);
+
     //if data is loaded, set first date of the calender equal the first date in data
     if($scope.timesDict.length > 0){
         $scope.firstDate = new Date($scope.timesDict[0][Object.keys($scope.timesDict[0])[0]].name);
@@ -220,6 +222,7 @@ angular.module('dataVisualizationsApp.controllers')
                 editBarDataWithLocations(0);
                 editMultilineWithLocations(0); 
             } else if($scope.locationsDict.length == 0){
+                console.log("test");
                 editBarDataWithoutLocations(0);
             }
         } 
@@ -615,11 +618,11 @@ angular.module('dataVisualizationsApp.controllers')
         var tempBarData = [];
         
         var i = 0;
-        for(var v in $scope.groupedAndAggregatedValues[index]){
+        for(var v in $scope.groupedAndAggregatedValues[index][1]){
             tempBarData[i] = [];
-            if($scope.groupedAndAggregatedValues[index][v])
+            if($scope.groupedAndAggregatedValues[index][1][v])
                 //rouding to one digit
-                tempBarData[i] = $scope.groupedAndAggregatedValues[index][v].toFixed(1);
+                tempBarData[i] = $scope.groupedAndAggregatedValues[index][1][v].toFixed(1);
             else
                 tempBarData[i] = 0;
             i++;
@@ -627,14 +630,15 @@ angular.module('dataVisualizationsApp.controllers')
 
         if($scope.barDict.length < 1){
             var tempBarDict = [];
-            for(var v in $scope.groupedAndAggregatedValues[index]){
-                tempBarDict.push(v);
+            for(var v in $scope.groupedAndAggregatedValues[index][0]){
+                tempBarDict.push($scope.groupedAndAggregatedValues[index][0][v]);
             }
             $scope.barDict = tempBarDict;
         }
 
         //always only 1 series --> index = 0
         $scope.barData[0] = tempBarData;
+        console.log($scope.barData);
 
         //always only 1 series --> index = 0
         $scope.barSeries[0] = $scope.valuesTitles[index];
