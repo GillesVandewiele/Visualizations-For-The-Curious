@@ -22,17 +22,12 @@ angular.module('dataVisualizationsApp.directives')
 
             var containerWidth = element[0].getBoundingClientRect().width;
 
-            console.log(containerWidth);
-
           	scope.$watch('config.data', function(newVals, oldVals) {
                 return scope.render(newVals);
           	}, true);
 
             scope.render = function(data){
             	if(data.length > 0){
-		            console.log("we're in the linechart directive atm!");
-
-		            console.log(element[0].getBoundingClientRect());
 
                   	// remove all previous items before render
                   	svg.selectAll('*').remove();

@@ -20,8 +20,30 @@ future improvements
 
 DEMO:
 -----
-- 11 December 2014:
-De treinstaking van vandaag zorgde voor de zwaarste ochtendspits van het jaar in Vlaanderen. Voor heel België was het zelfs de op één na zwaarste. Op een bepaald moment stond er 365 kilometer file. Richting Brussel liepen de wachttijden op tot twee uur.
-( http://www.hln.be/hln/nl/957/Binnenland/article/detail/2149193/2014/12/11/Staking-zorgt-voor-langste-file-van-2014.dhtml )
 
+Inleiding van onze webapplicatie
+---------------------------------
+"We kunnen ELKE dataset visualizeren die een bepaalde value afbeeldt op een bepaald tijdstip en eventueel ook een bepaalde locatie. De beperkingen zijn dat het aantal gemeten locaties gefixeerd moet zijn (zoals 9 weerstations, 3 boeien of 96 routes) en dat de metingen hoogstens op dagfrequentie moeten gebeuren (barchart zou eventueel wel nog mogelijk zijn voor hogere frequenties)."
 
+	--> On time x, values (y1, y2, y3) occurred on location z.
+
+Op zoek naar de warmste dag van het jaar
+----------------------------------------
+
+- Tonen van weersdata, temperatuur. GROUPING: Weeks; AGGREGATE: MAX;
+	--> Klikken op Middelkerke en Brussel
+	--> In (Week 29 -- July 14, 2014 -- July 20, 2014) wordt de hoogste temperatuur (by far) behaald
+
+- Tonen van grafiek op http://www.meteo.be/meteo/view/nl/18606670-2014.html
+
+Warmste dag --> files richting kust
+------------------------------------
+
+3) Bestuderen van de files op 18 juli 2014 (verkeerstijden, vertraging) op de kaart. GROUPING: Weekdays; AGGREGATE: SUM
+
+4) Tonen van linechart en multilinechart (routes aan de kust en 2 andere willekeurige) voor die dag
+
+Bewijzen van generiekheid
+-------------------------
+
+4) Toevoegen van eigen dataset: boeien

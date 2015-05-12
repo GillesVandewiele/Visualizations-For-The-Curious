@@ -20,11 +20,6 @@ angular.module('dataVisualizationsApp.services')
 	
 	/*************** DECLARE USERSDATASETS **********************/
 
-	// Load one dataset (@Gilles: Is this ever used? If not, feel free to remove)
-	this.addOneDataset = function(d, callbackSuccess, callbackFail){
-		this.addMultipleDatasets([d], callbackSuccess, callbackFail);
-	};
-
 	// Load multiple datasets at once
 	this.addMultipleDatasets = function(ds, callbackSuccess, callbackFail){
 		userDatasets = ds;

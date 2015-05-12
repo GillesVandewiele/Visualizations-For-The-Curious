@@ -72,22 +72,27 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.multilineLegend = false;
 
     for(var c=0;c<$scope.numDatasets;c++){
-        $scope.values[c] = dataService.getValues(c);
+        //$scope.values[c] = dataService.getValues(c);
         $scope.valuesTitles[c] = dataService.getValuesTitle(c);
-        $scope.times[c] = dataService.getTimes(c);
-        $scope.locations[c] = dataService.getLocations(c);
+        //$scope.times[c] = dataService.getTimes(c);
+        //$scope.locations[c] = dataService.getLocations(c);
         $scope.valuesDict[c] = dataService.getValuesDict(c);
         $scope.timesDict[c] = dataService.getTimesDict(c);
         $scope.locationsDict[c] = dataService.getLocationsDict(c);
-        $scope.groupedAndAggregatedValues[c] = dataService.getGroupedAndAggregatedValues(c);
+        $scope.groupedAndAggregatedValues[c] = dataService.getGroupedValues(c);
+        console.log("groupedAndAggregatedValues = ", $scope.groupedAndAggregatedValues[c]);
 
 
         //initialise these on the first date in the timesDict   
-        $scope.valuesTodayAggregated[c] = dataService.filterByDay(c, new Date($scope.timesDict[c][$scope.times[c][0]].name), $scope.aggregatedValues[c], true);
-        $scope.valuesToday[c] = dataService.filterByDay(c, new Date($scope.timesDict[c][$scope.times[c][0]].name), $scope.values[c], false);
+        $scope.valuesTodayAggregated[c] = dataService.getByDay(c, new Date($scope.timesDict[c][Object.keys($scope.timesDict[c])[0]].name), {'date': true, loc: 'no'});
+        console.log("valuesTodayAggregated initalised: ", $scope.valuesTodayAggregated[c]);
+        //dataService.filterByDay(c, new Date($scope.timesDict[c][$scope.times[c][0]].name), $scope.aggregatedValues[c], true);
+        $scope.valuesToday[c] = dataService.getByDay(c, new Date($scope.timesDict[c][Object.keys($scope.timesDict[c])[0]].name), {'date': true, loc: 'yes'});
+        console.log("valuesToday initalised: ", $scope.valuesToday[c]);
+        //dataService.filterByDay(c, new Date($scope.timesDict[c][$scope.times[c][0]].name), $scope.values[c], false);
 
         //do some calendar stuff --> must be refactored to use dataService aggregation
-        var tmp ={};
+        /*var tmp ={};
         var aggregatedVals ={};
         tmp['title'] = $scope.valuesTitles[c];
         tmp['data'] = {};
@@ -112,7 +117,17 @@ angular.module('dataVisualizationsApp.controllers')
 
             tmp['data'][secondsTime] = val;
         }
-        var vals = Object.keys(aggregatedVals).map(function(key){ return aggregatedVals[key];});
+        var vals = Object.keys(aggregatedVals).map(function(key){ return aggregatedVals[key];});*/
+        var tmp ={};
+        tmp['title'] = $scope.valuesTitles[c];
+        tmp['data'] = {};
+        var vals = [];
+        for(var i = 0; i < dataService.getDays(c).length; i++){
+            tmp['data'][Date.parse(dataService.getDays(c)[i])/1000] = dataService.getByDay(c, dataService.getDays(c)[i], {'date': false, loc: 'no'});
+            vals.push(dataService.getByDay(c, dataService.getDays(c)[i], {'date': false, loc: 'no'}));
+        }
+        //var vals = Object.keys($scope.timesDict[c]).map(function(key){ return dataService.getByDay(c, new Date($scope.timesDict[c][key].name), {'date': false, loc: 'no'}); });
+        console.log("[CALENDAR] data = ", tmp['data']);
 
         tmp['legend'] = getLegend(d3.extent(vals));
         tmp['click'] = clickOnDay;
@@ -121,7 +136,7 @@ angular.module('dataVisualizationsApp.controllers')
 
     //if data is loaded, set first date of the calender equal the first date in data
     if($scope.timesDict.length > 0){
-        $scope.firstDate = new Date($scope.timesDict[0][$scope.times[0][0]].name);
+        $scope.firstDate = new Date($scope.timesDict[Object.keys($scope.timesDict)[0]].name);
     } else {
         $scope.firstDate = new Date(2015, 0, 30);
     }
@@ -185,7 +200,10 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.$watch('valuesTodayAggregated', function(){
          if($scope.valuesTodayAggregated.length > 0){
             if($scope.valuesTodayAggregated[0] && $scope.valuesTodayAggregated[0].length > 0){
-                $scope.lineChartData = $scope.valuesTodayAggregated[0];
+                $scope.lineChartData = [];
+                for(var i = 0; i < $scope.valuesTodayAggregated[0][1].length; i++){
+                    $scope.lineChartData.push({date: new Date($scope.timesDict[0][$scope.valuesTodayAggregated[0][0][i]].name), data: $scope.valuesTodayAggregated[0][1][i]})
+                }
 
                 console.log("Updating timebar");
                 $scope.mapStop();
@@ -226,7 +244,7 @@ angular.module('dataVisualizationsApp.controllers')
             if($scope.locations2Visualize.length > 0){
                 editBarDataWithLocations(0);
                 editMultilineWithLocations(0); 
-            } else if($scope.locations[0].length == 0){
+            } else if($scope.locationsDict.length == 0){
                 editBarDataWithoutLocations(0);
             }
         } 
@@ -578,8 +596,10 @@ angular.module('dataVisualizationsApp.controllers')
     }
 
     function clickOnDay(date, nb){
-        if($scope.aggregatedValues[0].length > 0) $scope.valuesTodayAggregated[0] = dataService.filterByDay(0, date, $scope.aggregatedValues[0], true);
-        if($scope.values[0].length > 0) $scope.valuesToday[0] = dataService.filterByDay(0, date, $scope.values[0], false);
+        if($scope.aggregatedValues[0].length > 0) $scope.valuesTodayAggregated[0] = dataService.getByDay(0, date, {'date': true, loc: 'no'});
+            //dataService.filterByDay(0, date, $scope.aggregatedValues[0], true);
+        if($scope.values[0].length > 0) $scope.valuesToday[0] = dataService.getByDay(0, date, {'date': true, loc: 'yes'});
+            //$scope.valuesToday[0] = dataService.filterByDay(0, date, $scope.values[0], false);
         $scope.$apply();
     }
 
