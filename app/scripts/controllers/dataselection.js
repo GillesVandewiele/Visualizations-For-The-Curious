@@ -10,7 +10,7 @@ angular.module('dataVisualizationsApp.controllers')
 
   	/****************** CONSTANTS ********************/
 
-  		var MAX_DATASETS = 3;
+  		var MAX_DATASETS = 1;
 
   	/*************************************************/
 
