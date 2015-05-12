@@ -310,8 +310,8 @@ angular.module('dataVisualizationsApp.controllers')
 
     function initMap(){
         $scope.mapDefaults = {
-                maxZoom: 14,
                 minZoom: 6,
+                dragging: false,
         };
 
         $scope.mapCenter = {
@@ -438,6 +438,8 @@ angular.module('dataVisualizationsApp.controllers')
         //drawing all locations
         for(var i=0; i<$scope.locationsDict[index].length; i++){
 
+            var msg = "<p>"+ $scope.locationsDict[index][i].name +"</p>";
+
             $scope.mapPaths[''+i] = {
                     weight: 2,
                     color: '#00ff00',
@@ -445,6 +447,7 @@ angular.module('dataVisualizationsApp.controllers')
                     radius: 20000,
                     type: 'circle',
                     clickable: true,
+                    message: msg,
                     name: $scope.locationsDict[index][i].name
                 };
 
@@ -479,12 +482,15 @@ angular.module('dataVisualizationsApp.controllers')
         for(var i=0; i<$scope.locationsDict[index].length; i++){
             var decoded = polyline.decode($scope.locationsDict[index][i].coordinates);
 
+            var msg = "<p>"+ $scope.locationsDict[index][i].name +"</p>";
+
             $scope.mapPaths[''+i] = {
                     weight: 4,
                     opacity: 0.6,
                     color: '#00ff00',
                     latlngs: decoded,
                     name: $scope.locationsDict[index][i].name,
+                    message: msg,
                     clickable: true,  
             };
 
@@ -643,8 +649,8 @@ angular.module('dataVisualizationsApp.controllers')
         for(var v in $scope.groupedAndAggregatedValues[index][1]){
             tempBarData[i] = [];
             if($scope.groupedAndAggregatedValues[index][1][v])
-                //rouding to one digit
-                tempBarData[i] = $scope.groupedAndAggregatedValues[index][1][v].toFixed(1);
+                //rouding to two digit
+                tempBarData[i] = $scope.groupedAndAggregatedValues[index][1][v].toFixed(2);
             else
                 tempBarData[i] = 0;
             i++;
@@ -676,7 +682,7 @@ angular.module('dataVisualizationsApp.controllers')
             tempMultilineData[l] = [];
             var data = dataService.getByDay(index, $scope.currentDay, {date: true, loc: Number($scope.locations2Visualize[l])})[1];
             for(var v=0; v<data.length; v++){
-                tempMultilineData[l][v] = data[v].toFixed(1);
+                tempMultilineData[l][v] = data[v].toFixed(2);
             }
         }
 

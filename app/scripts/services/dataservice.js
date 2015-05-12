@@ -262,44 +262,42 @@ angular.module('dataVisualizationsApp.services')
 	}
 		
 	function aggregate(data, method) {
+		var out;
 		if (method === 'MEAN'){
-			return aggregate(data, 'SUM')*1.0/data.length;
+			out = aggregate(data, 'SUM')*1.0/data.length;
 		} else if (method === 'SUM'){
-			var sum = 0;
+			out = 0;
 			for(var i=0; i<data.length; i++){
-				sum += data[i];
+				out += data[i];
 			}
-			return sum;
 		} else if (method === 'MAX'){
-			var max = data[0];
+			out = data[0];
 			for(var j=1; j<data.length; j++){
-				if (data[j]>max) {
-					max = data[j];
+				if (data[j]>out) {
+					out = data[j];
 				}
 			}
-			return max;
 		} else if (method === 'MIN'){
-			var min = data[0];
+			out = data[0];
 			for(var k=1; k<data.length; k++){
-				if (data[k]<min) {
-					min = data[k];
+				if (data[k]<out) {
+					out = data[k];
 				}
 			}
-			return min;
 		} else if (method === 'COUNT'){
 			// In case of COUNT, the values are stored in dictionnaries. But no worries, we can use the compressed value to count.
-			var counts = {};
+			out = {};
 			for(var l=0; l<data.length; l++){
-				if (!counts.hasOwnProperty(data[l])) {
-					counts[data[l]] = 0;
+				if (!out.hasOwnProperty(data[l])) {
+					out[data[l]] = 0;
 				}
-				counts[data[l]] += 1;
+				out[data[l]] += 1;
 			}
-			return counts;
 		} else {
 			// Avoid falling through this method: in case no method is specified: use the mean
-			aggregate(data, 'MEAN');
+			out = aggregate(data, 'MEAN');
 		}
+		return Math.round(out*100)/100;
 	}
 
 	// Function that loads a url and stores the result in the property field of destination. Returns a promise which is fulfilled when the data is loaded
