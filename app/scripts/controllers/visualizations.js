@@ -12,8 +12,6 @@ angular.module('dataVisualizationsApp.controllers')
 
     /********************LOAD DATA**********************/
 
-	console.log("Test query: " + dataService.getDays(0));
-
 
     // if locations are locations = 2 , routes = 1 , no locations = 0
     /*
