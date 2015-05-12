@@ -97,7 +97,7 @@ angular.module('dataVisualizationsApp.controllers')
     }
 
     var tmpPieData = dataService.getByDay(0, new Date($scope.timesDict[0][Object.keys($scope.timesDict[0])[0]].name), {'date': false, loc: 'yes'});
-    if(tmpPieData) $scope.pieChartData = dataService.getByDay(0, new Date($scope.timesDict[0][Object.keys($scope.timesDict[0])[0]].name), {'date': false, loc: 'yes'})[1];
+    if(tmpPieData){ $scope.pieChartData = tmpPieData[1];}
 
     editBarDataWithoutLocations(0);
 
@@ -559,7 +559,7 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.valuesToday[0] = dataService.getByDay(0, date, {'date': true, loc: 'yes'});
         $scope.currentDay = date;
         var tmpPieData = dataService.getByDay(0, $scope.currentDay, {'date': false, loc: 'yes'});
-        if (tmpPieData) $scope.pieChartData = dataService.getByDay(0, $scope.currentDay, {'date': false, loc: 'yes'})[1];
+        if (tmpPieData){ $scope.pieChartData = tmpPieData[1];}
         $scope.$apply();
     }
 

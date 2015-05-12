@@ -35,8 +35,11 @@ angular.module('dataVisualizationsApp.directives')
         var min = Math.min(width, height);
         var svg = d3.select(el[0]).append('svg');
         var pie = d3.layout.pie().sort(null);
+
+        var tip = d3.tip().attr('class', 'd3-tip').html(function(d) { return d.value; });
         
         pie.value(function(d){ return d; });
+        svg.call(tip);
 
         var arc = d3.svg.arc()
           .outerRadius(min / 2 * 0.9)
@@ -54,7 +57,9 @@ angular.module('dataVisualizationsApp.directives')
           arcs.exit().remove(); // remove path tags that no longer have values
           arcs.enter().append('path') // or add path tags if there's more values
             .style('stroke', 'white')
-            .attr('fill', function(d, i){ return color(i) });
+            .attr('fill', function(d, i){ return color(i) })
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide);
           arcs.attr('d', arc); // update all the `<path>` tags
         }, true);
 
