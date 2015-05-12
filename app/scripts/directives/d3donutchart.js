@@ -73,9 +73,9 @@ angular.module('dataVisualizationsApp.directives')
         scope.$watch('labels', function(labels){
           legendEntries = legendEntries.data(labels);
           legendEntries.exit().remove(); // remove div tags that no longer have values
-          legendEntries.enter().append('div').attr('class','legend-entry'); // or add div tags if there's more values
-          legendEntries.append('div').attr('class','colorDiv').style('background-color',function(d,i){ return color(i);});
-          legendEntries.append('span').text(function(d){ 
+          var entries = legendEntries.enter().append('div').attr('class','legend-entry'); // or add div tags if there's more values
+          entries.append('div').attr('class','colorDiv').style('background-color',function(d,i){ return color(i);});
+          entries.append('span').text(function(d){ 
             return d;
           });
         }, true);
