@@ -41,13 +41,10 @@ angular.module('dataVisualizationsApp.controllers')
 
     $scope.numDatasets = dataService.getNumDatasets();
 
-    $scope.values = [];
     $scope.valuesToday = [];
     $scope.valuesTodayAggregated = [];
 
     $scope.valuesTitles = [];
-    $scope.times = [];
-    $scope.locations = [];
     $scope.groupedAndAggregatedValues = [];
 
     $scope.locations2Visualize = [];
@@ -72,52 +69,16 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.multilineLegend = false;
 
     for(var c=0;c<$scope.numDatasets;c++){
-        //$scope.values[c] = dataService.getValues(c);
         $scope.valuesTitles[c] = dataService.getValuesTitle(c);
-        //$scope.times[c] = dataService.getTimes(c);
-        //$scope.locations[c] = dataService.getLocations(c);
         $scope.valuesDict[c] = dataService.getValuesDict(c);
         $scope.timesDict[c] = dataService.getTimesDict(c);
         $scope.locationsDict[c] = dataService.getLocationsDict(c);
         $scope.groupedAndAggregatedValues[c] = dataService.getGroupedValues(c);
-        console.log("groupedAndAggregatedValues = ", $scope.groupedAndAggregatedValues[c]);
 
 
-        //initialise these on the first date in the timesDict   
         $scope.valuesTodayAggregated[c] = dataService.getByDay(c, new Date($scope.timesDict[c][Object.keys($scope.timesDict[c])[0]].name), {'date': true, loc: 'no'});
-        console.log("valuesTodayAggregated initalised: ", $scope.valuesTodayAggregated[c]);
-        //dataService.filterByDay(c, new Date($scope.timesDict[c][$scope.times[c][0]].name), $scope.aggregatedValues[c], true);
         $scope.valuesToday[c] = dataService.getByDay(c, new Date($scope.timesDict[c][Object.keys($scope.timesDict[c])[0]].name), {'date': true, loc: 'yes'});
-        console.log("valuesToday initalised: ", $scope.valuesToday[c]);
-        //dataService.filterByDay(c, new Date($scope.timesDict[c][$scope.times[c][0]].name), $scope.values[c], false);
-
-        //do some calendar stuff --> must be refactored to use dataService aggregation
-        /*var tmp ={};
-        var aggregatedVals ={};
-        tmp['title'] = $scope.valuesTitles[c];
-        tmp['data'] = {};
-        for(var cnt = 0; cnt < $scope.values[c].length;cnt++){
-            var time = $scope.times[c][cnt];
-            var stringTime = $scope.timesDict[c][time].name;
-            var secondsTime = Date.parse(stringTime)/1000;
-            var val=$scope.values[c][cnt][0];
-
-            // "2014-05-16T06:45:23+00:00"
-            // stringTime.substr(0,10)
-            // "2014-05-16"
-            // aggregate by day
-            var stringDay = stringTime.substr(0,10);
-            var dayMilis =  Date.parse(stringDay);
-            if(aggregatedVals[dayMilis]){
-                aggregatedVals[dayMilis] += val;
-            }
-            else{
-                aggregatedVals[dayMilis] = val;
-            }
-
-            tmp['data'][secondsTime] = val;
-        }
-        var vals = Object.keys(aggregatedVals).map(function(key){ return aggregatedVals[key];});*/
+       
         var tmp ={};
         tmp['title'] = $scope.valuesTitles[c];
         tmp['data'] = {};
@@ -128,9 +89,6 @@ angular.module('dataVisualizationsApp.controllers')
             tmp['data'][(days[i].getTime()/1000).toString()] = value;
             vals.push(value);
         }
-        //var vals = Object.keys($scope.timesDict[c]).map(function(key){ return dataService.getByDay(c, new Date($scope.timesDict[c][key].name), {'date': false, loc: 'no'}); });
-        console.log("[CALENDAR] data = ", tmp['data']);
-
         tmp['legend'] = getLegend(d3.extent(vals));
         tmp['click'] = clickOnDay;
         $scope.calendarData.push(tmp);
@@ -138,7 +96,6 @@ angular.module('dataVisualizationsApp.controllers')
 
     //if data is loaded, set first date of the calender equal the first date in data
     if($scope.timesDict.length > 0){
-        console.log("first date = ", $scope.timesDict[0][Object.keys($scope.timesDict[0])[0]].name);
         $scope.firstDate = new Date($scope.timesDict[0][Object.keys($scope.timesDict[0])[0]].name);
     } else {
         $scope.firstDate = new Date(2015, 0, 30);
@@ -208,7 +165,6 @@ angular.module('dataVisualizationsApp.controllers')
                     $scope.lineChartData.push({date: new Date($scope.timesDict[0][$scope.valuesTodayAggregated[0][0][i]].name), data: $scope.valuesTodayAggregated[0][1][i]});
                 }
 
-                console.log("Updating timebar");
                 $scope.mapStop();
                 initTimeBar();
             }
@@ -289,7 +245,6 @@ angular.module('dataVisualizationsApp.controllers')
 
 
     $("#linechartLink").click(function() {
-        console.log('clicked on linecharttab');
 
         $("#linechartTab")[0].style.visibility = 'visible';
         $("#barchartTab")[0].style.visibility = 'hidden';
@@ -299,7 +254,6 @@ angular.module('dataVisualizationsApp.controllers')
 
 
     $("#barchartLink").click(function() {
-        console.log('clicked on barcharttab');
 
         $("#linechartTab")[0].style.visibility = 'hidden';
         $("#barchartTab")[0].style.visibility = 'visible';
@@ -309,7 +263,6 @@ angular.module('dataVisualizationsApp.controllers')
     });
 
     $("#multilinechartLink").click(function() {
-        console.log('clicked on multilinecharttab');
 
         $("#linechartTab")[0].style.visibility = 'hidden';
         $("#barchartTab")[0].style.visibility = 'hidden';
@@ -319,7 +272,6 @@ angular.module('dataVisualizationsApp.controllers')
     });
 
     $("#piechartLink").click(function() {
-        console.log('clicked on piecharttab');
 
         $("#linechartTab")[0].style.visibility = 'hidden';
         $("#barchartTab")[0].style.visibility = 'hidden';
@@ -451,8 +403,6 @@ angular.module('dataVisualizationsApp.controllers')
     }
 
     function editLocationColors(index){
-        console.log('edit routes');
-
         if($scope.locationsType == 2){
             editMarkers(index);
         } else if($scope.locationsType == 1){
@@ -544,8 +494,6 @@ angular.module('dataVisualizationsApp.controllers')
     function initLegend(index){
         //first find the maximal value
         $scope.mapExtent = [99999, -99999];
-        console.log("Values Today = ", $scope.valuesToday[index]);
-        console.log("Aggregated values today = ", $scope.valuesTodayAggregated[index]);
         var lMax = -9999999;
         var lMin = 9999999;
         for(var l in $scope.valuesToday[index][2]){
@@ -557,8 +505,6 @@ angular.module('dataVisualizationsApp.controllers')
 
         if(lMin < $scope.mapExtent[0])
             $scope.mapExtent[0] = lMin;
-
-        console.log($scope.mapExtent);
 
         //for the legend, the heatmapboudaries must be set.
         for(var j=0; j<$scope.heatMapBoundaries.length; j++){
@@ -600,7 +546,6 @@ angular.module('dataVisualizationsApp.controllers')
     }
 
     function clickOnDay(date, nb){
-        console.log("clicked on ", date);
         $scope.valuesTodayAggregated[0] = dataService.getByDay(0, date, {'date': true, loc: 'no'});
             //dataService.filterByDay(0, date, $scope.aggregatedValues[0], true);
         $scope.valuesToday[0] = dataService.getByDay(0, date, {'date': true, loc: 'yes'});
@@ -615,7 +560,7 @@ angular.module('dataVisualizationsApp.controllers')
     /* one of the grouped data (if a grouping is specified)*/
     function editBarDataWithLocations(index){ 
         //last edited location must be chanded in barchart
-        console.log($scope.groupedAndAggregatedValues[index]);
+        console.log("Grouped and aggregated values = ", $scope.groupedAndAggregatedValues[index]);
 
         var tempBarData = [];
         
@@ -644,15 +589,12 @@ angular.module('dataVisualizationsApp.controllers')
 
         //add legend to chart --> apparently leaflet-directive and angular-chart.js conflict when legend is involved...
         //had to disable all legend functionality of angular-leaflet-directive by commenting out
-        console.log($scope.locations2Visualize[$scope.lastAddedLocation2Visualize]);
+        console.log("locations2visualize = ", $scope.locations2Visualize[$scope.lastAddedLocation2Visualize]);
         $scope.barSeries[$scope.lastAddedLocation2Visualize] = $scope.mapPaths[$scope.locations2Visualize[$scope.lastAddedLocation2Visualize].toString()].name;
         $scope.barLegend = true;
     }
 
     function editBarDataWithoutLocations(index){
-        //grouped and aggregated values
-        console.log($scope.groupedAndAggregatedValues[index]);
-
         var tempBarData = [];
         
         var i = 0;
