@@ -1,0 +1,8 @@
+{
+  "name": "polyline",
+  "version": "0.0.3",
+  "main": "./src/polyline.js",
+  "ignore": [],
+  "dependencies": {
+  }
+}
