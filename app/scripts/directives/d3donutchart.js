@@ -11,7 +11,7 @@ angular.module('dataVisualizationsApp.directives')
     return {
       restrict: 'E',
       scope: { 
-        values: '=', 
+        values: '=',
         labels: '=',
         donutcolors: '='
       },
@@ -52,6 +52,7 @@ angular.module('dataVisualizationsApp.directives')
 
         var arcs = g.selectAll('path');
         console.log(arcs);
+
         scope.$watch('values', function(values){
           arcs = arcs.data(pie(values));
           arcs.exit().remove(); // remove path tags that no longer have values
@@ -62,6 +63,8 @@ angular.module('dataVisualizationsApp.directives')
             .on('mouseout', tip.hide);
           arcs.attr('d', arc); // update all the `<path>` tags
         }, true);
+
+
 
       }
     };

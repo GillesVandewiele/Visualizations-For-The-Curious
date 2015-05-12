@@ -97,9 +97,6 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.calendarData.push(tmp);
     }
 
-    var tmpPieData = dataService.getByDay(0, new Date($scope.timesDict[0][Object.keys($scope.timesDict[0])[0]].name), {'date': false, loc: 'yes'});
-    if(tmpPieData){ $scope.pieChartData = tmpPieData[1];}
-
     editBarDataWithoutLocations(0);
 
     //if data is loaded, set first date of the calender equal the first date in data
@@ -110,6 +107,8 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.firstDate = new Date(2015, 0, 30);
         $scope.currentDay = $scope.firstDate;
     }
+
+    updateDonutChart();
 
     //check type of locations
     if($scope.locationsDict[0]){
@@ -226,6 +225,8 @@ angular.module('dataVisualizationsApp.controllers')
                 editBarDataWithoutLocations(0);
             }
         } 
+
+        updateDonutChart();
     }, true); //dirty watch
 
 
@@ -568,9 +569,27 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.valuesTodayAggregated[0] = dataService.getByDay(0, date, {'date': true, loc: 'no'});
         $scope.valuesToday[0] = dataService.getByDay(0, date, {'date': true, loc: 'yes'});
         $scope.currentDay = date;
-        var tmpPieData = dataService.getByDay(0, $scope.currentDay, {'date': false, loc: 'yes'});
-        if (tmpPieData){ $scope.pieChartData = tmpPieData[1];}
+
+        updateDonutChart();
         $scope.$apply();
+    }
+
+    /************* HELPER FUNCTIONS FOR DONUT CHART *************/
+    function updateDonutChart(){
+        //check if there are locations selected
+        var tmpPieData = [];
+        if($scope.locations2Visualize.length > 0){
+            var locdata;
+            for(var i=0; i<$scope.locations2Visualize.length;i++){
+                locdata = dataService.getByDay(0, $scope.currentDay, {'date': false, loc: Number($scope.locations2Visualize[i])});
+                if(locdata){ tmpPieData.push(locdata); }
+            }
+            $scope.pieChartData = tmpPieData;
+        }else{
+            //no locations selected, get all data
+            tmpPieData = dataService.getByDay(0, $scope.currentDay, {'date': false, loc: 'yes'});
+            if (tmpPieData){ $scope.pieChartData = tmpPieData[1];}
+        }
     }
 
 
