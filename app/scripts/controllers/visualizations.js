@@ -49,7 +49,7 @@ angular.module('dataVisualizationsApp.controllers')
 
     $scope.locations2Visualize = [];
     var maxLocations2Visualize = 5; // value from 1->7
-    $scope.lastAddedLocation2Visualize = maxLocations2Visualize;
+    //$scope.lastAddedLocation2Visualize = maxLocations2Visualize;
 
     $scope.valuesDict = [];
     $scope.timesDict = [];
@@ -162,13 +162,19 @@ angular.module('dataVisualizationsApp.controllers')
         //the locations2Visualize acts as a FIFO register. the first locations that went in, 
         //will be the first to be thrown out when the maximum number of locations is exceeded
         if(newLocation){
-            if($scope.lastAddedLocation2Visualize < maxLocations2Visualize-1){
-                $scope.lastAddedLocation2Visualize ++;
-                $scope.locations2Visualize[$scope.lastAddedLocation2Visualize] = args.modelName;
-            } else {
-                $scope.locations2Visualize[0] = args.modelName;
-                $scope.lastAddedLocation2Visualize = 0;
-            }
+            $scope.locations2Visualize.unshift(args.modelName);
+            $scope.locations2Visualize = $scope.locations2Visualize.slice(0,maxLocations2Visualize);
+
+            if($scope.groupedAndAggregatedValues[0]){
+                if($scope.locations2Visualize.length > 0){
+                    editBarDataWithLocations(0);
+                    editMultilineWithLocations(0); 
+                } else if($scope.locationsDict.length == 0){
+                    editBarDataWithoutLocations(0);
+                }
+            } 
+
+            updateDonutChart();
         }
     });
 
@@ -217,18 +223,18 @@ angular.module('dataVisualizationsApp.controllers')
     }, true); //dirty watch!
 
     //watch for editing the stackbardata
-    $scope.$watch('lastAddedLocation2Visualize', function(){
-        if($scope.groupedAndAggregatedValues[0]){
-            if($scope.locations2Visualize.length > 0){
-                editBarDataWithLocations(0);
-                editMultilineWithLocations(0); 
-            } else if($scope.locationsDict.length == 0){
-                editBarDataWithoutLocations(0);
-            }
-        } 
+    // $scope.$watch('lastAddedLocation2Visualize', function(){
+    //     if($scope.groupedAndAggregatedValues[0]){
+    //         if($scope.locations2Visualize.length > 0){
+    //             editBarDataWithLocations(0);
+    //             editMultilineWithLocations(0); 
+    //         } else if($scope.locationsDict.length == 0){
+    //             editBarDataWithoutLocations(0);
+    //         }
+    //     } 
 
-        updateDonutChart();
-    }, true); //dirty watch
+    //     updateDonutChart();
+    // }, true); //dirty watch
 
 
     /****************** TABS INITIALISATION *********************/
@@ -621,7 +627,7 @@ angular.module('dataVisualizationsApp.controllers')
     /* one of the grouped data (if a grouping is specified)*/
     function editBarDataWithLocations(index){ 
         //last edited location must be chanded in barchart
-        var tempBarData = dataService.getGroupedValues(index, {loc: Number($scope.locations2Visualize[$scope.lastAddedLocation2Visualize])})[1];
+        var tempBarData = dataService.getGroupedValues(index, {loc: Number($scope.locations2Visualize[0])})[1];
 
         if($scope.barDict.length < 1){
             var tempBarDict = [];
@@ -633,12 +639,13 @@ angular.module('dataVisualizationsApp.controllers')
 
         //one problem remains, ordering of the days is dependent on the first date that is loaded.
         //if first day of a dataset is a Tuesday --> tuesday first... --> fixed by initialising groupedValues correctly
-        $scope.barData[$scope.lastAddedLocation2Visualize] = tempBarData;
+        $scope.barData[0] = tempBarData;
 
         //add legend to chart --> apparently leaflet-directive and angular-chart.js conflict when legend is involved...
         //had to disable all legend functionality of angular-leaflet-directive by commenting out
         console.log("locations2visualize = ", $scope.locations2Visualize);
-        $scope.barSeries[$scope.lastAddedLocation2Visualize] = $scope.mapPaths[$scope.locations2Visualize[$scope.lastAddedLocation2Visualize].toString()].name;
+        $scope.barSeries.unshift($scope.mapPaths[$scope.locations2Visualize[0].toString()].name);
+        $scope.barSeries = $scope.barSeries.slice(0,maxLocations2Visualize);
         $scope.barLegend = true;
     }
 
@@ -700,7 +707,8 @@ angular.module('dataVisualizationsApp.controllers')
 
         $scope.multilineDict = tempMultilineDict;
 
-        $scope.multilineSeries[$scope.lastAddedLocation2Visualize] = $scope.mapPaths[$scope.locations2Visualize[$scope.lastAddedLocation2Visualize].toString()].name;
+        $scope.multilineSeries.unshift($scope.mapPaths[$scope.locations2Visualize[0].toString()].name);
+        $scope.multilineSeries = $scope.multilineSeries.slice(0,maxLocations2Visualize);
         $scope.multilineLegend = true;
     } 
 
