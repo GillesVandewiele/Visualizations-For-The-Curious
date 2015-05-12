@@ -54,6 +54,7 @@ angular.module('dataVisualizationsApp.controllers')
     $scope.timesDict = [];
     $scope.locationsDict = [];
     $scope.pieChartData = [];
+    $scope.pieLabels = [];
 
     $scope.currentDay = null;
 
@@ -568,18 +569,34 @@ angular.module('dataVisualizationsApp.controllers')
     function updateDonutChart(){
         //check if there are locations selected
         var tmpPieData = [];
+        var loclabels = [];
         if($scope.locations2Visualize.length > 0){
             var locdata;
             for(var i=0; i<$scope.locations2Visualize.length;i++){
-                locdata = dataService.getByDay(0, $scope.currentDay, {'date': false, loc: Number($scope.locations2Visualize[i])});
-                if(locdata){ tmpPieData.push(locdata); }
+                var locNumber = Number($scope.locations2Visualize[i]);
+                locdata = dataService.getByDay(0, $scope.currentDay, {'date': false, loc: locNumber});
+                if(locdata){ 
+                    tmpPieData.push(locdata);
+                    if($scope.locationsDict[0]){
+                        var locationLabel = $scope.locationsDict[0][locNumber].name;
+                        loclabels.push(locationLabel);
+                    }
+                }
             }
             $scope.pieChartData = tmpPieData;
         }else{
             //no locations selected, get all data
             tmpPieData = dataService.getByDay(0, $scope.currentDay, {'date': false, loc: 'yes'});
             if (tmpPieData){ $scope.pieChartData = tmpPieData[1];}
+
+            if($scope.locationsDict[0]){
+                for(var locNumber in $scope.locationsDict[0]) {
+                    var locationLabel = $scope.locationsDict[0][locNumber].name;
+                    loclabels.push(locationLabel);
+                }
+            }
         }
+        $scope.pieLabels = loclabels;
     }
 
 

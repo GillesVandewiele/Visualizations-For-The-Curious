@@ -1,0 +1,15 @@
+$legendColorHeight: 15px;
+$entryPadding: 5px;
+
+.colorDiv {
+	display: 'inline-block';
+	width: $legendColorHeight;
+	height: $legendColorHeight;
+}
+
+.legend-entry {
+	display: 'block';
+	height: $legendColorHeight+2*$entryPadding;
+	padding-top: $entryPadding;
+	padding-bottom: $entryPadding;
+}
