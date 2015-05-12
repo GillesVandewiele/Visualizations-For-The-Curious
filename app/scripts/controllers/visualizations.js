@@ -579,11 +579,9 @@ angular.module('dataVisualizationsApp.controllers')
     /* one of the grouped data (if a grouping is specified)*/
     function editBarDataWithLocations(index){ 
         //last edited location must be chanded in barchart
-        console.log("Grouped and aggregated values = ", $scope.groupedAndAggregatedValues[index]);
 
-        var tempBarData = [];
-        
-        var i = 0;
+        var tempBarData = dataService.getGroupedValues(index, {loc: Number($scope.lastAddedLocation2Visualize)})[1];
+
         /*for(var v in $scope.groupedAndAggregatedValues[index]){
             tempBarData[i] = [];
             if($scope.groupedAndAggregatedValues[index][v][$scope.locations2Visualize[$scope.lastAddedLocation2Visualize]])
