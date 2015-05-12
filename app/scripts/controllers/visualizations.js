@@ -310,9 +310,8 @@ angular.module('dataVisualizationsApp.controllers')
 
     function initMap(){
         $scope.mapDefaults = {
-                maxZoom: 7,
-                minZoom: 7,
-                dragging: false,
+                maxZoom: 14,
+                minZoom: 6,
         };
 
         $scope.mapCenter = {
