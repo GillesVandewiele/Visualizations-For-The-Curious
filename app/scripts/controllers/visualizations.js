@@ -11,6 +11,7 @@ angular.module('dataVisualizationsApp.controllers')
   .controller('VisualizationsCtrl', ['$scope', 'dataService', '$interval', function ($scope, dataService, $interval) {
 
     /********************LOAD DATA**********************/
+	
 
     // if locations are locations = 2 , routes = 1 , no locations = 0
     /*
@@ -126,7 +127,16 @@ angular.module('dataVisualizationsApp.controllers')
         else {
             $scope.locationsType = 0;
         }
-    }
+    } else {
+		//hide the map div
+		console.log("Trying...");
+		var a = document.querySelector(".mapCol");
+		console.log(a)
+		console.log(a.style)
+		document.querySelector(".mapCol").style.width = "0";
+		document.querySelector(".visualizationsCol").style.left = "12%";
+		document.querySelector(".visualizationsCol").style.width = "88%";
+	}
 
     //loading the routes or the locations
     if($scope.locationsDict[0]){
