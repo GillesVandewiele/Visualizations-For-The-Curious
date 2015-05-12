@@ -104,8 +104,9 @@ angular.module('dataVisualizationsApp.controllers')
         tmp['click'] = clickOnDay;
         $scope.calendarData.push(tmp);
     }
-    console.log(dataService.getByDay(0, new Date($scope.timesDict[0][Object.keys($scope.timesDict[0])[0]].name), {'date': false, loc: 'yes'})[1]);
-    $scope.pieChartData = dataService.getByDay(0, new Date($scope.timesDict[0][Object.keys($scope.timesDict[0])[0]].name), {'date': false, loc: 'yes'})[1];
+
+    var tmpPieData = dataService.getByDay(0, new Date($scope.timesDict[0][Object.keys($scope.timesDict[0])[0]].name), {'date': false, loc: 'yes'});
+    if(tmpPieData) $scope.pieChartData = dataService.getByDay(0, new Date($scope.timesDict[0][Object.keys($scope.timesDict[0])[0]].name), {'date': false, loc: 'yes'})[1];
 
     //if data is loaded, set first date of the calender equal the first date in data
     if($scope.timesDict.length > 0){
@@ -564,7 +565,8 @@ angular.module('dataVisualizationsApp.controllers')
         $scope.valuesTodayAggregated[0] = dataService.getByDay(0, date, {'date': true, loc: 'no'});
         $scope.valuesToday[0] = dataService.getByDay(0, date, {'date': true, loc: 'yes'});
         $scope.currentDay = date;
-        $scope.pieChartData = dataService.getByDay(0, $scope.currentDay, {'date': false, loc: 'yes'})[1];
+        var tmpPieData = dataService.getByDay(0, $scope.currentDay, {'date': false, loc: 'yes'});
+        if (tmpPieData) $scope.pieChartData = dataService.getByDay(0, $scope.currentDay, {'date': false, loc: 'yes'})[1];
         $scope.$apply();
     }
 
