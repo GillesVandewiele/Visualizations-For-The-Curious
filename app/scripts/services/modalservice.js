@@ -76,7 +76,8 @@ angular.module('dataVisualizationsApp.services')
 
 						var datasetColumns = [];
                         for(var i = 0; i < $scope.columns.length; i++){
-                            var newCol = {Name: $scope.columns[i].name, Path: $scope.columns[i].mapping};
+                            var newCol = {Name: $scope.columns[i].name, Path: $scope.columns[i].mapping, Dict: $scope.columns[i].dict,
+                                Dict_mapping: $scope.columns[i].dict_mapping};
                             datasetColumns.push(newCol);
                         }
 						var dataset = {name:$scope.datasetName, path:$scope.datasetPath, columns:datasetColumns};
