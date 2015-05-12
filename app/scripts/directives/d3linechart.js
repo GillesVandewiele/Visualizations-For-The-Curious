@@ -51,7 +51,8 @@ angular.module('dataVisualizationsApp.directives')
 					// Declaring the x and y axis
 					var xAxis = d3.svg.axis()
 						.scale(x)
-					    .tickFormat(function(d) { return getTimeFormat(d); })
+						.ticks(d3.time.hours, 3)
+					    .tickFormat(function(d) { console.log(d); return getTimeFormat(d); })
 					    .orient("bottom");
 					var yAxis = d3.svg.axis()
 					    .scale(y)    
