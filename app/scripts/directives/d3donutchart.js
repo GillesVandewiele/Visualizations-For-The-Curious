@@ -26,6 +26,7 @@ angular.module('dataVisualizationsApp.directives')
         //   }
         // }
         var values = scope.values || [];
+        console.log("values = ", values);
         //var color = d3.scale.linear().domain([0,values.length]).range(["green","red"]).clamp(true);
 
         var color = d3.scale.category20();
@@ -36,7 +37,7 @@ angular.module('dataVisualizationsApp.directives')
         var svg = d3.select(el[0]).append('svg');
         var pie = d3.layout.pie().sort(null);
         
-        pie.value(function(d){ return d.data; });
+        pie.value(function(d){ return d; });
 
         var arc = d3.svg.arc()
           .outerRadius(min / 2 * 0.9)
@@ -48,6 +49,7 @@ angular.module('dataVisualizationsApp.directives')
           .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
 
         var arcs = g.selectAll('path');
+        console.log(arcs);
         scope.$watch('values', function(values){
           arcs = arcs.data(pie(values));
           arcs.exit().remove(); // remove path tags that no longer have values
