@@ -626,7 +626,7 @@ angular.module('dataVisualizationsApp.controllers')
     /* one of the aggregated data (if there is an aggregation specified)
     /* one of the grouped data (if a grouping is specified)*/
     function editBarDataWithLocations(index){ 
-        //last edited location must be chanded in barchart
+        //last edited location must be changed in barchart
         var tempBarData = dataService.getGroupedValues(index, {loc: Number($scope.locations2Visualize[0])})[1];
 
         if($scope.barDict.length < 1){
@@ -639,7 +639,8 @@ angular.module('dataVisualizationsApp.controllers')
 
         //one problem remains, ordering of the days is dependent on the first date that is loaded.
         //if first day of a dataset is a Tuesday --> tuesday first... --> fixed by initialising groupedValues correctly
-        $scope.barData[0] = tempBarData;
+        $scope.barData.unshift(tempBarData);
+        $scope.barData = $scope.barData.slice(0,maxLocations2Visualize);
 
         //add legend to chart --> apparently leaflet-directive and angular-chart.js conflict when legend is involved...
         //had to disable all legend functionality of angular-leaflet-directive by commenting out
