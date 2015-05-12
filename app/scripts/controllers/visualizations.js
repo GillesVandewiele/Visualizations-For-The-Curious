@@ -597,10 +597,9 @@ angular.module('dataVisualizationsApp.controllers')
                 var locNumber = Number($scope.locations2Visualize[i]);
                 locdata = dataService.getByDay(0, $scope.currentDay, {'date': false, loc: locNumber});
                 if(locdata){ 
-                    tmpPieData.push(locdata);
                     if($scope.locationsDict[0]){
                         var locationLabel = $scope.locationsDict[0][locNumber].name;
-                        loclabels.push(locationLabel);
+                        tmpPieData.push({"val":locdata,"lbl":locationLabel});
                     }
                 }
             }
@@ -608,7 +607,7 @@ angular.module('dataVisualizationsApp.controllers')
         }else{
             //no locations selected, get all data
             tmpPieData = dataService.getByDay(0, $scope.currentDay, {'date': false, loc: 'yes'});
-            if (tmpPieData){ $scope.pieChartData = tmpPieData[1];}
+            var tempPieChartData = [];
 
             if($scope.locationsDict[0]){
                 for(var locNumber in $scope.locationsDict[0]) {
@@ -616,8 +615,15 @@ angular.module('dataVisualizationsApp.controllers')
                     loclabels.push(locationLabel);
                 }
             }
+
+            if (tmpPieData){
+                for(var i=0;i<tmpPieData[1].length;i++){
+                    tempPieChartData.push({"val":tmpPieData[1][i],"lbl":locationLabel});
+                }
+                $scope.pieChartData = tempPieChartData;
+            }
+            
         }
-        $scope.pieLabels = loclabels;
     }
 
 

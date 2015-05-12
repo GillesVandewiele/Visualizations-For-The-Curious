@@ -11,8 +11,7 @@ angular.module('dataVisualizationsApp.directives')
     return {
       restrict: 'E',
       scope: { 
-        values: '=',
-        labels: '=',
+        valslbls: '=',
         donutcolors: '='
       },
       link: function (scope, el, attr){
@@ -25,11 +24,10 @@ angular.module('dataVisualizationsApp.directives')
         //     color[i]=colorgenerator(i);
         //   }
         // }
-        var values = scope.values || [];
+        var valslbls = scope.valslbls || [];
         //var color = d3.scale.linear().domain([0,values.length]).range(["green","red"]).clamp(true);
 
         var color = d3.scale.category20();
-        var labels = scope.labels || [];
         var width = 300;
         var height = 300;
         var min = Math.min(width, height);
@@ -39,9 +37,13 @@ angular.module('dataVisualizationsApp.directives')
         var legend = rootelem.append('div').attr('class', 'donut-legend');
 
 
-        var tip = d3.tip().attr('class', 'd3-tip').html(function(d) { return Math.round(d.value * 100) / 100; });
+        var tip = d3.tip().attr('class', 'd3-tip').html(function(d) { 
+          return Math.round(d.value * 100) / 100 + "( " + d.data.lbl + " )"; 
+        });
         
-        pie.value(function(d){ return d; });
+        pie.value(function(d){ 
+          return d.val; 
+        });
         svg.call(tip);
 
         var arc = d3.svg.arc()
@@ -59,8 +61,8 @@ angular.module('dataVisualizationsApp.directives')
         var legendEntries = legend.selectAll('div');
         console.log(legendEntries);
 
-        scope.$watch('values', function(values){
-          arcs = arcs.data(pie(values));
+        scope.$watch('valslbls', function(valslbls){
+          arcs = arcs.data(pie(valslbls));
           arcs.exit().remove(); // remove path tags that no longer have values
           arcs.enter().append('path') // or add path tags if there's more values
             .style('stroke', 'white')
@@ -68,21 +70,17 @@ angular.module('dataVisualizationsApp.directives')
             .on('mouseover', tip.show)
             .on('mouseout', tip.hide);
           arcs.attr('d', arc); // update all the `<path>` tags
-        }, true);
 
-        scope.$watch('labels', function(labels){
           legend.selectAll('div').remove();
           legendEntries = legend.selectAll('div');
-          legendEntries = legendEntries.data(labels);
+          legendEntries = legendEntries.data(valslbls);
           legendEntries.exit().remove(); // remove div tags that no longer have values
           var entries = legendEntries.enter().append('div').attr('class','legend-entry'); // or add div tags if there's more values
           entries.append('div').attr('class','colorDiv').style('background-color',function(d,i){ return color(i);});
           entries.append('span').text(function(d){ 
-            return d;
+            return d.lbl;
           });
         }, true);
-
-
 
       }
     };
