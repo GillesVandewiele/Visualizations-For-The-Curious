@@ -102,7 +102,7 @@
 					"Dict_mapping": ""
 				},
 				{
-					"Name": "Files",
+					"Name": "Flitsers",
 					"Path": "$.data[*][3]",
 					"Dict": "",
 					"Dict_mapping": ""
