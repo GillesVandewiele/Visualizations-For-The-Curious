@@ -85,7 +85,6 @@ angular.module('dataVisualizationsApp.services')
 						dataset.value = dataset.columns[1];
 						dataset.date = dataset.columns[dataset.columns.length - 1];
 						$localStorage.datasets.push(dataset);
-						console.log($localStorage.datasets);
                         $modalInstance.close(result);
                     };
 
@@ -115,7 +114,6 @@ angular.module('dataVisualizationsApp.services')
                             $scope.currentColumn.name = ""; $scope.currentColumn.mapping = ""; $scope.currentColumn.data = ""; 
                             $scope.currentColumn.dict = ""; $scope.currentColumn.dict_mapping = "";
                         }
-                        console.log($scope.columns);
                     };
 
                     $scope.$watch('valid', function(){

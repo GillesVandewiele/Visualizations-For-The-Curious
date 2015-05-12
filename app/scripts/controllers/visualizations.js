@@ -80,14 +80,6 @@ angular.module('dataVisualizationsApp.controllers')
 
         $scope.valuesTodayAggregated[c] = dataService.getByDay(c, new Date($scope.timesDict[c][Object.keys($scope.timesDict[c])[0]].name), {'date': true, loc: 'no'});
         $scope.valuesToday[c] = dataService.getByDay(c, new Date($scope.timesDict[c][Object.keys($scope.timesDict[c])[0]].name), {'date': true, loc: 'yes'});
-        console.log("valuesTodayAggregated = ", $scope.valuesTodayAggregated[c]);
-
-        console.log("Testing...");
-        console.log("Date = True; Loc = Locnr", dataService.getByDay(c, new Date($scope.timesDict[c][Object.keys($scope.timesDict[c])[0]].name), {'date': true, loc: 55}));
-        console.log("Date = False; Loc = yes", dataService.getByDay(c, new Date($scope.timesDict[c][Object.keys($scope.timesDict[c])[0]].name), {'date': false, loc: 'yes'}));
-        console.log("Date = False; Loc = no", dataService.getByDay(c, new Date($scope.timesDict[c][Object.keys($scope.timesDict[c])[0]].name), {'date': false, loc: 'no'}));
-        console.log("Date = False; Loc = Locnr", dataService.getByDay(c, new Date($scope.timesDict[c][Object.keys($scope.timesDict[c])[0]].name), {'date': false, loc: 0}));
-
 
         var tmp ={};
         tmp['title'] = $scope.valuesTitles[c];
@@ -178,7 +170,6 @@ angular.module('dataVisualizationsApp.controllers')
          if($scope.valuesTodayAggregated.length > 0){
             if($scope.valuesTodayAggregated[0] && $scope.valuesTodayAggregated[0].length > 0){
                 $scope.lineChartData = [];
-                console.log("ValuesTodayAgg = ", $scope.valuesTodayAggregated[0]);
                 for(var i = 0; i < $scope.valuesTodayAggregated[0][1].length; i++){
                     $scope.lineChartData.push({date: new Date($scope.timesDict[0][$scope.valuesTodayAggregated[0][0][i]].name), data: $scope.valuesTodayAggregated[0][1][i]});
                 }
@@ -222,7 +213,6 @@ angular.module('dataVisualizationsApp.controllers')
                 editBarDataWithLocations(0);
                 editMultilineWithLocations(0); 
             } else if($scope.locationsDict.length == 0){
-                console.log("test");
                 editBarDataWithoutLocations(0);
             }
         } 
@@ -580,18 +570,7 @@ angular.module('dataVisualizationsApp.controllers')
     /* one of the grouped data (if a grouping is specified)*/
     function editBarDataWithLocations(index){ 
         //last edited location must be chanded in barchart
-        console.log(Number($scope.locations2Visualize[$scope.lastAddedLocation2Visualize]));
         var tempBarData = dataService.getGroupedValues(index, {loc: Number($scope.locations2Visualize[$scope.lastAddedLocation2Visualize])})[1];
-
-        /*for(var v in $scope.groupedAndAggregatedValues[index]){
-            tempBarData[i] = [];
-            if($scope.groupedAndAggregatedValues[index][v][$scope.locations2Visualize[$scope.lastAddedLocation2Visualize]])
-                //rounding to one digit
-                tempBarData[i] = $scope.groupedAndAggregatedValues[index][v][$scope.locations2Visualize[$scope.lastAddedLocation2Visualize]].toFixed(1);
-            else
-                tempBarData[i] = 0;
-            i++;
-        }*/
 
         if($scope.barDict.length < 1){
             var tempBarDict = [];
@@ -636,7 +615,6 @@ angular.module('dataVisualizationsApp.controllers')
 
         //always only 1 series --> index = 0
         $scope.barData[0] = tempBarData;
-        console.log($scope.barData);
 
         //always only 1 series --> index = 0
         $scope.barSeries[0] = $scope.valuesTitles[index];
