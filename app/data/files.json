@@ -74,7 +74,7 @@
 				{
 					"Name": "Weertype",
 					"Path": "$.data[*][2][*][6]",
-					"Dict": "data/kmihourly/weertype.json",
+					"Dict": "data/kmihourly/weertypes.json",
 					"Dict_mapping": "$[*]"
 				},
 				{
